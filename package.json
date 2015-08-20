@@ -1,0 +1,38 @@
+{
+  "name": "quotes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Quotes",
+  "main": "index.js",
+  "dependencies": {
+    "node-libs-browser": "^0.5.2",
+    "babel-runtime": "^5.5.6",
+    "node-noop": "^0.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer-loader": "^2.0.0",
+    "babel-core": "^5.8.22",
+    "babel-loader": "^5.3.2",
+    "css-loader": "^0.14.5",
+    "dotenv": "^1.1.0",
+    "eslint-plugin-react": "^3.2.3",
+    "extract-text-webpack-plugin": "^0.8.1",
+    "find-nearest-file": "^1.0.0",
+    "font-loader": "^0.1.2",
+    "glob": "^5.0.10",
+    "node-sass": "^3.2.0",
+    "react": "^0.13.3",
+    "react-router": "^0.13.3",
+    "sass-loader": "^1.0.2",
+    "static-site-generator-webpack-plugin": "^1.1.0",
+    "style-loader": "^0.12.3",
+    "webpack": "^1.11.0",
+    "webpack-dev-server": "^1.10.1",
+    "webpack-partial": "^0.1.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "icid.asset@gmail.com",
+  "license": "ISC"
+}
