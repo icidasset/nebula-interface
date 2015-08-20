@@ -15,14 +15,14 @@ const config = {
   },
 
   target: 'web',
-  libraryTarget: 'umd',
   context: root,
 
   output: {
+    libraryTarget: 'umd',
+    chunkFilename: '[id].[hash].js',
     filename: '[name].[hash].js',
     publicPath: '/',
     path: path.join(root, 'build'),
-    chunkFilename: '[id].[hash].js',
   },
 };
 
