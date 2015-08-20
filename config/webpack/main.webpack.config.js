@@ -11,7 +11,7 @@ const config = {
   id: 'main',
 
   entry: {
-    main: path.join(root, 'src/javascripts', 'main'),
+    main: path.join(root, 'src', 'javascripts', 'main'),
   },
 
   target: 'web',
