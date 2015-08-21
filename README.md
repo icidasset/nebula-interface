@@ -1,6 +1,6 @@
-# Quotes
+# Nebula Interface
 
-A React/Reflux/Webpack exercise.
+The interface to a music player from a distant galaxy.
 
 
 ## How to use

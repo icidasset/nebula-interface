@@ -1,5 +1,5 @@
 export default {
-  title: 'Quotes',
+  title: 'Nebula',
   routes: [
     '/',
     '/about',
