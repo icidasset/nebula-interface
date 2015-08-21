@@ -31,6 +31,9 @@
     "webpack-partial": "^0.1.7"
   },
   "scripts": {
+    "build": "webpack",
+    "server": "webpack-dev-server",
+
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "icid.asset@gmail.com",

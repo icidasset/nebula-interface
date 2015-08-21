@@ -10,8 +10,8 @@ A React/Reflux/Webpack exercise.
 npm install
 
 # make a build -> build/
-make
+npm run build
 
 # development server
-make server
+npm run server
 ```
