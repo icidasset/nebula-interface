@@ -9,9 +9,9 @@ The interface to a music player from a distant galaxy.
 # install dependencies
 npm install
 
-# make a build -> build/
+# make a build
 npm run build
 
-# development server
-npm run server
+# make a build, watch and start a server
+npm run dev
 ```

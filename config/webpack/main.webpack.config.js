@@ -11,7 +11,7 @@ const config = {
   id: 'main',
 
   entry: {
-    main: path.join(root, 'src', 'javascripts', 'main'),
+    main: path.join(root, 'src', 'main.js'),
   },
 
   target: 'web',
@@ -26,11 +26,8 @@ const config = {
   },
 };
 
-// Extend the default webpack configuration with any partials you want.
-// e.g. partial(config, 'babel', 'compatibility');
 export default partial(
   config,
   'babel',
-  'html',
-  'sass'
+  'css'
 );
