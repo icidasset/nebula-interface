@@ -16,6 +16,7 @@ const m = ms(__dirname);
 const templateOptions = {
   pattern: '*.hbs',
   engine: 'handlebars',
+  partials: 'partials',
   env: process.env.NODE_ENV,
 };
 

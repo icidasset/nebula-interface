@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 
-class IndexPage extends Component {
+class AppPage extends Component {
 
   render() {
     return (
       <p>
-        Index Page!
+        App Page!
         <br />
         <Link to={'/sign-in'}>Go to sign-in</Link>
       </p>
@@ -17,4 +17,4 @@ class IndexPage extends Component {
 }
 
 
-export default IndexPage;
+export default AppPage;

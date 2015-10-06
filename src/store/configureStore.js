@@ -4,7 +4,7 @@ import createHistory from 'history/lib/createBrowserHistory';
 import thunk from 'redux-thunk';
 
 import rootReducer from '../reducers';
-import routes from '../routes';
+import routes from '../main-routes';
 
 
 const finalCreateStore = compose(

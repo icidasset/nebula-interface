@@ -9,7 +9,7 @@ class SignInPage extends Component {
       <p>
         Sign in Page!
         <br />
-        <Link to={'/'}>Go to index</Link>
+        <Link to={'/app'}>Go to the app</Link>
       </p>
     );
   }
