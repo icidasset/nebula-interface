@@ -1,13 +1,13 @@
 {
-    "env": {
-        "browser": true
-    },
-    "extends": "eslint-config-airbnb",
-    "ecmaFeatures": {
-        "jsx": true,
-        "experimentalObjectRestSpread": true
-    },
-    "plugins": [
-        "react"
-    ]
+  "env": {
+    "browser": true
+  },
+  "extends": "eslint-config-airbnb",
+  "ecmaFeatures": {
+    "jsx": true,
+    "experimentalObjectRestSpread": true
+  },
+  "plugins": [
+    "react"
+  ]
 }

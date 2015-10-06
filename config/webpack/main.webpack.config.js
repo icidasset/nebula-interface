@@ -11,7 +11,10 @@ const config = {
   id: 'main',
 
   entry: {
-    main: path.join(root, 'src', 'main.js'),
+    main: [
+      path.join(root, 'src', 'main.js'),
+      path.join(root, 'src', 'main.scss'),
+    ],
   },
 
   target: 'web',
@@ -19,7 +22,6 @@ const config = {
 
   output: {
     libraryTarget: 'umd',
-    chunkFilename: '[id].[hash].js',
     filename: '[name].[hash].js',
     publicPath: '/',
     path: path.join(root, 'build'),

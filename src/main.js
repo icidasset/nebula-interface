@@ -1,12 +1,17 @@
+import 'babel/polyfill';
+
 import React from 'react';
-import Router from 'react-router';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { ReduxRouter } from 'redux-router';
 
-import Routes from './lib/Routes.jsx';
+import configureStore from './store/configureStore';
 
+const store = configureStore();
 
-export default function(locals, callback) {
-  Router.run(Routes, locals.path, function renderRoute(Handler) {
-    const html = React.renderToStaticMarkup(React.createElement(Handler, locals));
-    callback(null, `<!DOCTYPE html>${html}`);
-  });
-}
+render(
+  <Provider store={store}>
+    <ReduxRouter />
+  </Provider>,
+  document.getElementById('root')
+);

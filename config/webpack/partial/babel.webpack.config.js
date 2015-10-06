@@ -1,6 +1,5 @@
 export default function babel() {
   return {
-    // Module settings.
     module: {
       loaders: [{
         name: 'babel',
@@ -10,7 +9,6 @@ export default function babel() {
         query: {
           stage: 0,
           optional: ['runtime'],
-          jsxPragma: 'createElement',
         },
       }],
     },
