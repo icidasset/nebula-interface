@@ -2,7 +2,7 @@
   "name": "ongaku-ryoho",
   "version": "0.1.0",
   "private": true,
-  "description": "The interface to a music player from a distant galaxy.",
+  "description": "Music therapy.",
   "main": "main.js",
   "scripts": {
     "build": "babel-node main.js",
