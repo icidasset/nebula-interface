@@ -1,6 +1,6 @@
-# Nebula Interface
+# Ongaku Ryoho
 
-The interface to a music player from a distant galaxy.
+Music therapy.
 
 
 ## How to use
