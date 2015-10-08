@@ -1,7 +1,22 @@
 import * as types from '../action_types/sources';
 
 
-export function processSources(attributes) {
+export function processSources() {
+  return (dispatch, getState) => {
+    if (!getState().sources.isProcessing) {
+      return dispatch(execProcess());
+    }
+  };
+}
+
+export function addSource(attributes) {
+  return { type: types.ADD_SOURCE, attributes };
+}
+
+
+/// Private
+///
+function execProcess() {
   return (dispatch, getState) => {
     const state = getState();
 
@@ -21,13 +36,7 @@ export function processSources(attributes) {
   };
 }
 
-export function addSource(attributes) {
-  return { type: types.ADD_SOURCE, attributes };
-}
 
-
-/// Private
-///
 function process(sources) {
   /*
 
