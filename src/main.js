@@ -7,6 +7,7 @@ import { ReduxRouter } from 'redux-router';
 
 import configureStore from './store/configureStore';
 
+
 const store = configureStore();
 
 render(

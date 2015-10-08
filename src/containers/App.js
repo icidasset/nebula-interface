@@ -3,11 +3,17 @@ import { connect } from 'react-redux';
 
 import Header from '../components/Header';
 
+import actions from '../actions';
+
 
 class App extends Component {
 
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    this.props.dispatch(actions.sources.processSources());
   }
 
   render() {
@@ -33,4 +39,4 @@ function mapStateToProps() { // (state) {}
 }
 
 
-export default connect(mapStateToProps, {})(App);
+export default connect(mapStateToProps)(App);
