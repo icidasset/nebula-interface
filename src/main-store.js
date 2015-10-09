@@ -4,8 +4,8 @@ import { reduxReactRouter } from 'redux-router';
 import createHistory from 'history/lib/createBrowserHistory';
 import thunk from 'redux-thunk';
 
-import rootReducer from '../reducers';
-import routes from '../main-routes';
+import rootReducer from './reducers';
+import routes from './main-routes';
 
 
 const finalCreateStore = compose(

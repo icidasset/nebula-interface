@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { ReduxRouter } from 'redux-router';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-import configureStore from './store/configureStore';
+import configureStore from './main-store';
 
 
 const store = configureStore();
