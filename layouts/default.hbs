@@ -5,6 +5,10 @@
   {{> title}}
 
   <link rel="stylesheet" href="{{webpack.assets.[main.css]}}" />
+
+  <script>
+    window.ENV = {{{envVariables}}};
+  </script>
 </head>
 <body>
 

@@ -1,4 +1,5 @@
 import * as types from '../action_types/sources';
+import groupBy from 'lodash/collection/groupBy'
 
 
 export function processSources() {
@@ -19,25 +20,21 @@ export function addSource(attributes) {
 function execProcess() {
   return (dispatch, getState) => {
     const state = getState();
-
     const sources = state.sources.items;
-
-    // TODO:
-    // const tracks = state.tracks.items;
-    // groupTracksBySource()
+    const tracksGroupedBySourceId = groupBy(state.tracks.items, 'sourceId');
 
     // notify 'start'
     dispatch({ type: types.START_PROCESS_SOURCES });
 
     // process & notify 'end'
-    return process(sources).then(() => {
+    return process(sources, tracksGroupedBySourceId).then(() => {
       dispatch({ type: types.END_PROCESS_SOURCES });
     });
   };
 }
 
 
-function process(sources) {
+function process(sources, tracksGroupedBySourceId) {
   /*
 
     TODO:

@@ -9,6 +9,9 @@ Music therapy.
 # install dependencies
 npm install
 
+# setup necessary env variables (dotenv)
+echo "FIREBASE_URL=ADD_FIREBASE_URL_HERE" > .env
+
 # make a build
 npm run build
 

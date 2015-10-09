@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
+import fs from 'fs';
 import ms from 'metalsmith';
+import msDefine from 'metalsmith-define';
 import msFilenames from 'metalsmith-filenames';
 import msInPlace from 'metalsmith-in-place';
 import msLayouts from 'metalsmith-layouts';
-import msMetadata from 'metalsmith-metadata';
 import msPermalinks from 'metalsmith-permalinks';
 import msRename from 'metalsmith-rename';
 import msServe from 'metalsmith-serve';
@@ -10,6 +12,14 @@ import msWatch from 'metalsmith-watch';
 import msWebpack from 'metalsmith-webpack';
 
 import webpackConfig from './config/webpack';
+
+
+const envFile = fs.readFileSync('./.env');
+const envVariables = dotenv.parse(envFile);
+
+
+console.log("ENV:");
+console.log(envVariables);
 
 
 const m = ms(__dirname);
@@ -23,9 +33,9 @@ const templateOptions = {
 m.source('pages');
 m.destination('build');
 
+m.use(msDefine({ envVariables: JSON.stringify(envVariables) }));
 m.use(msWebpack(webpackConfig));
 m.use(msFilenames());
-m.use(msMetadata({}));
 m.use(msInPlace(templateOptions));
 m.use(msLayouts(Object.assign({}, templateOptions, { default: 'default.hbs' })));
 

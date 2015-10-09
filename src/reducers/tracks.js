@@ -3,7 +3,10 @@ import * as types from '../action_types/tracks';
 
 const initialTrack = {
   title: 'Untitled',
-  artist: 'Untitled'
+  artist: 'Untitled',
+
+  sourceId: null,
+  path: null,
 };
 
 
