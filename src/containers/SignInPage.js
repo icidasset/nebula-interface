@@ -6,11 +6,13 @@ class SignInPage extends Component {
 
   render() {
     return (
-      <p>
-        Sign in Page!
-        <br />
-        <Link to={'/app'}>Go to the app</Link>
-      </p>
+      <div>
+        <p>
+          Sign in Page!
+          <br />
+          <Link to={'/app'}>Go to the app</Link>
+        </p>
+      </div>
     );
   }
 

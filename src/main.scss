@@ -1,3 +1,19 @@
+@import "./main-colors.scss";
+
 body {
-  color: blue;
+  font-family: "Palanquin", sans-serif;
+}
+
+
+/// Material-design-lite overrides
+///
+:global .mdl-layout__drawer-button {
+  color: $shade_text;
+  left: 1rem;
+  margin: 0;
+  top: 15px;
+}
+
+:global .mdl-layout__content {
+  margin: calc(6rem + 2px) 0 5.5rem;
 }

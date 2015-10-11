@@ -1,8 +1,15 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 import autoprefixer from 'autoprefixer';
-import cssimport from 'postcss-import';
+import nearest from 'find-nearest-file';
+import path from 'path';
+import csspartialimport from 'postcss-partial-import';
 import precss from 'precss';
+
+
+const root = path.dirname(
+  nearest('package.json')
+);
 
 
 export default function css() {
@@ -12,20 +19,32 @@ export default function css() {
     localIdentName: '[name]-[local]-[hash:base64:5]',
   };
 
+  const postcssLoaderConfig = {
+    parser: "postcss-scss"
+  };
+
   return {
     module: {
       loaders: [{
         test: /\.(scss|sass)$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
-          `css-loader?${JSON.stringify(cssLoaderConfig)}!postcss-loader`
+          `css-loader?${JSON.stringify(cssLoaderConfig)}` +
+            `!postcss-loader?${JSON.stringify(postcssLoaderConfig)}`
+        ),
+      }, {
+        test: /\.(css)$/,
+        include: path.join(root, 'node_modules'),
+        loader: ExtractTextPlugin.extract(
+          'style-loader',
+          `css-loader`
         ),
       }],
     },
 
-    css() {
+    postcss() {
       return [
-        cssimport({ onImport: files => files.forEach(this.addDependency) }),
+        csspartialimport(),
         precss,
         autoprefixer({ browsers: ['last 2 versions'] }),
       ];

@@ -1,5 +1,5 @@
-import logs from './logs.webpack.config';
-import main from './main.webpack.config';
+import logs from './logs';
+import main from './main';
 
 
 export default Object.assign.apply(null, [{}].concat(

@@ -1,3 +1,4 @@
+import 'material-design-lite/material';
 import 'babel/polyfill';
 
 import React from 'react';
@@ -10,15 +11,17 @@ import configureStore from './main-store';
 
 
 const store = configureStore();
+const debugPanel = (
+  <DebugPanel top right bottom>
+    <DevTools store={store} monitor={LogMonitor} />
+  </DebugPanel>
+);
 
 render(
   <div>
     <Provider store={store}>
       <ReduxRouter />
     </Provider>
-    <DebugPanel top right bottom>
-      <DevTools store={store} monitor={LogMonitor} />
-    </DebugPanel>
   </div>,
   document.getElementById('root')
 );
