@@ -1,11 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Rebase from 're-base';
 
 import actions from '../actions';
-
-
-const base = Rebase.createClass(ENV.FIREBASE_URL);
 
 
 class App extends Component {
@@ -15,14 +11,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(actions.sources.processSources());
-
-    base.fetch('tracks', {
-      context: this,
-      then: function(data) {
-        console.log(data);
-      }
-    });
+    // this.props.dispatch(actions.sources.processSources());
+    this.props.dispatch(actions.tracks.fetchTracks());
 
     // TODO:
     // - Store sources on Firebase

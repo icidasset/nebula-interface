@@ -36,6 +36,16 @@ export default function sources(state = initialState, action) {
       isProcessing: false
     });
 
+  case types.FETCH_SOURCES:
+    return Object.assign({}, state, {
+      isFetching: true
+    });
+
+  case types.FETCH_SOURCES_DONE:
+    return Object.assign({}, state, {
+      isFetching: false
+    });
+
   case types.ADD_SOURCE:
     return Object.assign({}, state, {
       items: [

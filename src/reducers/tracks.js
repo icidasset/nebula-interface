@@ -19,6 +19,16 @@ const initialState = {
 
 export default function tracks(state = initialState, action) {
   switch (action.type) {
+  case types.FETCH_TRACKS:
+    return Object.assign({}, state, {
+      isFetching: true
+    });
+
+  case types.FETCH_TRACKS_DONE:
+    return Object.assign({}, state, {
+      isFetching: false
+    });
+
   case types.ADD_TRACK:
     return Object.assign({}, state, {
       items: [
