@@ -1,4 +1,4 @@
-import * as types from '../action_types/tracks';
+import * as types from '../constants/action_types/tracks';
 
 
 export function addTrack(attributes) {

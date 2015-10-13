@@ -1,4 +1,4 @@
-import * as types from '../action_types/collections';
+import * as types from '../constants/action_types/collections';
 
 
 export function addCollection(attributes) {

@@ -1,4 +1,4 @@
-import * as types from '../action_types/sources';
+import * as types from '../constants/action_types/sources';
 import groupBy from 'lodash/collection/groupBy'
 
 

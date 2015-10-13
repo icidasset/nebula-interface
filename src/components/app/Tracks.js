@@ -10,13 +10,13 @@ export default class Tracks extends Component {
   render() {
     let listItems = [];
 
-    for (let i = 0, j = 250; i < j; i++) {
-      listItems.push(<li key={i} styleName="track">
-        <strong>Delicious (Vocal Mix)</strong>
+    this.props.tracks.items.forEach(function(track, idx) {
+      listItems.push(<li key={idx} styleName="track">
+        <strong>{track.title}</strong>
         <span> by </span>
-        <strong>Alexander Kowalski & Raz Ohara</strong>
-      </li>)
-    }
+        <strong>{track.artist}</strong>
+      </li>);
+    });
 
     return (
       <ul styleName="tracks">
