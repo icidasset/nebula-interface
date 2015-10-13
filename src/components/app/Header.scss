@@ -1,0 +1,14 @@
+@import "../../main-colors.scss";
+
+
+.header {
+  background: white;
+  border-bottom: 2px solid $shade;
+  color: $shade_text;
+  height: 6rem;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 3;
+}

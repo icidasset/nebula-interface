@@ -1,0 +1,43 @@
+.tracks {
+  font-size: 0.9rem;
+  letter-spacing: 0.025em;
+  line-height: 1.2;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/// Track
+///
+.track {
+  border-bottom: 1px solid #f4f4f4;
+  padding: 1rem 3.5rem;
+  position: relative;
+}
+
+.track::before {
+  background: #aaa;
+  border-radius: 50%;
+  content: "";
+  height: 3px;
+  left: 2rem;
+  margin-top: 1px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+}
+
+.track span {
+  color: #aaa;
+  display: inline-block;
+  font-size: 0.8em;
+  margin: 0 0.5rem;
+  vertical-align: baseline;
+}
+
+.track strong {
+  display: inline-block;
+  font-weight: 400;
+  vertical-align: baseline;
+}

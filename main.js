@@ -14,14 +14,16 @@ import msWebpack from 'metalsmith-webpack';
 import webpackConfig from './config/webpack';
 
 
+const watchPaths = {
+  '${source}/**/*': true,
+  'layouts/**/*': '**/*',
+  'partials/**/*': '**/*',
+  'src/**/*': '**/*'
+}
+
+
 const envFile = fs.readFileSync('./.env');
 const envVariables = dotenv.parse(envFile);
-
-
-console.log("ENV:");
-console.log(envVariables);
-
-
 const m = ms(__dirname);
 const templateOptions = {
   pattern: '*.hbs',
@@ -47,7 +49,7 @@ m.use(msPermalinks({ relative: false }));
 
 // # watch, serve, etc.
 if (process.env.SERVE) m.use(msServe({ port: 8080, verbose: true }));
-if (process.env.WATCH) m.use(msWatch({ paths: { '${source}/**/*': true, 'src/**/*': '**/*' } }));
+if (process.env.WATCH) m.use(msWatch({ paths: watchPaths }));
 
 // # build
 m.build(function buildCallback(err) {

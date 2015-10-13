@@ -15,6 +15,10 @@ const config = {
       path.join(root, 'src', 'main.js'),
       path.join(root, 'src', 'main.scss'),
     ],
+    material: [
+      'material-design-lite/dist/material.css',
+      'material-design-lite/dist/material.js',
+    ],
   },
 
   target: 'web',
@@ -23,6 +27,7 @@ const config = {
   output: {
     libraryTarget: 'umd',
     filename: '[name].[hash].js',
+    chunkFilename: '[id].[hash].js',
     publicPath: '/',
     path: path.join(root, 'build'),
   },
@@ -30,6 +35,6 @@ const config = {
 
 export default partial(
   config,
-  'babel',
-  'css'
+  './partial/babel.js',
+  './partial/css.js'
 );

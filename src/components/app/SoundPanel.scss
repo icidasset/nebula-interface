@@ -1,0 +1,12 @@
+@import "../../main-colors.scss";
+
+
+.sound-panel {
+  background: $shade;
+  bottom: 0;
+  height: 5.5rem;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 4;
+}
