@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Layout, { Content, Drawer, Navigation } from 'react-mdl/lib/layout/Layout';
 
 import * as viewTypes from '../constants/view_types';
 
@@ -14,25 +15,22 @@ class AppPage extends Component {
     let pageContent = this.getPageContent();
 
     return (
-      <div className="mdl-layout mdl-js-layout">
+      <Layout>
         <Header />
 
-        <div className="mdl-layout__drawer">
-          <span className="mdl-layout-title">Menu</span>
-          <nav className="mdl-navigation">
-            <a className="mdl-navigation__link" href="">Sources</a>
-            <a className="mdl-navigation__link" href="/sign-out">Sign out</a>
-          </nav>
-        </div>
+        <Drawer title="Title">
+          <Navigation>
+            <a href="#">Settings</a>
+            <a href="#">Sign out</a>
+          </Navigation>
+        </Drawer>
 
-        <main className="mdl-layout__content">
-          <div className="page-content">
-            {pageContent}
-          </div>
-        </main>
+        <Content>
+          {pageContent}
+        </Content>
 
         <SoundPanel />
-      </div>
+      </Layout>
     );
   }
 

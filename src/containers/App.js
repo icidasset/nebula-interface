@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import actions from '../actions';
+import { pages } from './index';
 
 
 class App extends Component {
@@ -11,8 +13,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // this.props.dispatch(actions.sources.processSources());
-    this.props.dispatch(actions.tracks.fetchTracks());
+    // this.props.actions.processSources();
+    // this.props.actions.fetchTracks();
 
     // TODO:
     // - Store sources on Firebase
@@ -22,19 +24,42 @@ class App extends Component {
     // - When one of those changes in the Redux store, save data on Firebase (sync)
     // - Initial fetch (or sync) of all data
     // - After initial fetch hide loading animation (this.props.showLoader)
+
+    this.props.actions.goTo(window.location.pathname);
   }
 
   render() {
-    return this.props.children;
+    if (this.props.routing.container) {
+      return React.createElement( pages[this.props.routing.container] );
+    } else {
+      return <div />;
+    }
   }
 
 }
 
 
 App.propTypes = {
-  // Injected by React Router
-  children: PropTypes.node,
+  routing: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
 
-export default connect()(App);
+function mapStateToProps(state) {
+  return {
+    routing: state.routing
+  };
+}
+
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  };
+}
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

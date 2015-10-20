@@ -2,6 +2,8 @@ import * as types from '../constants/action_types/tracks';
 import base from '../constants/firebase';
 
 
+/// Actions
+///
 export function fetchTracks() {
   return (dispatch, getState) => {
     dispatch({ type: types.FETCH_TRACKS });
@@ -17,7 +19,6 @@ export function fetchTracks() {
   };
 }
 
-
 export function saveTracks(tracks) {
   return (dispatch, getState) => {
     dispatch({ type: types.SAVE_TRACKS });
@@ -28,7 +29,6 @@ export function saveTracks(tracks) {
     });
   };
 }
-
 
 export function addTrack(attributes) {
   return { type: types.ADD_TRACK, attributes };

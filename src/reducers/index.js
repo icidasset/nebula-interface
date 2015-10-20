@@ -1,15 +1,16 @@
 import { combineReducers } from 'redux';
-import { routerStateReducer as router } from 'redux-router';
 
+import auth from './auth';
 import collections from './collections';
+import routing from './routing';
 import sources from './sources';
 import tracks from './tracks';
 
 
 const rootReducer = combineReducers({
-  router,
-
+  auth,
   collections,
+  routing,
   sources,
   tracks,
 });

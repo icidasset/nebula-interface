@@ -15,7 +15,6 @@
     "babel-runtime": "~5.8.x",
     "history": "^1.12.5",
     "lodash": "~3.10.x",
-    "material-design-lite": "~1.0.x",
     "node-libs-browser": "~0.5.x",
     "node-noop": "~0.0.x",
     "re-base": "~1.1.x",
@@ -24,9 +23,7 @@
     "react-dom": "~0.14.x",
     "react-mdl": "~0.15.x",
     "react-redux": "^3.0.0",
-    "react-router": "~1.0.0-rc3",
     "redux": "~3.0.x",
-    "redux-router": "^1.0.0-beta3",
     "redux-thunk": "~1.0.x"
   },
   "devDependencies": {
@@ -37,7 +34,7 @@
     "eslint-config-airbnb": "~0.1.x",
     "eslint-plugin-react": "~3.5.x",
     "extract-text-webpack-plugin": "~0.8.x",
-    "file-loader": "~0.8.x",
+    "file-loader": "^0.8.4",
     "find-nearest-file": "~1.0.x",
     "handlebars": "~4.0.x",
     "memory-fs": "~0.2.x",

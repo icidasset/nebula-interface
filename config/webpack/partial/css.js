@@ -34,7 +34,6 @@ export default function css() {
         ),
       }, {
         test: /\.(css)$/,
-        include: path.join(root, 'node_modules'),
         loader: ExtractTextPlugin.extract(
           'style-loader',
           `css-loader`

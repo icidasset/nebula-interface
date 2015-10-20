@@ -16,8 +16,8 @@ const config = {
       path.join(root, 'src', 'main.scss'),
     ],
     material: [
-      'material-design-lite/dist/material.css',
-      'material-design-lite/dist/material.js',
+      `${root}/vendor/material.css`,
+      `${root}/vendor/material.js`,
     ],
   },
 
@@ -35,6 +35,6 @@ const config = {
 
 export default partial(
   config,
-  './partial/babel.js',
+  './partial/javascript.js',
   './partial/css.js'
 );

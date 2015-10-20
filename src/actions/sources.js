@@ -2,6 +2,8 @@ import * as types from '../constants/action_types/sources';
 import groupBy from 'lodash/collection/groupBy'
 
 
+/// Actions
+///
 export function processSources() {
   return (dispatch, getState) => {
     if (!getState().sources.isProcessing) {
@@ -32,7 +34,6 @@ function execProcess() {
     });
   };
 }
-
 
 function process(sources, tracksGroupedBySourceId) {
   /*
