@@ -31,7 +31,7 @@ export function goTo(path, status=200) {
     let onEnterThunk;
 
     // remove extraneous stuff from the path
-    path = '/' + path.replace(/(^\/*|\/*$)/g, '');
+    path = `/${path.replace(/(^\/*|\/*$)/g, '')}`;
 
     // get table item
     tableItem = ROUTING_TABLE[path];

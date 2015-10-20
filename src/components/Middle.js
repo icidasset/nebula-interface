@@ -5,7 +5,7 @@ import styles from './Middle.scss';
 
 
 @CSSModules(styles)
-export default class Middle extends Component {
+class Middle extends Component {
 
   render() {
     return (
@@ -16,3 +16,6 @@ export default class Middle extends Component {
   }
 
 }
+
+
+export default Middle;

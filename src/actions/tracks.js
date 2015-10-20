@@ -9,12 +9,9 @@ export function fetchTracks() {
     dispatch({ type: types.FETCH_TRACKS });
 
     // retrieve tracks from Firebase
-    base.fetch('tracks', {
-      context: this,
-      then: function(data) {
-        let items = data;
-        dispatch(fetchTracksDone(items));
-      }
+    base.child('tracks').on('value', (snapshot) => {
+      let items = snapshot.val();
+      dispatch(fetchTracksDone(items));
     });
   };
 }
@@ -24,9 +21,7 @@ export function saveTracks(tracks) {
     dispatch({ type: types.SAVE_TRACKS });
 
     // save tracks on Firebase
-    base.post('tracks', {
-      data: tracks
-    });
+    base.child('tracks').set(tracks);
   };
 }
 

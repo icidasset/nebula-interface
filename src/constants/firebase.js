@@ -1,4 +1,4 @@
-import Rebase from 're-base';
+import Firebase from 'firebase';
 
 
-export default Rebase.createClass(ENV.FIREBASE_URL);
+export default new Firebase(ENV.FIREBASE_URL);
