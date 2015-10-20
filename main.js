@@ -19,7 +19,14 @@ const watchPaths = {
   'layouts/**/*': '**/*',
   'partials/**/*': '**/*',
   'src/**/*': '**/*'
-}
+};
+
+
+const serveOptions = {
+  port: 8080,
+  verbose: true,
+  http_error_files: { 404: '/200.html' }
+};
 
 
 const envFile = fs.readFileSync('./.env');
@@ -48,7 +55,7 @@ m.use(msRename([['.hbs', '.html']]));
 m.use(msPermalinks({ relative: false }));
 
 // # watch, serve, etc.
-if (process.env.SERVE) m.use(msServe({ port: 8080, verbose: true }));
+if (process.env.SERVE) m.use(msServe(serveOptions));
 if (process.env.WATCH) m.use(msWatch({ paths: watchPaths }));
 
 // # build

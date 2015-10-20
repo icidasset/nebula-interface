@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 
 import Button from 'react-mdl/lib/Button'
 import Textfield from 'react-mdl/lib/Textfield'

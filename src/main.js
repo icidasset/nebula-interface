@@ -18,9 +18,10 @@ import App from './containers/App';
 
 store.subscribe(function() {
   const state = store.getState();
+  const windowPath = window.location.pathname.replace(/\/*$/, '')
 
-  if (window.location.pathname.replace(/\/*$/, '') !== state.routing.path) {
-    window.history.pushState({}, document.title, state.routing.path);
+  if (state.routing.path && windowPath !== state.routing.path) {
+    window.history.pushState({}, document.title, state.routing.path + '/');
   }
 });
 
