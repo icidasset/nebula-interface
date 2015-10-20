@@ -8,8 +8,6 @@ export function createUser(credentials) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
 
-      console.log(credentials);
-
       base.createUser(credentials, function(error, userData) {
         if (error) {
           reject(error);
