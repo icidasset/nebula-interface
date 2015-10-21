@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Button from 'react-mdl/lib/Button'
-import Textfield from 'react-mdl/lib/Textfield'
+import Button from 'react-mdl/lib/Button';
+import Textfield from 'react-mdl/lib/Textfield';
 
 import Form from '../components/Form';
 import FormStyles from '../components/Form.scss';
@@ -22,6 +21,33 @@ class SignInPage extends Component {
   }
 
 
+  handleSubmit(event) {
+    const credentials = {
+      email: findDOMNode(this.refs.email).querySelector('input').value,
+      password: findDOMNode(this.refs.password).querySelector('input').value,
+    };
+
+    this.props.dispatch(actions.authenticate(credentials)).then(
+      () => this.props.dispatch(actions.goTo('/app')),
+      (error) => {
+        // TODO: handle error
+        console.error(error);
+      }
+    );
+
+    event.preventDefault();
+  }
+
+
+  initiateMDLOverride() {
+    const nodes = ['email', 'password'].map((ref) => {
+      return findDOMNode(this.refs[ref]);
+    });
+
+    overrideTextFieldValidation(nodes);
+  }
+
+
   render() {
     return (
       <Middle>
@@ -34,21 +60,21 @@ class SignInPage extends Component {
               ref="email"
               type="email"
               label="Email"
-              floatingLabel={true}
-              required={true}
+              floatingLabel
+              required
             />
 
             <Textfield
               ref="password"
               type="password"
               label="Password"
-              floatingLabel={true}
-              required={true}
+              floatingLabel
+              required
             />
           </div>
 
           <p>
-            <Button raised={true} colored={true}>Sign in</Button>
+            <Button raised colored>Sign in</Button>
           </p>
 
           <p>
@@ -61,51 +87,12 @@ class SignInPage extends Component {
     );
   }
 
-
-  handleSubmit(event) {
-    const credentials = {
-      email: findDOMNode(this.refs.email).querySelector('input').value,
-      password: findDOMNode(this.refs.password).querySelector('input').value
-    };
-
-    this.props.actions.authenticate(credentials).then(
-      () => this.props.actions.goTo('/app'),
-      (error) => console.error(error)
-    );
-
-    event.preventDefault();
-  }
-
-
-  initiateMDLOverride() {
-    let nodes = ["email", "password"].map((ref) => {
-      return findDOMNode(this.refs[ref])
-    });
-
-    overrideTextFieldValidation(nodes);
-  }
-
 }
 
 
 SignInPage.propTypes = {
-  actions: PropTypes.object.isRequired
+  dispatch: PropTypes.func.isRequired,
 };
 
 
-function mapStateToProps(state) {
-  return {};
-}
-
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch)
-  };
-}
-
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SignInPage);
+export default connect()(SignInPage);

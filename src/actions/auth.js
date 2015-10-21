@@ -5,10 +5,10 @@ import base from '../constants/firebase';
 /// Actions
 ///
 export function createUser(credentials) {
-  return (dispatch) => {
+  return () => {
     return new Promise((resolve, reject) => {
 
-      base.createUser(credentials, function(error, userData) {
+      base.createUser(credentials, (error, userData) => {
         if (error) {
           reject(error);
         } else {
@@ -20,12 +20,34 @@ export function createUser(credentials) {
   };
 }
 
+export function performInitialAuthCheck() {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+
+      base.onAuth((authData) => {
+        let promise;
+
+        if (authData) {
+          promise = dispatch(authenticate(authData));
+        } else {
+          promise = Promise.resolve();
+        }
+
+        promise
+          .then(() => dispatch({ type: types.PASS_INITIAL_AUTH_CHECK }), reject)
+          .then(resolve, reject);
+      });
+
+    });
+  };
+}
+
 export function authenticate(args) {
   return (dispatch) => {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
 
       if (args.email) {
-        base.authWithPassword(args, function(error, authData) {
+        base.authWithPassword(args, (error, authData) => {
           if (error) {
             reject(error);
           } else {
@@ -46,8 +68,4 @@ export function authenticate(args) {
 
 export function deauthenticate() {
   return { type: types.DEAUTHENTICATE };
-}
-
-export function passInitialAuthCheck() {
-  return { type: types.PASS_INITIAL_AUTH_CHECK };
 }

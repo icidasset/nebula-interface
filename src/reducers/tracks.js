@@ -13,7 +13,7 @@ const initialTrack = {
 const initialState = {
   isFetching: false,
 
-  items: []
+  items: [],
 };
 
 
@@ -21,20 +21,20 @@ export default function tracks(state = initialState, action) {
   switch (action.type) {
   case types.FETCH_TRACKS:
     return Object.assign({}, state, {
-      isFetching: true
+      isFetching: true,
     });
 
   case types.FETCH_TRACKS_DONE:
     return Object.assign({}, state, {
-      isFetching: false
+      isFetching: false,
     });
 
   case types.ADD_TRACK:
     return Object.assign({}, state, {
       items: [
         ...state.items,
-        Object.assign({}, initialTrack, action.attributes)
-      ]
+        Object.assign({}, initialTrack, action.attributes),
+      ],
     });
 
   default:

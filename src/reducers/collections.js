@@ -4,14 +4,14 @@ import * as types from '../constants/action_types/collections';
 const initialCollection = {
   name: 'Untitled',
 
-  tracksIds: []
+  tracksIds: [],
 };
 
 
 const initialState = {
   isFetching: false,
 
-  items: []
+  items: [],
 };
 
 
@@ -21,8 +21,8 @@ export default function tracks(state = initialState, action) {
     return Object.assign({}, state, {
       items: [
         ...state.items,
-        Object.assign({}, initialCollection, action.attributes)
-      ]
+        Object.assign({}, initialCollection, action.attributes),
+      ],
     });
 
   default:

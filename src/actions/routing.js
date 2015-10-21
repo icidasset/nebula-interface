@@ -1,6 +1,19 @@
 import * as types from '../constants/action_types/routing';
 
 
+function indexPageEnter(getState) {
+  const state = getState();
+
+  // if the user is not signed in,
+  // redirect to the 'static' about page.
+  if (!state.auth.user) {
+    window.location.href = '/about';
+  } else {
+    return goTo('/app', 302);
+  }
+}
+
+
 function appPageOnEnter(getState) {
   const state = getState();
 
@@ -13,28 +26,28 @@ function appPageOnEnter(getState) {
 
 
 const ROUTING_TABLE = {
+  '/': { container: 'IndexPage', onEnter: indexPageEnter },
   '/app': { container: 'AppPage', onEnter: appPageOnEnter },
   '/sign-in': { container: 'SignInPage' },
   '/sign-up': { container: 'SignUpPage' },
 
   // redirects
   '/login': { redirectTo: '/sign-in' },
-  '/register': { redirectTo: '/sign-up' }
+  '/register': { redirectTo: '/sign-up' },
 };
 
 
 /// Actions
 ///
-export function goTo(path, status=200) {
+export function goTo(path, status = 200) {
   return (dispatch, getState) => {
-    let tableItem;
     let onEnterThunk;
 
     // remove extraneous stuff from the path
-    path = `/${path.replace(/(^\/*|\/*$)/g, '')}`;
+    const cleanPath = `/${path.replace(/(^\/*|\/*$)/g, '')}`;
 
     // get table item
-    tableItem = ROUTING_TABLE[path];
+    const tableItem = ROUTING_TABLE[cleanPath];
 
     // if *found*
     if (tableItem) {
@@ -50,7 +63,7 @@ export function goTo(path, status=200) {
           dispatch(onEnterThunk);
         } else {
           dispatch(setStatus(status));
-          dispatch(setPath(path));
+          dispatch(setPath(cleanPath));
           dispatch(setContainer(tableItem.container));
         }
 
@@ -59,7 +72,7 @@ export function goTo(path, status=200) {
     // if *not found*
     } else {
       dispatch(setStatus(404));
-      dispatch(setPath(path));
+      dispatch(setPath(cleanPath));
       dispatch(setContainer('NotFoundPage'));
 
     }

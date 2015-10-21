@@ -3,7 +3,7 @@ import * as types from '../constants/action_types/auth';
 
 const initialState = {
   passedInitialCheck: false,
-  user: undefined
+  user: undefined,
 };
 
 
@@ -11,17 +11,17 @@ export default function auth(state = initialState, action) {
   switch (action.type) {
   case types.AUTHENTICATE:
     return Object.assign({}, state, {
-      user: action.user
+      user: action.user,
     });
 
   case types.DEAUTHENTICATE:
     return Object.assign({}, state, {
-      user: undefined
+      user: undefined,
     });
 
   case types.PASS_INITIAL_AUTH_CHECK:
     return Object.assign({}, state, {
-      passedInitialCheck: true
+      passedInitialCheck: true,
     });
 
   default:

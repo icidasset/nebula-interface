@@ -9,5 +9,14 @@
   },
   "plugins": [
     "react"
-  ]
+  ],
+  "globals": {
+    "ENV": true
+  },
+  "rules": {
+    "new-cap": 0,
+    "no-use-before-define": 0,
+    "padded-blocks": 0,
+    "spaced-comment": 0
+  }
 }

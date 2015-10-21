@@ -15,7 +15,7 @@ class Link extends Component {
   }
 
   render() {
-    let href = this.props.to;
+    const href = this.props.to;
 
     // TODO: make href relative
 
@@ -30,18 +30,21 @@ class Link extends Component {
 
 
 Link.propTypes = {
+  actions: PropTypes.object.isRequired,
+  children: PropTypes.node,
+  external: PropTypes.bool,
   to: PropTypes.string.isRequired,
 };
 
 
-function mapStateToProps(state) {
+function mapStateToProps() {
   return {};
 }
 
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(routingActions, dispatch)
+    actions: bindActionCreators(routingActions, dispatch),
   };
 }
 

@@ -5,19 +5,19 @@ import base from '../constants/firebase';
 /// Actions
 ///
 export function fetchTracks() {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ type: types.FETCH_TRACKS });
 
     // retrieve tracks from Firebase
     base.child('tracks').on('value', (snapshot) => {
-      let items = snapshot.val();
+      const items = snapshot.val();
       dispatch(fetchTracksDone(items));
     });
   };
 }
 
 export function saveTracks(tracks) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ type: types.SAVE_TRACKS });
 
     // save tracks on Firebase
@@ -32,6 +32,6 @@ export function addTrack(attributes) {
 
 /// Private
 ///
-function fetchTracksDone(items=[]) {
+function fetchTracksDone(items = []) {
   return { type: types.FETCH_TRACKS_DONE, items };
 }

@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import pick from 'lodash/object/pick';
 
 import actions from '../actions';
-import base from '../constants/firebase';
 import { pages } from './index';
 
 
@@ -19,31 +19,10 @@ class App extends Component {
     // - Initial fetch (or sync) of all data
     // - After initial fetch hide loading animation (this.props.showLoader)
 
-    this.authenticate().then(() => {
+    this.props.actions.performInitialAuthCheck().then(() => {
       this.props.actions.goTo(window.location.pathname);
       // this.props.actions.processSources();
       // this.props.actions.fetchTracks();
-    });
-  }
-
-
-  authenticate() {
-    return new Promise((resolve, reject) => {
-
-      base.onAuth((authData) => {
-        let promise;
-
-        if (authData) {
-          promise = this.props.actions.authenticate(authData);
-        } else {
-          promise = Promise.resolve();
-        }
-
-        promise
-          .then(this.props.actions.passInitialAuthCheck, reject)
-          .then(resolve, reject);
-      });
-
     });
   }
 
@@ -53,9 +32,9 @@ class App extends Component {
       return (<div>Loading user session.</div>);
     } else if (this.props.routing.container) {
       return React.createElement( pages[this.props.routing.container] );
-    } else {
-      return (<div />);
     }
+
+    return (<div />);
   }
 
 }
@@ -64,22 +43,17 @@ class App extends Component {
 App.propTypes = {
   auth: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 
 function mapStateToProps(state) {
-  return {
-    auth: state.auth,
-    routing: state.routing
-  };
+  return pick(state, ['auth', 'routing']);
 }
 
 
 function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch)
-  };
+  return { actions: bindActionCreators(actions, dispatch) };
 }
 
 

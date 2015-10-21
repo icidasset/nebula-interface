@@ -1,5 +1,5 @@
 import * as types from '../constants/action_types/sources';
-import groupBy from 'lodash/collection/groupBy'
+import groupBy from 'lodash/collection/groupBy';
 
 
 /// Actions
@@ -35,7 +35,7 @@ function execProcess() {
   };
 }
 
-function process(sources, tracksGroupedBySourceId) {
+function process() {
   /*
 
     TODO:
@@ -48,7 +48,7 @@ function process(sources, tracksGroupedBySourceId) {
 
   */
 
-  return new Promise(function(resolve) {
+  return new Promise((resolve) => {
     setTimeout(resolve, 10000);
   });
 }

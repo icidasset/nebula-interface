@@ -19,6 +19,7 @@ class Form extends Component {
 
 
 Form.propTypes = {
+  children: PropTypes.node,
   onSubmit: PropTypes.func.isRequired,
 };
 

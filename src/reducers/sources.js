@@ -12,7 +12,7 @@ const initialSource = {
 
   settings: {
     // directory_collections: true
-  }
+  },
 };
 
 
@@ -20,7 +20,7 @@ const initialState = {
   isProcessing: false,
   isFetching: false,
 
-  items: []
+  items: [],
 };
 
 
@@ -28,30 +28,30 @@ export default function sources(state = initialState, action) {
   switch (action.type) {
   case types.START_PROCESS_SOURCES:
     return Object.assign({}, state, {
-      isProcessing: true
+      isProcessing: true,
     });
 
   case types.END_PROCESS_SOURCES:
     return Object.assign({}, state, {
-      isProcessing: false
+      isProcessing: false,
     });
 
   case types.FETCH_SOURCES:
     return Object.assign({}, state, {
-      isFetching: true
+      isFetching: true,
     });
 
   case types.FETCH_SOURCES_DONE:
     return Object.assign({}, state, {
-      isFetching: false
+      isFetching: false,
     });
 
   case types.ADD_SOURCE:
     return Object.assign({}, state, {
       items: [
         ...state.items,
-        Object.assign({}, initialSource, action.attributes)
-      ]
+        Object.assign({}, initialSource, action.attributes),
+      ],
     });
 
   default:

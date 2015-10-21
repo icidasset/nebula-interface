@@ -2,17 +2,30 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layout, { Content, Drawer, Navigation } from 'react-mdl/lib/layout/Layout';
 
-import * as viewTypes from '../constants/view_types';
-
 import Header from '../components/app/Header';
-import Tracks from '../components/app/Tracks';
 import SoundPanel from '../components/app/SoundPanel';
 
 
 class AppPage extends Component {
 
+  getPageContent() {
+    // if (this.props.view === viewTypes.QUEUE) {
+    //   return (<div>TODO: Queue</div>);
+    //
+    // } else if (this.props.tracks.isFetching) {
+    //   return (<div>TODO: Load screen ...</div>);
+    //
+    // } else {
+    //   return (<Tracks tracks={this.props.tracks} />);
+    //
+    // }
+
+    return (<div>TODO: Load screen ...</div>);
+  }
+
+
   render() {
-    let pageContent = this.getPageContent();
+    const pageContent = this.getPageContent();
 
     return (
       <Layout>
@@ -34,29 +47,13 @@ class AppPage extends Component {
     );
   }
 
-
-  getPageContent() {
-    if (this.props.view === viewTypes.QUEUE) {
-      return (<div>TODO: Queue</div>);
-
-    } else if (this.props.tracks.isFetching) {
-      return (<div>TODO: Load screen ...</div>);
-
-    } else {
-      return (<Tracks tracks={this.props.tracks} />);
-
-    }
-  }
-
 }
 
 
 function mapStateToProps(state) {
-  const { tracks, view } = state;
-
   return {
-    tracks,
-    view
+    tracks: state.tracks,
+    view: state.view,
   };
 }
 
