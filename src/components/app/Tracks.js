@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './Tracks.scss';
 
 
 @CSSModules(styles)
-export default class Tracks extends Component {
+class Tracks extends Component {
 
   render() {
-    let listItems = [];
+    const listItems = [];
 
-    this.props.tracks.items.forEach(function(track, idx) {
+    this.props.tracks.items.forEach((track, idx) => {
       listItems.push(<li key={idx} styleName="track">
         <strong>{track.title}</strong>
         <span> by </span>
@@ -26,3 +26,11 @@ export default class Tracks extends Component {
   }
 
 }
+
+
+Tracks.propTypes = {
+  tracks: PropTypes.object.isRequired,
+};
+
+
+export default Tracks;

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Layout, { Content, Drawer, Navigation } from 'react-mdl/lib/layout/Layout';
 
 import Header from '../components/app/Header';
+import Link from '../components/Link';
 import SoundPanel from '../components/app/SoundPanel';
 
 
@@ -34,7 +35,7 @@ class AppPage extends Component {
         <Drawer title="Title">
           <Navigation>
             <a href="#">Settings</a>
-            <a href="#">Sign out</a>
+            <Link to="/sign-out" className="mdl-navigation__link">Sign out</Link>
           </Navigation>
         </Drawer>
 

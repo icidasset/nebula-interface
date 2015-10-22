@@ -1,4 +1,5 @@
 import * as types from '../constants/action_types/routing';
+import * as authActions from './auth';
 
 
 function indexPageEnter(getState) {
@@ -25,14 +26,23 @@ function appPageOnEnter(getState) {
 }
 
 
+function signOutPageEnter() {
+  return (dispatch) => {
+    dispatch(authActions.deauthenticate());
+  };
+}
+
+
 const ROUTING_TABLE = {
   '/': { container: 'IndexPage', onEnter: indexPageEnter },
   '/app': { container: 'AppPage', onEnter: appPageOnEnter },
   '/sign-in': { container: 'SignInPage' },
   '/sign-up': { container: 'SignUpPage' },
+  '/sign-out': { redirectTo: '/sign-in', onEnter: signOutPageEnter },
 
   // redirects
   '/login': { redirectTo: '/sign-in' },
+  '/logout': { redirectTo: '/sign-out' },
   '/register': { redirectTo: '/sign-up' },
 };
 
@@ -52,6 +62,11 @@ export function goTo(path, status = 200) {
     // if *found*
     if (tableItem) {
       if (tableItem.redirectTo) {
+        if (tableItem.onEnter) {
+          onEnterThunk = tableItem.onEnter(getState);
+          if (onEnterThunk) dispatch(onEnterThunk);
+        }
+
         dispatch(goTo(tableItem.redirectTo, 302));
 
       } else {

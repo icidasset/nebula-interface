@@ -20,8 +20,13 @@ store.subscribe(() => {
   const state = store.getState();
   const windowPath = window.location.pathname.replace(/\/*$/, '');
 
-  if (state.routing.path && windowPath !== state.routing.path) {
-    window.history.pushState({}, document.title, state.routing.path + '/');
+  if (state.routing.path) {
+    let href = `/${state.routing.path}/`.replace(/\/{2,}/g, '/');
+    if (href === '/') href = '';
+
+    if (windowPath !== href) {
+      window.history.pushState({}, document.title, href);
+    }
   }
 });
 

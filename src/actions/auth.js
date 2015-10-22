@@ -67,5 +67,10 @@ export function authenticate(args) {
 }
 
 export function deauthenticate() {
-  return { type: types.DEAUTHENTICATE };
+  return (dispatch) => {
+
+    base.unauth();
+    dispatch({ type: types.DEAUTHENTICATE });
+
+  };
 }

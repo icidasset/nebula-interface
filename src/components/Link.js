@@ -20,7 +20,7 @@ class Link extends Component {
     // TODO: make href relative
 
     return (
-      <a href={href} onClick={this.handleClick.bind(this)}>
+      <a href={href} className={this.props.className} onClick={this.handleClick.bind(this)}>
         {this.props.children}
       </a>
     );
@@ -32,6 +32,7 @@ class Link extends Component {
 Link.propTypes = {
   actions: PropTypes.object.isRequired,
   children: PropTypes.node,
+  className: PropTypes.string,
   external: PropTypes.bool,
   to: PropTypes.string.isRequired,
 };
