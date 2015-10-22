@@ -16,6 +16,7 @@ import webpackConfig from './config/webpack';
 
 const watchPaths = {
   '${source}/**/*': true,
+  'images/**/*': '**/*',
   'layouts/**/*': '**/*',
   'partials/**/*': '**/*',
   'src/**/*': '**/*'

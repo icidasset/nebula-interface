@@ -1,27 +1,30 @@
-import React, { Component } from 'react';
+import pick from 'lodash/object/pick';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+
 import Layout, { Content, Drawer, Navigation } from 'react-mdl/lib/layout/Layout';
 
 import Header from '../components/app/Header';
+import Loader from '../components/Loader';
 import Link from '../components/Link';
 import SoundPanel from '../components/app/SoundPanel';
+import Tracks from '../components/app/Tracks';
+
+import * as viewTypes from '../constants/view_types';
 
 
 class AppPage extends Component {
 
   getPageContent() {
-    // if (this.props.view === viewTypes.QUEUE) {
-    //   return (<div>TODO: Queue</div>);
-    //
-    // } else if (this.props.tracks.isFetching) {
-    //   return (<div>TODO: Load screen ...</div>);
-    //
-    // } else {
-    //   return (<Tracks tracks={this.props.tracks} />);
-    //
-    // }
+    if (this.props.view === viewTypes.QUEUE) {
+      return (<div>TODO: Queue</div>);
 
-    return (<div>TODO: Load screen ...</div>);
+    } else if (this.props.tracks.isFetching) {
+      return (<Loader />);
+
+    }
+
+    return (<Tracks tracks={this.props.tracks} />);
   }
 
 
@@ -51,11 +54,14 @@ class AppPage extends Component {
 }
 
 
+AppPage.propTypes = {
+  tracks: PropTypes.object.isRequired,
+  view: PropTypes.string,
+};
+
+
 function mapStateToProps(state) {
-  return {
-    tracks: state.tracks,
-    view: state.view,
-  };
+  return pick(state, ['tracks', 'view']);
 }
 
 

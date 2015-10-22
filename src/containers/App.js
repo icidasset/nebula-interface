@@ -1,7 +1,9 @@
+import pick from 'lodash/object/pick';
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import pick from 'lodash/object/pick';
+
+import Loader from '../components/Loader';
 
 import actions from '../actions';
 import { pages } from './index';
@@ -29,7 +31,7 @@ class App extends Component {
 
   render() {
     if (!this.props.auth.passedInitialCheck) {
-      return (<div>Loading user session.</div>);
+      return (<Loader />);
     } else if (this.props.routing.container) {
       return React.createElement( pages[this.props.routing.container] );
     }

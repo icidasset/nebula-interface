@@ -39,6 +39,7 @@ const config = {
 
 export default partial(
   config,
+  './partial/css.js',
   './partial/javascript.js',
-  './partial/css.js'
+  './partial/images.js'
 );
