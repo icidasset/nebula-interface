@@ -15,6 +15,10 @@ const config = {
       path.join(root, 'src', 'main.js'),
       path.join(root, 'src', 'main.scss'),
     ],
+    static: [
+      path.join(root, 'src', 'static.js'),
+      path.join(root, 'src', 'static.scss'),
+    ],
     material: [
       `${root}/vendor/material.css`,
       `${root}/vendor/material.js`,

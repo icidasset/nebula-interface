@@ -1,7 +1,45 @@
+@import "./styles/colors.scss";
+
+@define-mixin default-font {
+  font-family: "Palanquin", sans-serif;
+}
+
 html {
   font-size: 16px;
 }
 
 body {
-  font-family: sans-serif;
+  @mixin default-font;
+  color: #3f3f3f;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+:global(.wrapper) {
+  margin: 3rem auto;
+  width: 960px;
+}
+
+/// Content
+///
+h1 {
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  text-align: center;
+}
+
+p {
+  color: #999;
+  text-align: center;
+}
+
+:global(.button) {
+  background: $shade_text;
+  border-radius: 4px;
+  color: white;
+  display: inline-block;
+  font-weight: 500;
+  margin: 0.75rem 0 0;
+  padding: 5px 12px 6px;
+  text-decoration: none;
 }
