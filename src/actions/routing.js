@@ -8,7 +8,7 @@ function indexPageEnter(getState) {
   // if the user is not signed in,
   // redirect to the 'static' about page.
   if (!state.auth.user) {
-    window.location.href = '/about';
+    document.location.replace('/about');
   } else {
     return goTo('/app', 302);
   }

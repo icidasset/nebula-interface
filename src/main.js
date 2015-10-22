@@ -19,13 +19,14 @@ import App from './containers/App';
 store.subscribe(() => {
   const state = store.getState();
   const windowPath = window.location.pathname.replace(/\/*$/, '');
+  const method = (state.routing.status === 302 ? 'replace' : 'push') + 'State';
 
   if (state.routing.path) {
     let href = `/${state.routing.path}/`.replace(/\/{2,}/g, '/');
     if (href === '/') href = '';
 
-    if (windowPath !== href) {
-      window.history.pushState({}, document.title, href);
+    if (windowPath !== state.routing.path) {
+      window.history[method]({}, document.title, href);
     }
   }
 });
