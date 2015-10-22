@@ -8,7 +8,13 @@ import styles from './Loader.scss';
 class Loader extends Component {
 
   render() {
-    return (<div styleName="loader"></div>);
+    return (
+      <div styleName="loader">
+        <div className="circles-loader">
+          Loading…
+        </div>
+      </div>
+    );
   }
 
 }

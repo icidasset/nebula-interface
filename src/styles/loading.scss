@@ -1,0 +1,46 @@
+$size: 18px;
+
+
+@keyframes circles-loader {
+  0% {
+    transform: rotate(-720deg);
+  }
+
+  50% {
+    transform: rotate(720deg);
+  }
+}
+
+:global(.circles-loader) {
+  animation: circles-loader 3s infinite ease-in-out;
+  background: color($shade_text a(0.9));
+  border-radius: 100%;
+  display: inline-block;
+  height: $size;
+  position: relative;
+  width: $size;
+  text-indent: -9999px;
+  transform-origin: 50% 100%;
+}
+
+:global(.circles-loader::before) {
+  background: color($shade_text a(0.6));
+  border-radius: 100%;
+  content: '';
+  height: $size;
+  left: calc(-$size / 2.31);
+  position: absolute;
+  top: calc($size / 1.3333333);
+  width: $size;
+}
+
+:global(.circles-loader::after) {
+  background: color($shade_text a(0.4));
+  border-radius: 100%;
+  content: '';
+  height: $size;
+  left: calc($size / 2.31);
+  position: absolute;
+  top: calc($size / 1.3333333);
+  width: $size;
+}
