@@ -5,6 +5,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 // import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
+import * as history from './utils/history';
 import store from './main-store';
 import App from './containers/App';
 
@@ -16,20 +17,7 @@ import App from './containers/App';
 // );
 
 
-store.subscribe(() => {
-  const state = store.getState();
-  const windowPath = window.location.pathname.replace(/\/*$/, '');
-  const method = (state.routing.status === 302 ? 'replace' : 'push') + 'State';
-
-  if (state.routing.path) {
-    let href = `/${state.routing.path}/`.replace(/\/{2,}/g, '/');
-    if (href === '/') href = '';
-
-    if (windowPath !== state.routing.path) {
-      window.history[method]({}, document.title, href);
-    }
-  }
-});
+history.initialize(store);
 
 
 render(
