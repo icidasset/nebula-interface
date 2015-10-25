@@ -1,15 +1,9 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 import autoprefixer from 'autoprefixer';
-import nearest from 'find-nearest-file';
-import path from 'path';
 import csspartialimport from 'postcss-partial-import';
+import postcss_normalize from 'postcss-normalize';
 import precss from 'precss';
-
-
-const root = path.dirname(
-  nearest('package.json')
-);
 
 
 export default function css() {
@@ -20,7 +14,7 @@ export default function css() {
   };
 
   const postcssLoaderConfig = {
-    parser: "postcss-scss"
+    parser: 'postcss-scss',
   };
 
   return {
@@ -43,7 +37,8 @@ export default function css() {
 
     postcss() {
       return [
-        csspartialimport(),
+        postcss_normalize(),
+        csspartialimport({ extension: 'scss' }),
         precss,
         autoprefixer({ browsers: ['last 2 versions'] }),
       ];

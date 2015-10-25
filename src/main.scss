@@ -1,5 +1,6 @@
-@import "./styles/colors.scss";
-@import "./styles/loading.scss";
+@import "styles/colors";
+@import "styles/button";
+@import "styles/loading";
 
 @define-mixin default-font {
   font-family: "Palanquin", sans-serif;
@@ -13,23 +14,9 @@ h1, h2, h3, h4, h5, h6 {
   @mixin default-font;
 }
 
-h2 {
+h1 {
   color: $shade_text;
   font-weight: 300;
-}
-
-
-/// Material-design-lite overrides
-///
-:global .mdl-layout__drawer-button {
-  color: $shade_text;
-  left: 1rem;
-  margin: 0;
-  top: 15px;
-}
-
-:global .mdl-layout__content {
-  margin: calc(6rem + 2px) 0 5.5rem;
 }
 
 

@@ -1,10 +1,30 @@
-.form {}
+.form {
+
+  /// Inputs
+  ///
+  .inputs {
+    margin: 0.5rem 0 1.75rem;
+  }
+
+  input {
+    border: none;
+    border-bottom: 1px solid #eee;
+    box-sizing: border-box;
+    display: block;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    padding: 10px 0;
+    width: 100%;
+
+    &:focus {
+      border-bottom-color: black;
+      outline: none;
+    }
+  }
+
+  label {
+    display: none;
+  }
 
 
-.inputs {
-  margin: 0.5rem 0 1.75rem;
-}
-
-.inputs :global(.mdl-textfield__input) {
-  line-height: 1.8;
 }

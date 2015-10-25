@@ -2,11 +2,9 @@ import pick from 'lodash/object/pick';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import Layout, { Content, Drawer, Navigation } from 'react-mdl/lib/layout/Layout';
-
 import Header from '../components/app/Header';
 import Loader from '../components/Loader';
-import Link from '../components/Link';
+// import Link from '../components/Link';
 import SoundPanel from '../components/app/SoundPanel';
 import Tracks from '../components/app/Tracks';
 
@@ -32,22 +30,15 @@ class AppPage extends Component {
     const pageContent = this.getPageContent();
 
     return (
-      <Layout>
+      <div>
         <Header />
 
-        <Drawer title="Title">
-          <Navigation>
-            <a href="#">Settings</a>
-            <Link to="/sign-out" className="mdl-navigation__link">Sign out</Link>
-          </Navigation>
-        </Drawer>
-
-        <Content>
+        <main>
           {pageContent}
-        </Content>
+        </main>
 
         <SoundPanel />
-      </Layout>
+      </div>
     );
   }
 

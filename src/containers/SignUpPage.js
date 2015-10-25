@@ -2,29 +2,20 @@ import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 
-import Button from 'react-mdl/lib/Button';
-import Textfield from 'react-mdl/lib/Textfield';
-
 import Form from '../components/Form';
 import FormStyles from '../components/Form.scss';
 import Link from '../components/Link';
 import Middle from '../components/Middle';
 
 import * as actions from '../actions/auth';
-import { overrideTextFieldValidation } from '../utils/mdl';
 
 
 class SignUpPage extends Component {
 
-  componentDidMount() {
-    this.initiateMDLOverride();
-  }
-
-
   handleSubmit(event) {
     const credentials = {
-      email: findDOMNode(this.refs.email).querySelector('input').value,
-      password: findDOMNode(this.refs.password).querySelector('input').value,
+      email: findDOMNode(this.refs.email).value,
+      password: findDOMNode(this.refs.password).value,
     };
 
     // create user and log him/her in
@@ -40,43 +31,29 @@ class SignUpPage extends Component {
   }
 
 
-  initiateMDLOverride() {
-    const nodes = ['email', 'password'].map((ref) => {
-      return findDOMNode(this.refs[ref]);
-    });
-
-    overrideTextFieldValidation(nodes);
-  }
-
-
   render() {
     return (
       <Middle>
 
-        <h2>Sign Up</h2>
+        <h1>Sign Up</h1>
 
         <Form onSubmit={this.handleSubmit.bind(this)}>
           <div className={FormStyles.inputs}>
-            <Textfield
-              ref="email"
-              type="email"
-              label="Email"
-              floatingLabel
-              required
-            />
+            <div>
+              <input type="email" id="email" ref="email" placeholder="example@email.com" required />
+              <label htmlFor="email">Email</label>
+            </div>
 
-            <Textfield
-              ref="password"
-              type="password"
-              label="Password"
-              floatingLabel
-              required
-              minLength={5}
-            />
+            <div>
+              <input type="password" id="password" ref="password" placeholder="password" minLength={5} required />
+              <label htmlFor="password">Password</label>
+            </div>
           </div>
 
           <p>
-            <Button raised colored>Sign up</Button>
+            <button className="button">
+              Sign up
+            </button>
           </p>
 
           <p>

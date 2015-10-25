@@ -2,31 +2,23 @@ import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 
-import Button from 'react-mdl/lib/Button';
-import Textfield from 'react-mdl/lib/Textfield';
-
 import Form from '../components/Form';
 import FormStyles from '../components/Form.scss';
 import Link from '../components/Link';
 import Middle from '../components/Middle';
 
 import actions from '../actions';
-import { overrideTextFieldValidation } from '../utils/mdl';
 
 
 class SignInPage extends Component {
 
-  componentDidMount() {
-    this.initiateMDLOverride();
-  }
-
-
   handleSubmit(event) {
     const credentials = {
-      email: findDOMNode(this.refs.email).querySelector('input').value,
-      password: findDOMNode(this.refs.password).querySelector('input').value,
+      email: findDOMNode(this.refs.email).value,
+      password: findDOMNode(this.refs.password).value,
     };
 
+    // authenticate user and go to the app page
     this.props.dispatch(actions.authenticate(credentials)).then(
       () => this.props.dispatch(actions.goTo('/app')),
       (error) => {
@@ -39,42 +31,29 @@ class SignInPage extends Component {
   }
 
 
-  initiateMDLOverride() {
-    const nodes = ['email', 'password'].map((ref) => {
-      return findDOMNode(this.refs[ref]);
-    });
-
-    overrideTextFieldValidation(nodes);
-  }
-
-
   render() {
     return (
       <Middle>
 
-        <h2>Sign in</h2>
+        <h1>Sign in</h1>
 
         <Form onSubmit={this.handleSubmit.bind(this)}>
           <div className={FormStyles.inputs}>
-            <Textfield
-              ref="email"
-              type="email"
-              label="Email"
-              floatingLabel
-              required
-            />
+            <div>
+              <input type="email" id="email" ref="email" placeholder="example@email.com" required />
+              <label htmlFor="email">Email</label>
+            </div>
 
-            <Textfield
-              ref="password"
-              type="password"
-              label="Password"
-              floatingLabel
-              required
-            />
+            <div>
+              <input type="password" id="password" ref="password" placeholder="password" required />
+              <label htmlFor="password">Password</label>
+            </div>
           </div>
 
           <p>
-            <Button raised colored>Sign in</Button>
+            <button className="button">
+              Sign in
+            </button>
           </p>
 
           <p>
