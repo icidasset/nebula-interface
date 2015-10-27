@@ -2,4 +2,8 @@
 // http://www.colourlovers.com/palette/1811244/1001_Stories
 
 $shade: color(#6954BB tint(70%));
-$shade_text: color(#6954BB tint(35%));
+$shade-text: color(#6954BB tint(35%));
+$subtle-gray: #eee;
+$subtle-gray-text: color($subtle-gray shade(9.5%));
+
+$text-color: #3f3f3f;

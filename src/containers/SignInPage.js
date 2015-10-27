@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 
+import Errors from '../components/Errors';
 import Form from '../components/Form';
 import FormStyles from '../components/Form.scss';
 import Link from '../components/Link';
@@ -12,6 +13,12 @@ import actions from '../actions';
 
 class SignInPage extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { errors: [] };
+  }
+
+
   handleSubmit(event) {
     const credentials = {
       email: findDOMNode(this.refs.email).value,
@@ -21,10 +28,7 @@ class SignInPage extends Component {
     // authenticate user and go to the app page
     this.props.dispatch(actions.authenticate(credentials)).then(
       () => this.props.dispatch(actions.goTo('/app')),
-      (error) => {
-        // TODO: handle error
-        console.error(error);
-      }
+      (error) => { this.setState({ errors: [error.toString()] }); this.render(); }
     );
 
     event.preventDefault();
@@ -35,18 +39,21 @@ class SignInPage extends Component {
     return (
       <Middle>
 
-        <h1>Sign in</h1>
+        <h1>
+          <i className="material-icons">perm_identity</i>
+          Sign <strong>in</strong>
+        </h1>
 
         <Form onSubmit={this.handleSubmit.bind(this)}>
           <div className={FormStyles.inputs}>
             <div>
-              <input type="email" id="email" ref="email" placeholder="example@email.com" required />
               <label htmlFor="email">Email</label>
+              <input type="email" id="email" ref="email" placeholder="user@email.com" autoFocus required />
             </div>
 
             <div>
-              <input type="password" id="password" ref="password" placeholder="password" required />
               <label htmlFor="password">Password</label>
+              <input type="password" id="password" ref="password" placeholder="••••••••" required />
             </div>
           </div>
 
@@ -56,7 +63,9 @@ class SignInPage extends Component {
             </button>
           </p>
 
-          <p>
+          <Errors errors={this.state.errors} />
+
+          <p className={FormStyles.note}>
             <span>Don't have an account yet, </span>
             <Link to="/sign-up">sign up</Link>.
           </p>

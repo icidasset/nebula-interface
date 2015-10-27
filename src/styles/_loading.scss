@@ -13,7 +13,7 @@ $size: 18px;
 
 :global .circles-loader {
   animation: circles-loader 3s infinite ease-in-out;
-  background: color($shade_text a(0.9));
+  background: color($shade-text a(0.9));
   border-radius: 100%;
   display: inline-block;
   height: $size;
@@ -24,7 +24,7 @@ $size: 18px;
 }
 
 :global .circles-loader::before {
-  background: color($shade_text a(0.6));
+  background: color($shade-text a(0.6));
   border-radius: 100%;
   content: '';
   height: $size;
@@ -35,7 +35,7 @@ $size: 18px;
 }
 
 :global .circles-loader::after {
-  background: color($shade_text a(0.4));
+  background: color($shade-text a(0.4));
   border-radius: 100%;
   content: '';
   height: $size;

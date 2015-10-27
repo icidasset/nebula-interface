@@ -8,6 +8,7 @@
 
 body {
   @mixin default-font;
+  color: $text-color;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -15,8 +16,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  color: $shade_text;
+  color: $shade-text;
   font-weight: 300;
+}
+
+h1 i {
+  margin-right: 10px;
+  position: relative;
+  top: 4px;
 }
 
 
