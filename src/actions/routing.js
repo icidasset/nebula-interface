@@ -37,8 +37,8 @@ function signOutPageEnter() {
 const ROUTING_TABLE = {
   '/': { container: 'IndexPage', onEnter: indexPageEnter },
   '/app': { container: 'AppPage', onEnter: appPageOnEnter },
-  '/sign-in': { container: 'SignInPage' },
-  '/sign-up': { container: 'SignUpPage' },
+  '/sign-in': { container: 'SignInUpPage' },
+  '/sign-up': { container: 'SignInUpPage' },
   '/sign-out': { redirectTo: '/sign-in', onEnter: signOutPageEnter },
 
   // redirects
