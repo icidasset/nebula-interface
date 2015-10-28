@@ -2,7 +2,7 @@ export default {
   stats: {
     assets: true,
     colors: true,
-    version: true,
+    version: false,
     modules: false,
     hash: false,
     timings: false,
@@ -10,6 +10,6 @@ export default {
     chunkModules: false,
     reasons: true,
     cached: true,
-    chunkOrigins: true,
+    chunkOrigins: false,
   },
 };

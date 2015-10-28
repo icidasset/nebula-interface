@@ -78,3 +78,18 @@ export function deauthenticate() {
 
   };
 }
+
+export function resetPassword(email) {
+  return () => {
+    return new Promise((resolve, reject) => {
+
+      // send password reset email
+      // -> return promise
+      base.resetPassword({ email }, (error) => {
+        if (error) reject(error);
+        else resolve();
+      });
+
+    });
+  };
+}
