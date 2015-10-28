@@ -11,7 +11,7 @@ const initialTrack = {
 
 
 const initialState = {
-  isFetching: true,
+  isFetching: false,
 
   items: [],
 };

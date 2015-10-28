@@ -36,7 +36,10 @@ function signOutPageEnter() {
 
 const ROUTING_TABLE = {
   '/': { container: 'IndexPage', onEnter: indexPageEnter },
+
   '/app': { container: 'AppPage', onEnter: appPageOnEnter },
+  '/app/queue': { container: 'AppPage', onEnter: appPageOnEnter },
+  '/app/sources': { container: 'AppPage', onEnter: appPageOnEnter },
 
   '/sign-in': { container: 'SignInUpPage' },
   '/sign-up': { container: 'SignInUpPage' },

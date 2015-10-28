@@ -1,40 +1,70 @@
 import pick from 'lodash/object/pick';
 import React, { Component, PropTypes } from 'react';
+import CSSModules from 'react-css-modules';
 import { connect } from 'react-redux';
 
 import Header from '../components/app/Header';
 import Loader from '../components/Loader';
-// import Link from '../components/Link';
 import SoundPanel from '../components/app/SoundPanel';
-import Tracks from '../components/app/Tracks';
 
-import * as viewTypes from '../constants/view_types';
+import childComponents from '../components/app/children';
+import childTypes from '../constants/app/children';
+
+import styles from './AppPage.scss';
 
 
+@CSSModules(styles)
 class AppPage extends Component {
 
-  getPageContent() {
-    if (this.props.view === viewTypes.QUEUE) {
-      return (<div>TODO: Queue</div>);
+  constructor(props) {
+    super(props);
+    this.setStartState(this.props);
+  }
 
+
+  componentWillReceiveProps(nextProps) {
+    this.setStartState(nextProps);
+  }
+
+
+  setStartState(props) {
+    const childRoute = props.routing.path.split('/')[2];
+    let childRouteViewClassName;
+
+    // determine child-view-class
+    if (childRoute && childTypes[childRoute]) {
+      childRouteViewClassName = childTypes[childRoute];
+    }
+
+    // set state
+    this.state = Object.assign({}, this.state, {
+      childRouteViewClassName,
+    });
+  }
+
+
+  getMainContent() {
+    if (this.state.childRouteViewClassName) {
+      return React.createElement(childComponents[this.state.childRouteViewClassName]);
+
+    // show loader when necessary
     } else if (this.props.tracks.isFetching) {
       return (<Loader />);
 
     }
 
-    return (<Tracks tracks={this.props.tracks} />);
+    // render tracks child-view (i.e. the default view)
+    return (<childComponents.Tracks tracks={this.props.tracks} />);
   }
 
 
   render() {
-    const pageContent = this.getPageContent();
-
     return (
       <div>
         <Header />
 
-        <main>
-          {pageContent}
+        <main styleName="main">
+          {this.getMainContent()}
         </main>
 
         <SoundPanel />
@@ -46,13 +76,13 @@ class AppPage extends Component {
 
 
 AppPage.propTypes = {
+  routing: PropTypes.object.isRequired,
   tracks: PropTypes.object.isRequired,
-  view: PropTypes.string,
 };
 
 
 function mapStateToProps(state) {
-  return pick(state, ['tracks', 'view']);
+  return pick(state, ['routing', 'tracks']);
 }
 
 
