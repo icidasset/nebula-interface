@@ -36,10 +36,7 @@ function signOutPageEnter() {
 
 const ROUTING_TABLE = {
   '/': { container: 'IndexPage', onEnter: indexPageEnter },
-
   '/app': { container: 'AppPage', onEnter: appPageOnEnter },
-  '/app/queue': { container: 'AppPage', onEnter: appPageOnEnter },
-  '/app/sources': { container: 'AppPage', onEnter: appPageOnEnter },
 
   '/sign-in': { container: 'SignInUpPage' },
   '/sign-up': { container: 'SignInUpPage' },
@@ -64,9 +61,10 @@ export function goTo(path, status = statusCodes.ADD_HISTORY) {
 
     // remove extraneous stuff from the path
     const cleanPath = `/${path.replace(/(^\/*|\/*$)/g, '')}`;
+    const routingItem = cleanPath.split('/').slice(0, 2).join('/');
 
     // get table item
-    const tableItem = ROUTING_TABLE[cleanPath];
+    const tableItem = ROUTING_TABLE[routingItem];
 
     // exit if already there
     if (cleanPath === currentPath) return;

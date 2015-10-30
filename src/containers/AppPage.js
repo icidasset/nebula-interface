@@ -45,7 +45,10 @@ class AppPage extends Component {
 
   getMainContent() {
     if (this.state.childRouteViewClassName) {
-      return React.createElement(childComponents[this.state.childRouteViewClassName]);
+      return React.createElement(
+        childComponents[this.state.childRouteViewClassName],
+        pick(this.props, ['routing'])
+      );
 
     // show loader when necessary
     } else if (this.props.tracks.isFetching) {

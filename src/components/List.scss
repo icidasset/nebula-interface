@@ -1,0 +1,18 @@
+@import "../styles/colors";
+
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+.item {
+  border-bottom: 1px solid $subtle-gray;
+  display: block;
+  padding: 1rem 0;
+}
+
+.item__title {}
+.item__actions {}
