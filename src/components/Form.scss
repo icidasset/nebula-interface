@@ -3,6 +3,10 @@
 
 .form {
 
+  h3 {
+    font-weight: 300;
+  }
+
   /// Inputs
   ///
   .inputs {
@@ -40,6 +44,26 @@
     font-weight: 500;
     margin-bottom: 1px;
     text-transform: uppercase;
+  }
+
+  // checkbox
+  :global(.input__checkbox) {
+    &:after {
+      clear: both;
+      content: " ";
+      display: table;
+    }
+
+    input {
+      float: left;
+      margin: 0 12px 0 0;
+      transform: translateY(4px);
+      width: auto;
+    }
+
+    label {
+      float: left;
+    }
   }
 
 

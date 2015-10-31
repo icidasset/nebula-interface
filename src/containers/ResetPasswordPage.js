@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 
 import ComponentWithInfo from '../components/ComponentWithInfo';
@@ -21,7 +20,7 @@ class ResetPasswordPage extends ComponentWithInfo {
 
 
   handleSubmit() {
-    const email = findDOMNode(this.refs.email).value;
+    const email = this.refs.email.value;
     return this.resetPassword(email);
   }
 

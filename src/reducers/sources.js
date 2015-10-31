@@ -6,19 +6,18 @@ const initialSource = {
   name: 'Untitled Music Collection',
 
   properties: {
-    // access_key: '...',
-    // secret_key: '...'
+    // properties specific to this source_type
   },
 
   settings: {
-    // directory_collections: true
+    directory_collections: false,
   },
 };
 
 
 const initialState = {
   isProcessing: false,
-  isFetching: false,
+  isFetching: true,
 
   items: [],
 };
@@ -42,8 +41,10 @@ export default function sources(state = initialState, action) {
     });
 
   case types.FETCH_SOURCES_DONE:
+    // resets the local-items collection
     return Object.assign({}, state, {
       isFetching: false,
+      items: action.items,
     });
 
   case types.ADD_SOURCE:

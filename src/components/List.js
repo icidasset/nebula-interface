@@ -17,14 +17,31 @@ class List extends Component {
       );
     });
 
-    return (<ol styleName="list">{items}</ol>);
+    if (items.length) {
+      return (<ol styleName="list" onClick={this.props.onClick}>{items}</ol>);
+    }
+
+    return (
+      <div styleName="empty-state" onClick={this.props.emptyClickHandler}>
+        <div styleName="empty-state__inner">
+
+          <i className="material-icons">{this.props.emptyIcon}</i>
+          <span>{this.props.emptyMessage}</span>
+
+        </div>
+      </div>
+    );
   }
 
 }
 
 
 List.propTypes = {
+  emptyClickHandler: PropTypes.func.isRequired,
+  emptyIcon: PropTypes.string.isRequired,
+  emptyMessage: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
+  onClick: PropTypes.func,
 };
 
 

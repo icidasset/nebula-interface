@@ -14,5 +14,36 @@
   padding: 1rem 0;
 }
 
+
 .item__title {}
 .item__actions {}
+
+
+.empty-state {
+  background: #F9F9F9;
+  color: #BBB;
+  cursor: pointer;
+  height: 170px;
+  position: relative;
+  text-align: center;
+}
+
+
+.empty-state__inner {
+  font-size: 0.9rem;
+  left: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+
+  > i,
+  > span {
+    display: block;
+  }
+
+  > i {
+    font-size: 2.25rem;
+    margin-bottom: 3px;
+  }
+}

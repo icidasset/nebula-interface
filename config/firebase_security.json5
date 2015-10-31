@@ -8,21 +8,27 @@
     //  Those tracks can be added to collections, which is something defined by the user.
     //
     //  So we have the following data:
-    //  - `/users/USER_ID/sources`
-    //  - `/users/USER_ID/tracks`
-    //  - `/users/USER_ID/collections`
+    //  - `/sources/USER_ID`
+    //  - `/tracks/USER_ID`
+    //  - `/collections/USER_ID`
     //
     //  These all have to be secure and only accessible by said user.
     //
-    //  WHAT I THINK THIS DOES:
-    //
-    //  If I'm not mistaken, these rules should give us that functionality.
-    //
-    //  TODO:
-    //
-    //  Find a way to test this programmatically.
-    //
-    "users": {
+    "collections": {
+      "$user_id": {
+        ".read": "$user_id === auth.uid",
+        ".write": "$user_id === auth.uid"
+      }
+    },
+
+    "sources": {
+      "$user_id": {
+        ".read": "$user_id === auth.uid",
+        ".write": "$user_id === auth.uid"
+      }
+    },
+
+    "tracks": {
       "$user_id": {
         ".read": "$user_id === auth.uid",
         ".write": "$user_id === auth.uid"

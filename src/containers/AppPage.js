@@ -1,6 +1,7 @@
 import pick from 'lodash/object/pick';
 import React, { Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Header from '../components/app/Header';
@@ -10,50 +11,37 @@ import SoundPanel from '../components/app/SoundPanel';
 import childComponents from '../components/app/children';
 import childTypes from '../constants/app/children';
 
+import actions from '../actions';
 import styles from './AppPage.scss';
 
 
 @CSSModules(styles)
 class AppPage extends Component {
 
-  constructor(props) {
-    super(props);
-    this.setStartState(this.props);
-  }
-
-
-  componentWillReceiveProps(nextProps) {
-    this.setStartState(nextProps);
-  }
-
-
-  setStartState(props) {
-    const childRoute = props.routing.path.split('/')[2];
-    let childRouteViewClassName;
-
-    // determine child-view-class
-    if (childRoute && childTypes[childRoute]) {
-      childRouteViewClassName = childTypes[childRoute];
-    }
-
-    // set state
-    this.state = Object.assign({}, this.state, {
-      childRouteViewClassName,
-    });
+  componentDidMount() {
+    this.props.actions.fetchSources();
   }
 
 
   getMainContent() {
-    if (this.state.childRouteViewClassName) {
+    const childRoute = this.props.routing.path.split('/')[2];
+
+    // render child-view based on route
+    if (childRoute && childTypes[childRoute]) {
+      let props;
+
+      switch (childTypes[childRoute]) {
+      case 'Sources':
+        props = ['sources'];
+        break;
+      default:
+        props = [];
+      }
+
       return React.createElement(
-        childComponents[this.state.childRouteViewClassName],
-        pick(this.props, ['routing'])
+        childComponents[childTypes[childRoute]],
+        pick(this.props, ['actions', 'routing'].concat(props))
       );
-
-    // show loader when necessary
-    } else if (this.props.tracks.isFetching) {
-      return (<Loader />);
-
     }
 
     // render tracks child-view (i.e. the default view)
@@ -62,6 +50,11 @@ class AppPage extends Component {
 
 
   render() {
+    if (this.props.sources.isFetching ||
+        this.props.tracks.isFetching) {
+      return (<Loader />);
+    }
+
     return (
       <div>
         <Header />
@@ -79,14 +72,21 @@ class AppPage extends Component {
 
 
 AppPage.propTypes = {
+  actions: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
+  sources: PropTypes.object.isRequired,
   tracks: PropTypes.object.isRequired,
 };
 
 
 function mapStateToProps(state) {
-  return pick(state, ['routing', 'tracks']);
+  return pick(state, ['routing', 'sources', 'tracks']);
 }
 
 
-export default connect(mapStateToProps)(AppPage);
+function mapDispatchToProps(dispatch) {
+  return { actions: bindActionCreators(actions, dispatch) };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppPage);

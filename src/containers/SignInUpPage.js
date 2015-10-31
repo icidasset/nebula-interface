@@ -1,6 +1,5 @@
 import pick from 'lodash/object/pick';
 import React, { PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -51,8 +50,8 @@ class SignInUpPage extends ComponentWithInfo {
 
   handleSubmit() {
     const credentials = {
-      email: findDOMNode(this.refs.email).value,
-      password: findDOMNode(this.refs.password).value,
+      email: this.refs.email.value,
+      password: this.refs.password.value,
     };
 
     // sign up/in

@@ -5,22 +5,57 @@ import Form from '../../Form';
 import Link from '../../Link';
 import List from '../../List';
 
+import * as sourcesActionTypes from '../../../constants/action_types/sources';
+
 
 class Sources extends Component {
 
-  handleAdd() {}
+  /// {actions} Index
+  ///
+  handleIndexClick(event) {
+    console.log(event.target);
+  }
+
+
+  /// {actions} Add
+  ///
+  handleAdd() {
+    this.props.actions.addSource({
+      type: sourcesActionTypes.SOURCE_TYPE_AWS_BUCKET,
+      name: this.refs.name.value,
+
+      properties: {
+        access_key: this.refs.access_key.value,
+        secret_key: this.refs.secret_key.value,
+      },
+
+      settings: {
+        directory_collections: this.refs.directory_collections.checked,
+      },
+    });
+  }
+
+
+  goToAdd() {
+    this.props.actions.goTo('/app/sources/add');
+  }
 
 
   /// {view} Index
   ///
   renderIndex() {
-    const items = [
-      { title: 'Collection #1' },
-      { title: 'Collection #2' },
-      { title: 'Collection #3' },
-    ];
+    const items = this.props.sources.items.map((source) => {
+      return { title: source.name };
+    });
 
-    return (<List items={items} />);
+    return (
+      <List
+        items={items}
+        emptyClickHandler={this.goToAdd.bind(this)}
+        emptyIcon="add_circle"
+        emptyMessage="Add some music to your life"
+        onClick={this.handleIndexClick.bind(this)}
+      />);
   }
 
 
@@ -33,10 +68,17 @@ class Sources extends Component {
         <input type="text" id="name" ref="name" placeholder="Music collection" autoFocus required />
 
         <label htmlFor="access_key">Access Key</label>
-        <input type="text" id="access_key" ref="access_key" placeholder="XYZ" autoFocus required />
+        <input type="text" id="access_key" ref="access_key" placeholder="XYZ" required />
 
         <label htmlFor="secret_key">Secret Key</label>
-        <input type="password" id="secret_key" ref="secret_key" placeholder="•••••" autoFocus required />
+        <input type="password" id="secret_key" ref="secret_key" placeholder="•••••" required />
+
+        <h3>Settings</h3>
+
+        <div className="input__checkbox">
+          <input type="checkbox" id="directory_collections" ref="directory_collections" />
+          <label htmlFor="directory_collections">Enable directory collections</label>
+        </div>
       </div>
     );
 
@@ -81,8 +123,9 @@ class Sources extends Component {
 
 
 Sources.propTypes = {
+  actions: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
-  sources: PropTypes.array,
+  sources: PropTypes.object.isRequired,
 };
 
 
