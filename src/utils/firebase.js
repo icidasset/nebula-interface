@@ -36,6 +36,14 @@ export function remove(key, uid, userId) {
 }
 
 
+export function replace(key, items, userId) {
+  return new Promise((resolve, reject) => {
+    base.child(`${key}/${userId}`)
+        .set(items, promiseCallback(resolve, reject));
+  });
+}
+
+
 export function convertPushedToArray(pushed = {}) {
   return Object.keys(pushed).map((key) => {
     return Object.assign({ uid: key }, pushed[key]);

@@ -33,6 +33,7 @@ class Sources extends Component {
       properties: {
         access_key: this.refs.access_key.value,
         secret_key: this.refs.secret_key.value,
+        bucket: this.refs.bucket.value,
       },
 
       settings: {
@@ -112,10 +113,13 @@ class Sources extends Component {
         <input type="text" id="name" ref="name" placeholder="Music collection" autoFocus required />
 
         <label htmlFor="access_key">Access Key</label>
-        <input type="text" id="access_key" ref="access_key" placeholder="XYZ" required />
+        <input type="text" id="access_key" ref="access_key" placeholder="Access key" required />
 
         <label htmlFor="secret_key">Secret Key</label>
-        <input type="password" id="secret_key" ref="secret_key" placeholder="•••••" required />
+        <input type="password" id="secret_key" ref="secret_key" placeholder="•••••••••" required />
+
+        <label htmlFor="bucket">Bucket</label>
+        <input type="text" id="bucket" ref="bucket" placeholder="Bucket" required />
 
         <h3>Settings</h3>
 

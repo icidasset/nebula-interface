@@ -45,12 +45,18 @@ class List extends Component {
 
 
 List.propTypes = {
-  actions: PropTypes.array.isRequired,
+  actions: PropTypes.array,
   emptyClickHandler: PropTypes.func,
   emptyIcon: PropTypes.string.isRequired,
   emptyMessage: PropTypes.string.isRequired,
-  items: PropTypes.array.isRequired,
+  items: PropTypes.array,
   onClick: PropTypes.func,
+};
+
+
+List.defaultProps = {
+  actions: [],
+  items: [],
 };
 
 

@@ -21,7 +21,9 @@ import styles from './AppPage.scss';
 class AppPage extends Component {
 
   componentDidMount() {
-    this.props.actions.fetchSources();
+    this.props.actions.fetchSources().then(
+      () => this.props.actions.processSources()
+    );
   }
 
 

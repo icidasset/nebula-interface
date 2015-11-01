@@ -42,7 +42,6 @@ export default function sources(state = initialState, action) {
 
   case types.FETCH_SOURCES_DONE:
     // resets the local-items collection
-    console.log(action.items);
     return Object.assign({}, state, {
       isFetching: false,
       items: action.items || [],

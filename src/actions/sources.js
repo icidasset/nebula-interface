@@ -1,5 +1,6 @@
 import groupBy from 'lodash/collection/groupBy';
 
+import * as awsUtils from '../utils/sources/aws';
 import * as firebase from '../utils/firebase';
 import * as types from '../constants/action_types/sources';
 
@@ -72,7 +73,7 @@ function execProcess() {
 }
 
 
-function process() {
+function process(sources) {
   /*
 
     TODO:
@@ -85,7 +86,11 @@ function process() {
 
   */
 
-  return new Promise((resolve) => {
-    setTimeout(resolve, 10000);
+  const promises = sources.map((source) => {
+    if (source.type === types.SOURCE_TYPE_AWS_BUCKET) {
+      return awsUtils.process(source);
+    }
   });
+
+  return Promise.all(promises);
 }
