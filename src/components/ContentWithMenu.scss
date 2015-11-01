@@ -14,12 +14,17 @@
   margin: 0 auto 3rem;
 
   a {
-    color: $text-color;
+    color: #888;
     font-size: 0.75rem;
     font-weight: 500;
     margin-right: 2.75rem;
     text-decoration: none;
     text-transform: uppercase;
+  }
+
+  :global(a.is-active) {
+    color: black;
+    cursor: default;
   }
 
   a i {

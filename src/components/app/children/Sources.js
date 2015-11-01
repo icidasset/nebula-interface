@@ -12,8 +12,14 @@ class Sources extends Component {
 
   /// {actions} Index
   ///
-  handleIndexClick(event) {
-    console.log(event.target);
+  handleIndexDelete(event) {
+    const uid = event.target.closest('li').getAttribute('data-key');
+    this.props.actions.deleteSource(uid);
+  }
+
+
+  handleIndexEdit() {
+    alert('TODO - Implement source edit');
   }
 
 
@@ -33,6 +39,8 @@ class Sources extends Component {
         directory_collections: this.refs.directory_collections.checked,
       },
     });
+
+    this.props.actions.goTo('/app/sources');
   }
 
 
@@ -43,10 +51,36 @@ class Sources extends Component {
 
   /// {view} Index
   ///
-  renderIndex() {
+  renderIndexProcessing() {
+    return (
+      <List
+        items={[]}
+        emptyIcon="sync"
+        emptyMessage="Processing sources"
+      />
+    );
+  }
+
+
+  renderIndexItems() {
     const items = this.props.sources.items.map((source) => {
-      return { title: source.name };
+      return { key: source.uid, title: source.name };
     });
+
+    const actions = [
+      {
+        key: 'delete',
+        label: 'Delete',
+        icon: 'close',
+        clickHandler: ::this.handleIndexDelete,
+      },
+      {
+        key: 'edit',
+        label: 'Edit',
+        icon: 'mode_edit',
+        clickHandler: ::this.handleIndexEdit,
+      },
+    ];
 
     return (
       <List
@@ -54,8 +88,18 @@ class Sources extends Component {
         emptyClickHandler={this.goToAdd.bind(this)}
         emptyIcon="add_circle"
         emptyMessage="Add some music to your life"
-        onClick={this.handleIndexClick.bind(this)}
-      />);
+        actions={actions}
+      />
+    );
+  }
+
+
+  renderIndex() {
+    if (this.props.sources.isProcessing) {
+      return this.renderIndexProcessing();
+    }
+
+    return this.renderIndexItems();
   }
 
 
@@ -102,7 +146,7 @@ class Sources extends Component {
 
     const menuItems = [
       <Link key="index" to="/app/sources">
-        <i className="material-icons">inbox</i> Overview
+        <i className="material-icons">list</i> Index
       </Link>,
       <Link key="add" to="/app/sources/add">
         <i className="material-icons">add</i> Add new

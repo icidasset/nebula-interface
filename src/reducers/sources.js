@@ -42,17 +42,23 @@ export default function sources(state = initialState, action) {
 
   case types.FETCH_SOURCES_DONE:
     // resets the local-items collection
+    console.log(action.items);
     return Object.assign({}, state, {
       isFetching: false,
-      items: action.items,
+      items: action.items || [],
     });
 
   case types.ADD_SOURCE:
     return Object.assign({}, state, {
       items: [
         ...state.items,
-        Object.assign({}, initialSource, action.attributes),
+        Object.assign({}, initialSource, action.source),
       ],
+    });
+
+  case types.DELETE_SOURCE:
+    return Object.assign({}, state, {
+      items: state.items.filter((item) => item.uid !== action.uid),
     });
 
   default:

@@ -8,9 +8,15 @@ import styles from './Message.scss';
 class Message extends Component {
 
   render() {
-    const icon = this.props.icon ?
-      (<span styleName="icon">{this.props.icon}</span>) :
-      (<span />);
+    let icon;
+
+    if (this.props.icon) {
+      if (this.props.isNonMaterialIcon) {
+        icon = (<i styleName="icon">{this.props.icon}</i>);
+      } else {
+        icon = (<i className="material-icons" styleName="icon">{this.props.icon}</i>);
+      }
+    }
 
     return (
       <div styleName="message">
@@ -25,6 +31,7 @@ class Message extends Component {
 Message.propTypes = {
   children: PropTypes.node,
   icon: PropTypes.string,
+  isNonMaterialIcon: PropTypes.bool,
 };
 
 

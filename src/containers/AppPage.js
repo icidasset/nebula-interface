@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 
 import Header from '../components/app/Header';
 import Loader from '../components/Loader';
+import Message from '../components/Message';
+import Middle from '../components/Middle';
 import SoundPanel from '../components/app/SoundPanel';
 
 import childComponents from '../components/app/children';
@@ -41,6 +43,17 @@ class AppPage extends Component {
       return React.createElement(
         childComponents[childTypes[childRoute]],
         pick(this.props, ['actions', 'routing'].concat(props))
+      );
+    }
+
+    // if no sources or tracks
+    if (this.props.tracks.items.length === 0) {
+      return (
+        <Middle>
+          <Message icon="new_releases">
+            Nothing here yet, add some music first.
+          </Message>
+        </Middle>
       );
     }
 

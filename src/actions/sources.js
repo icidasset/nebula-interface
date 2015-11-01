@@ -6,18 +6,24 @@ import * as types from '../constants/action_types/sources';
 
 /// Actions
 ///
-export function processSources() {
+export function addSource(attributes) {
   return (dispatch, getState) => {
-    if (!getState().sources.isProcessing) {
-      return dispatch(execProcess());
-    }
+    const state = getState();
+
+    return firebase.add('sources', attributes, state.auth.user.uid).then(
+      (source) => dispatch({ type: types.ADD_SOURCE, source })
+    );
   };
 }
 
-export function addSource(attributes) {
-  return (dispatch) => {
-    dispatch({ type: types.ADD_SOURCE, attributes });
-    dispatch(saveSources());
+
+export function deleteSource(uid) {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    dispatch({ type: types.DELETE_SOURCE, uid });
+
+    return firebase.remove('sources', uid, state.auth.user.uid);
   };
 }
 
@@ -29,25 +35,26 @@ export function fetchSources() {
     dispatch({ type: types.FETCH_SOURCES });
 
     return firebase.fetch('sources', state.auth.user.uid).then(
-      (items) => dispatch({ type: types.FETCH_SOURCES_DONE, items })
+      (result) => {
+        const items = firebase.convertPushedToArray(result || {});
+        dispatch({ type: types.FETCH_SOURCES_DONE, items });
+      }
     );
+  };
+}
+
+
+export function processSources() {
+  return (dispatch, getState) => {
+    if (!getState().sources.isProcessing) {
+      return dispatch(execProcess());
+    }
   };
 }
 
 
 /// Private
 ///
-function saveSources() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const sources = state.sources.items;
-
-    dispatch({ type: types.SAVE_SOURCES });
-
-    return firebase.save('sources', sources, state.auth.user.uid);
-  };
-}
-
 function execProcess() {
   return (dispatch, getState) => {
     const state = getState();
@@ -63,6 +70,7 @@ function execProcess() {
     });
   };
 }
+
 
 function process() {
   /*

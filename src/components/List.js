@@ -8,17 +8,25 @@ import styles from './List.scss';
 class List extends Component {
 
   render() {
+    const actions = this.props.actions.map((action) => {
+      return (
+        <a key={action.key} title={action.label} onClick={action.clickHandler}>
+          <i className="material-icons">{action.icon}</i>
+        </a>
+      );
+    });
+
     const items = this.props.items.map((item, idx) => {
       return (
-        <li styleName="item" key={idx}>
+        <li styleName="item" key={item.key || idx} data-key={item.key}>
           <div styleName="item__title">{item.title}</div>
-          <div styleName="item__actions">{item.actions}</div>
+          <div styleName="item__actions">{actions}</div>
         </li>
       );
     });
 
     if (items.length) {
-      return (<ol styleName="list" onClick={this.props.onClick}>{items}</ol>);
+      return (<ol styleName="list">{items}</ol>);
     }
 
     return (
@@ -37,7 +45,8 @@ class List extends Component {
 
 
 List.propTypes = {
-  emptyClickHandler: PropTypes.func.isRequired,
+  actions: PropTypes.array.isRequired,
+  emptyClickHandler: PropTypes.func,
   emptyIcon: PropTypes.string.isRequired,
   emptyMessage: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,

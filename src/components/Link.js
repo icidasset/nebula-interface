@@ -17,10 +17,20 @@ class Link extends Component {
   render() {
     const href = this.props.to;
 
-    // TODO: make href relative
+    // className
+    const classNames = [];
 
+    if (this.props.routing.path === this.props.to) {
+      classNames.push('is-active');
+    }
+
+    if (this.props.className) {
+      classNames.push(this.props.className);
+    }
+
+    // render
     return (
-      <a href={href} className={this.props.className} onClick={this.handleClick.bind(this)}>
+      <a href={href} className={classNames.join(' ')} onClick={this.handleClick.bind(this)}>
         {this.props.children}
       </a>
     );
@@ -34,12 +44,15 @@ Link.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   external: PropTypes.bool,
+  routing: PropTypes.object.isRequired,
   to: PropTypes.string.isRequired,
 };
 
 
-function mapStateToProps() {
-  return {};
+function mapStateToProps(state) {
+  return {
+    routing: state.routing,
+  };
 }
 
 
