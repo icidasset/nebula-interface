@@ -5,7 +5,7 @@ const initialTrack = {
   title: 'Untitled',
   artist: 'Untitled',
 
-  sourceId: null,
+  sourceUid: null,
   path: null,
 };
 
@@ -29,12 +29,23 @@ export default function tracks(state = initialState, action) {
       isFetching: false,
     });
 
-  case types.ADD_TRACK:
+  case types.ADD_TRACKS:
     return Object.assign({}, state, {
-      items: [
-        ...state.items,
-        Object.assign({}, initialTrack, action.attributes),
-      ],
+      items: state.items.concat(
+        action.items.map((item) => {
+          return Object.assign({}, initialTrack, item.attributes);
+        })
+      ),
+    });
+
+  case types.REMOVE_TRACKS:
+    return Object.assign({}, state, {
+      items: state.items.filter(
+        () => {
+          // TODO
+          return true;
+        }
+      ),
     });
 
   default:

@@ -1,3 +1,4 @@
+import difference from 'lodash/array/difference';
 import groupBy from 'lodash/collection/groupBy';
 
 import * as awsUtils from '../utils/sources/aws';
@@ -60,7 +61,7 @@ function execProcess() {
   return (dispatch, getState) => {
     const state = getState();
     const sources = state.sources.items;
-    const tracksGroupedBySourceId = groupBy(state.tracks.items, 'sourceId');
+    const tracksGroupedBySourceId = groupBy(state.tracks.items, 'source_uid');
 
     // notify 'start'
     dispatch({ type: types.START_PROCESS_SOURCES });
@@ -73,24 +74,84 @@ function execProcess() {
 }
 
 
-function process(sources) {
-  /*
+function process(sources, tracksGroupedBySourceId) {
+  const externalTreesPromise = getExternalTrees(sources);
+  const internalTrees = getInternalTrees(tracksGroupedBySourceId);
 
-    TODO:
-    - Loop over sources array
-    - For each source, make new file tree
-    - Make "old" file tree based on source.tracks
-    - Compare old and new trees
-    - Remove missing tracks
-    - Add new tracks
+  return externalTreesPromise.then(
+    (externalTrees) => {
+      const diff = compareTrees({
+        external: externalTrees,
+        internal: internalTrees,
+      });
 
-  */
+      return diff;
+    }
+  ).then(
+    (diff) => {
+      let missing = [];
 
+      Object.keys(diff).map((sourceId) => {
+        missing = missing.concat(diff[sourceId].missing);
+      });
+
+      // TODO:
+      // - Get metadata from new paths
+      // - Send array of { attributes: metadata } to 'ADD_TRACKS'
+
+      return missing;
+    }
+  );
+}
+
+
+function getExternalTrees(sources) {
   const promises = sources.map((source) => {
+    let promise;
+
     if (source.type === types.SOURCE_TYPE_AWS_BUCKET) {
-      return awsUtils.process(source);
+      promise = awsUtils.getTree(source);
+    }
+
+    return promise.then(
+      (tree) => {
+        return { source_uid: source.uid, source, tree };
+      }
+    );
+  });
+
+  return Promise.all(promises).then(
+    (treesWithSource) => groupBy(treesWithSource, 'source_uid')
+  );
+}
+
+
+function getInternalTrees(tracksGroupedBySourceId) {
+  const trees = {};
+
+  Object.keys(tracksGroupedBySourceId).forEach((sourceId) => {
+    trees[sourceId] = tracksGroupedBySourceId[sourceId].map((track) => track.path);
+  });
+
+  return trees;
+}
+
+
+function compareTrees(args) {
+  const { external, internal } = args;
+  const diff = {};
+
+  Object.keys(external).forEach((sourceId) => {
+    const sourceOfTruth = external[sourceId];
+    const internalItems = internal[sourceId] || [];
+
+    const newItems = difference(sourceOfTruth, internalItems);
+    const missingItems = difference(internalItems, sourceOfTruth);
+
+    if (newItems.length || missingItems.length) {
+      diff[sourceId] = { 'new': newItems, 'missing': missingItems };
     }
   });
 
-  return Promise.all(promises);
+  return diff;
 }
