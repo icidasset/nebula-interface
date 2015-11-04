@@ -1,76 +1,107 @@
+import aws4 from 'aws4';
+import fetch from 'isomorphic-fetch';
+import he from 'he';
 import last from 'lodash/array/last';
-
-
-const cachedConnections = {};
+import queryString from 'query-string';
+import xmlParser from 'xml-parser';
 
 
 /// Public
 ///
-export function getTree(source) {
-  const connection = getConnection(source);
-  const params = {
-    Bucket: source.properties.bucket,
-    MaxKeys: 1000,
+export function getTree(source, pathRegex) {
+  const filterFunc = (key) => {
+    return !!key.match(pathRegex);
   };
 
-  const filterFunc = (item) => {
-    return !!item.match(/\.(mp3|mp4|m4a)$/);
+  const args = {
+    source,
+    filterFunc,
+    collection: [],
+    idx: 0,
   };
 
-  return list(connection, params, filterFunc).then(
-    (contents) => console.log(contents),
-    (error) => console.error(error)
+  return list(args).then(
+    (results) => results.collection
   );
 }
 
 
 /// Private
 ///
-function getConnection(source) {
-  const cached = cachedConnections[source.properties.access_key];
-
-  if (cached) return cached;
-  return makeConnection(source);
-}
-
-
-function makeConnection(source) {
-  const connection = new AWS.S3(
-    new AWS.Config({
-      accessKeyId: source.properties.access_key,
-      secretAccessKey: source.properties.secret_key,
-    })
-  );
-
-  cachedConnections[source.properties.access_key] = connection;
-  return connection;
-}
-
-
-function list(connection, params, filterFunc) {
-  return new Promise((resolve, reject) => {
-    const collection = [];
-    return listInner({ connection, params, collection, filterFunc, resolve, reject });
+function makeSignature(source, queryAttributes) {
+  return aws4.sign({
+    hostname: `${source.properties.bucket}.s3.amazonaws.com`,
+    path: `?` + queryString.stringify(queryAttributes),
+    region: 'eu-west-1',
+    service: 's3',
+    signQuery: true,
+  }, {
+    accessKeyId: source.properties.access_key,
+    secretAccessKey: source.properties.secret_key,
   });
 }
 
 
-function listInner(args) {
-  args.connection.listObjects(args.params, (error, response) => {
-    if (error) return args.reject(error);
+function makeListRequest(args) {
+  const signature = makeSignature(args.source, {
+    'marker': args.marker,
+    'max-keys': '1000',
+    'X-Amz-Expires': '60',
+  });
 
-    const newKeys = response.Contents.map((item) => item.Key).filter(args.filterFunc);
-    const newCollection = args.collection.concat(newKeys);
+  const url =
+    `//${signature.hostname}${signature.path}`;
 
-    if (response.IsTruncated) {
-      args.params.Marker = last(response.Contents).Key;
-      args.collection = newCollection;
+  return fetch(url, signature).then(
+    (response) => response.text()
+  ).then(
+    (xmlText) => {
+      const obj = xmlParser(xmlText);
+      const results = { isTruncated: false, keys: [] };
 
-      listInner(args);
+      obj.root.children.forEach(function loop(child) {
+        switch (child.name) {
+        case 'IsTruncated':
+          results.isTruncated = (child.content === 'true');
+          break;
+        case 'Contents':
+          for (let i = 0, j = child.children.length; i < j; i++) {
+            if (child.children[i].name === 'Key') {
+              results.keys.push(he.decode(child.children[i].content));
+            }
+          }
+          break;
+        }
+      });
 
-    } else {
-      args.resolve(newCollection);
-
+      return results;
     }
-  });
+  );
+}
+
+
+function list(args) {
+  return makeListRequest(args).then(
+    (results) => {
+      const newArgs = Object.assign({}, args, {
+        collection: args.collection.concat(
+          results.keys.filter(args.filterFunc)
+        ),
+      });
+
+      if (results.isTruncated) {
+        newArgs.marker = last(results.keys);
+        newArgs.idx = newArgs.idx + 1;
+
+        // infinite loop protection
+        if (newArgs.idx > 10000) {
+          return newArgs;
+        }
+
+        return list(newArgs);
+      }
+
+      return newArgs;
+    }
+  );
 }

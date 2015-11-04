@@ -10,21 +10,26 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "aws4": "^1.1.0",
     "babel": "^5.8.29",
     "babel-loader": "~5.3.x",
     "babel-runtime": "^5.8.29",
     "firebase": "^2.3.1",
+    "he": "^0.5.0",
     "history": "^1.12.6",
+    "isomorphic-fetch": "^2.2.0",
     "lodash": "~3.10.x",
     "node-libs-browser": "~0.5.x",
     "node-noop": "0.0.1",
     "postcss-normalize": "^0.1.1",
+    "query-string": "^3.0.0",
     "react": "~0.14.x",
     "react-css-modules": "^3.6.1",
     "react-dom": "~0.14.x",
     "react-redux": "^4.0.0",
     "redux": "^3.0.4",
-    "redux-thunk": "~1.0.x"
+    "redux-thunk": "~1.0.x",
+    "xml-parser": "^1.2.1"
   },
   "devDependencies": {
     "autoprefixer": "~6.0.x",
@@ -57,7 +62,8 @@
     "redux-devtools": "^2.1.5",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.2",
-    "webpack-partial": "^0.4.1"
+    "webpack-partial": "^0.4.1",
+    "worker-loader": "^0.6.0"
   },
   "author": "icid.asset@gmail.com",
   "license": "ISC"

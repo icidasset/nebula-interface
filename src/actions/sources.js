@@ -1,9 +1,9 @@
-import difference from 'lodash/array/difference';
 import groupBy from 'lodash/collection/groupBy';
 
-import * as awsUtils from '../utils/sources/aws';
 import * as firebase from '../utils/firebase';
 import * as types from '../constants/action_types/sources';
+
+import SourcesWorker from 'worker!../workers/sources.js';
 
 
 /// Actions
@@ -67,91 +67,20 @@ function execProcess() {
     dispatch({ type: types.START_PROCESS_SOURCES });
 
     // process & notify 'end'
-    return process(sources, tracksGroupedBySourceId).then(() => {
-      dispatch({ type: types.END_PROCESS_SOURCES });
+    const worker = new SourcesWorker();
+
+    worker.onmessage = (event) => {
+      const data = event.data || {};
+
+      if (data.isDone) {
+        console.log(data.results);
+        dispatch({ type: types.END_PROCESS_SOURCES });
+      }
+    };
+
+    worker.postMessage({
+      sources,
+      tracksGroupedBySourceId,
     });
   };
-}
-
-
-function process(sources, tracksGroupedBySourceId) {
-  const externalTreesPromise = getExternalTrees(sources);
-  const internalTrees = getInternalTrees(tracksGroupedBySourceId);
-
-  return externalTreesPromise.then(
-    (externalTrees) => {
-      const diff = compareTrees({
-        external: externalTrees,
-        internal: internalTrees,
-      });
-
-      return diff;
-    }
-  ).then(
-    (diff) => {
-      let missing = [];
-
-      Object.keys(diff).map((sourceId) => {
-        missing = missing.concat(diff[sourceId].missing);
-      });
-
-      // TODO:
-      // - Get metadata from new paths
-      // - Send array of { attributes: metadata } to 'ADD_TRACKS'
-
-      return missing;
-    }
-  );
-}
-
-
-function getExternalTrees(sources) {
-  const promises = sources.map((source) => {
-    let promise;
-
-    if (source.type === types.SOURCE_TYPE_AWS_BUCKET) {
-      promise = awsUtils.getTree(source);
-    }
-
-    return promise.then(
-      (tree) => {
-        return { source_uid: source.uid, source, tree };
-      }
-    );
-  });
-
-  return Promise.all(promises).then(
-    (treesWithSource) => groupBy(treesWithSource, 'source_uid')
-  );
-}
-
-
-function getInternalTrees(tracksGroupedBySourceId) {
-  const trees = {};
-
-  Object.keys(tracksGroupedBySourceId).forEach((sourceId) => {
-    trees[sourceId] = tracksGroupedBySourceId[sourceId].map((track) => track.path);
-  });
-
-  return trees;
-}
-
-
-function compareTrees(args) {
-  const { external, internal } = args;
-  const diff = {};
-
-  Object.keys(external).forEach((sourceId) => {
-    const sourceOfTruth = external[sourceId];
-    const internalItems = internal[sourceId] || [];
-
-    const newItems = difference(sourceOfTruth, internalItems);
-    const missingItems = difference(internalItems, sourceOfTruth);
-
-    if (newItems.length || missingItems.length) {
-      diff[sourceId] = { 'new': newItems, 'missing': missingItems };
-    }
-  });
-
-  return diff;
 }

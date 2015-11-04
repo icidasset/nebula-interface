@@ -11,10 +11,11 @@
     "react"
   ],
   "globals": {
-    "AWS": true,
     "ENV": true
   },
   "rules": {
+    "default-case": 0,
+    "id-length": 0,
     "new-cap": 0,
     "no-alert": 0,
     "no-console": 0,
