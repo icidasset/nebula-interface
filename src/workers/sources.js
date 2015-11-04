@@ -22,8 +22,6 @@ function process(args) {
 
   return externalTreesPromise.then(
     (externalTrees) => {
-      console.log(JSON.stringify(externalTrees));
-
       const diff = compareTrees({
         external: externalTrees,
         internal: internalTrees,
