@@ -10,6 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "amazon-s3-url-signer": "0.0.7",
     "aws4": "^1.1.0",
     "babel": "^5.8.29",
     "babel-loader": "~5.3.x",

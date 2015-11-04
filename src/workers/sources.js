@@ -36,7 +36,12 @@ function process(args) {
       // - Get metadata from new paths
       // - Send array of { attributes: metadata } to 'ADD_TRACKS'
 
+      const testSource = args.sources[0];
+      const testPath = 'classical/VA-The_100_Most_Essential_Pieces_of_Classical_Music-2010-BOUGHT/01-carmina_burana__o_fortuna.m4a';
+      const testUrl = awsUtils.getSignedUrl(testSource, testPath);
+
       return diff;
+
     }
   );
 }

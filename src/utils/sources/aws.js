@@ -1,3 +1,4 @@
+import asus from 'amazon-s3-url-signer';
 import aws4 from 'aws4';
 import fetch from 'isomorphic-fetch';
 import he from 'he';
@@ -20,19 +21,51 @@ export function getTree(source, pathRegex) {
     idx: 0,
   };
 
-  return list(args).then(
+  return getBucketRegion(source).then(
+    (region) => list(Object.assign({}, args, { region }))
+  ).then(
     (results) => results.collection
   );
 }
 
 
+export function getSignedUrl(source, path, method = 'GET', expiresInMinutes = 1440) {
+  const bucket = asus.urlSigner(
+    source.properties.access_key,
+    source.properties.secret_key,
+    { useSubdomain: true }
+  );
+
+  return bucket.getUrl(method, path, source.properties.bucket, expiresInMinutes);
+}
+
+
 /// Private
 ///
-function makeSignature(source, queryAttributes) {
+function getBucketRegion(source) {
+  const defaultRegion = 'us-east-1';
+  const signature = makeSignature(source, defaultRegion, { location: '1' });
+  const url = `//${signature.hostname}${signature.path}`;
+
+  return fetch(url, signature).then(
+    (response) => response.text()
+  ).then(
+    (xmlText) => {
+      const obj = xmlParser(xmlText);
+      const regionObj = obj.root.children.filter((c) => c.name === 'Region')[0];
+      const region = regionObj ? regionObj.content : defaultRegion;
+
+      return region;
+    }
+  );
+}
+
+
+function makeSignature(source, region, queryAttributes = {}) {
   return aws4.sign({
     hostname: `${source.properties.bucket}.s3.amazonaws.com`,
-    path: `?` + queryString.stringify(queryAttributes),
-    region: 'eu-west-1',
+    path: `?${queryString.stringify(queryAttributes)}`,
+    region: region,
     service: 's3',
     signQuery: true,
   }, {
@@ -43,7 +76,7 @@ function makeSignature(source, queryAttributes) {
 
 
 function makeListRequest(args) {
-  const signature = makeSignature(args.source, {
+  const signature = makeSignature(args.source, args.region, {
     'marker': args.marker,
     'max-keys': '1000',
     'X-Amz-Expires': '60',
