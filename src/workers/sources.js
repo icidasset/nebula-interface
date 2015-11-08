@@ -1,4 +1,8 @@
 import difference from 'lodash/array/difference';
+import groupBy from 'lodash/collection/groupBy';
+import pairs from 'lodash/object/pairs';
+
+import { ID3 as meta } from 'imports?this=>{},window=>self!exports?this!../../vendor/id3-minimized.js';
 
 import * as awsUtils from '../utils/sources/aws';
 import * as types from '../constants/action_types/sources';
@@ -31,17 +35,9 @@ function process(args) {
     }
   ).then(
     (diff) => {
-
-      // TODO:
-      // - Get metadata from new paths
-      // - Send array of { attributes: metadata } to 'ADD_TRACKS'
-
-      const testSource = args.sources[0];
-      const testPath = 'classical/VA-The_100_Most_Essential_Pieces_of_Classical_Music-2010-BOUGHT/01-carmina_burana__o_fortuna.m4a';
-      const testUrl = awsUtils.getSignedUrl(testSource, testPath);
-
-      return diff;
-
+      return getAttributesForNewTracks(
+        Object.assign({}, args, { diff })
+      );
     }
   );
 }
@@ -108,4 +104,102 @@ function compareTrees(args) {
   });
 
   return diff;
+}
+
+
+function getAttributesForNewTracks(args) {
+  const diffPaired = pairs(args.diff);
+  const sourcesGroupedById = groupBy(args.sources, 'uid');
+  const results = {};
+
+  return getAttributesForNewTrackLoop(
+    diffPaired,
+    sourcesGroupedById,
+    0,
+    0,
+    results
+
+  ).then((newAttributes) => {
+    return Object.assign({}, args.diff, newAttributes);
+
+  });
+}
+
+
+function getAttributesForNewTrackLoop(diffs, sources, sourceIdx, itemIdx, results) {
+  const diff = diffs[sourceIdx];
+  const newItems = diff ? diff[1].new : [];
+  const newItem = newItems[itemIdx];
+  const source = diff ? sources[diff[0]][0] : null;
+
+  if (!newItem || !source) {
+    return Promise.resolve(results);
+  }
+
+  return getAttributesForNewTrack(source, newItem).then((tags) => {
+    results[source.uid] = results[source.uid] || {};
+    results[source.uid].new = results[source.uid].new || [];
+
+    if (tags) {
+      results[source.uid].new.push(tags);
+    }
+
+    let nextItemIdx = itemIdx + 1;
+    let nextSourceIdx = sourceIdx;
+
+    if (!newItems[nextItemIdx]) {
+      nextItemIdx = 0;
+      nextSourceIdx = sourceIdx + 1;
+    }
+
+    if (!diffs[nextSourceIdx]) {
+      // = done
+      return results;
+    }
+
+    return getAttributesForNewTrackLoop(
+      diffs,
+      sources,
+      nextSourceIdx,
+      nextItemIdx,
+      results
+    );
+  });
+}
+
+
+function getAttributesForNewTrack(source, newItem) {
+  return new Promise((resolve) => {
+
+    const urlHead = awsUtils.getSignedUrl(source, encodeURIComponent(newItem), 'HEAD', 1);
+    const urlGet = awsUtils.getSignedUrl(source, encodeURIComponent(newItem), 'GET', 1);
+
+    meta.loadTags(urlGet, urlHead, () => {
+      const {
+        album,
+        artist,
+        genre,
+        title,
+        track,
+        year,
+      } = meta.getAllTags(urlGet);
+
+      resolve({
+        path: newItem,
+
+        album: album ? album.toString() : undefined,
+        artist: artist ? artist.toString() : undefined,
+        genre: genre ? genre.toString() : undefined,
+        title: title ? title.toString() : undefined,
+        year: year ? year.toString() : undefined,
+
+        track: track,
+      });
+    }, {
+      onError: () => {
+        resolve(null);
+      },
+    });
+
+  });
 }
