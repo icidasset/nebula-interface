@@ -186,6 +186,7 @@ function getAttributesForNewTrack(source, newItem) {
 
       resolve({
         path: newItem,
+        sourceId: source.uid,
 
         album: album ? album.toString() : undefined,
         artist: artist ? artist.toString() : undefined,

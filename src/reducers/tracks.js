@@ -5,7 +5,7 @@ const initialTrack = {
   title: 'Untitled',
   artist: 'Untitled',
 
-  sourceUid: null,
+  sourceId: null,
   path: null,
 };
 

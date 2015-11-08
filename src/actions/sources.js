@@ -73,7 +73,15 @@ function execProcess() {
       const data = event.data || {};
 
       if (data.isDone) {
-        console.log(data.results);
+        const newTracksCollection = handleTracksDiff(
+          state.tracks.items,
+          data.results,
+        );
+
+        if (newTracksCollection) {
+          // TODO: dispatch replace_tracks action
+        }
+
         dispatch({ type: types.END_PROCESS_SOURCES });
       }
     };
@@ -83,4 +91,39 @@ function execProcess() {
       tracksGroupedBySourceId,
     });
   };
+}
+
+
+function handleTracksDiff(tracks, diff) {
+  const missingTracks = [];
+  const newTracks = [];
+
+  let collection;
+
+  Object.keys(diff).forEach((sourceId) => {
+    const d = diff[sourceId];
+
+    d.missing.forEach((missingItem) => {
+      missingTracks.push(`${sourceId}/${missingItem}`);
+    });
+
+    if (d.new.length) {
+      newTracks = newTracks.concat(d.new);
+    }
+  });
+
+  // remove missing tracks
+  if (missingTracks.length) {
+    collection = tracks.filter((track) => {
+      return missingTracks.indexOf(`${track.sourceId}/${track.path}`) === -1;
+    });
+  }
+
+  // add new tracks
+  if (newTracks.length) {
+    collection = (collection || tracks).concat(newTracks);
+  }
+
+  // return
+  return collection;
 }
