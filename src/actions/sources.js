@@ -1,7 +1,6 @@
-import groupBy from 'lodash/collection/groupBy';
-
 import * as firebase from '../utils/firebase';
 import * as types from '../constants/action_types/sources';
+import * as trackActions from './tracks';
 
 import SourcesWorker from 'worker!../workers/sources.js';
 
@@ -61,7 +60,7 @@ function execProcess() {
   return (dispatch, getState) => {
     const state = getState();
     const sources = state.sources.items;
-    const tracksGroupedBySourceId = groupBy(state.tracks.items, 'source_uid');
+    const tracks = state.tracks.items;
 
     // notify 'start'
     dispatch({ type: types.START_PROCESS_SOURCES });
@@ -73,57 +72,14 @@ function execProcess() {
       const data = event.data || {};
 
       if (data.isDone) {
-        const newTracksCollection = handleTracksDiff(
-          state.tracks.items,
-          data.results,
-        );
-
-        if (newTracksCollection) {
-          // TODO: dispatch replace_tracks action
-        }
-
+        dispatch(trackActions.diffTracks(data.diff));
         dispatch({ type: types.END_PROCESS_SOURCES });
       }
     };
 
     worker.postMessage({
       sources,
-      tracksGroupedBySourceId,
+      tracks,
     });
   };
-}
-
-
-function handleTracksDiff(tracks, diff) {
-  const missingTracks = [];
-  const newTracks = [];
-
-  let collection;
-
-  Object.keys(diff).forEach((sourceId) => {
-    const d = diff[sourceId];
-
-    d.missing.forEach((missingItem) => {
-      missingTracks.push(`${sourceId}/${missingItem}`);
-    });
-
-    if (d.new.length) {
-      newTracks = newTracks.concat(d.new);
-    }
-  });
-
-  // remove missing tracks
-  if (missingTracks.length) {
-    collection = tracks.filter((track) => {
-      return missingTracks.indexOf(`${track.sourceId}/${track.path}`) === -1;
-    });
-  }
-
-  // add new tracks
-  if (newTracks.length) {
-    collection = (collection || tracks).concat(newTracks);
-  }
-
-  // return
-  return collection;
 }

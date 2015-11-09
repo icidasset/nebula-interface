@@ -1,18 +1,20 @@
 import difference from 'lodash/array/difference';
 import groupBy from 'lodash/collection/groupBy';
+import mapValues from 'lodash/object/mapValues';
 import pairs from 'lodash/object/pairs';
 
 import { ID3 as meta } from 'imports?this=>{},window=>self!exports?this!../../vendor/id3-minimized.js';
 
 import * as awsUtils from '../utils/sources/aws';
 import * as types from '../constants/action_types/sources';
+import { makeTrackObject } from '../reducers/tracks';
 
 import FILE_FORMATS from '../constants/supported_file_formats';
 
 
 self.addEventListener('message', (event) => {
-  process(event.data).then((results) => {
-    self.postMessage({ isDone: true, results: results });
+  process(event.data).then((diff) => {
+    self.postMessage({ isDone: true, diff });
     self.close();
   });
 });
@@ -22,16 +24,14 @@ self.addEventListener('message', (event) => {
 ///
 function process(args) {
   const externalTreesPromise = getExternalTrees(args.sources);
-  const internalTrees = getInternalTrees(args.tracksGroupedBySourceId);
+  const internalTrees = getInternalTrees(args.tracks);
 
   return externalTreesPromise.then(
     (externalTrees) => {
-      const diff = compareTrees({
+      return compareTrees({
         external: externalTrees,
         internal: internalTrees,
       });
-
-      return diff;
     }
   ).then(
     (diff) => {
@@ -43,6 +43,15 @@ function process(args) {
 }
 
 
+/**
+ * Get trees from external sources.
+ *
+ * @struct tree
+ * [ path, path, ... ]
+ *
+ * @return {Promise}
+ * { `${source-id}` : tree }
+ */
 function getExternalTrees(sources) {
   const pathRegex = new RegExp(
     `\.(${FILE_FORMATS.join('|')})$`
@@ -57,7 +66,7 @@ function getExternalTrees(sources) {
 
     return promise.then(
       (tree) => {
-        return { source_uid: source.uid, tree };
+        return { sourceId: source.uid, tree };
       }
     );
   });
@@ -67,7 +76,7 @@ function getExternalTrees(sources) {
       const treesGroupedBySourceId = {};
 
       treesWithSource.forEach((t) => {
-        treesGroupedBySourceId[t.source_uid] = t.tree;
+        treesGroupedBySourceId[t.sourceId] = t.tree;
       });
 
       return treesGroupedBySourceId;
@@ -76,7 +85,17 @@ function getExternalTrees(sources) {
 }
 
 
-function getInternalTrees(tracksGroupedBySourceId) {
+/**
+ * Get paths from stored tracks to make internal trees.
+ *
+  * @struct tree
+  * [ path, path, ... ]
+  *
+  * @return {Promise}
+  * { `${source-id}` : tree }
+ */
+function getInternalTrees(tracks) {
+  const tracksGroupedBySourceId = groupBy(tracks, 'sourceId');
   const trees = {};
 
   Object.keys(tracksGroupedBySourceId).forEach((sourceId) => {
@@ -87,6 +106,13 @@ function getInternalTrees(tracksGroupedBySourceId) {
 }
 
 
+/**
+ * Compare external and internal trees.
+ * Returns a diff.
+ *
+ * @return
+ * { `${source-id}` : { missing: [path], new: [path] }}
+ */
 function compareTrees(args) {
   const { external, internal } = args;
   const diff = {};
@@ -107,10 +133,15 @@ function compareTrees(args) {
 }
 
 
+/**
+ * Get the metadata from the remote audio files.
+ */
 function getAttributesForNewTracks(args) {
   const diffPaired = pairs(args.diff);
   const sourcesGroupedById = groupBy(args.sources, 'uid');
-  const results = {};
+  const results = mapValues(args.diff, (d) => {
+    return { missing: d.missing };
+  });
 
   return getAttributesForNewTrackLoop(
     diffPaired,
@@ -171,8 +202,13 @@ function getAttributesForNewTrackLoop(diffs, sources, sourceIdx, itemIdx, result
 function getAttributesForNewTrack(source, newItem) {
   return new Promise((resolve) => {
 
-    const urlHead = awsUtils.getSignedUrl(source, encodeURIComponent(newItem), 'HEAD', 1);
-    const urlGet = awsUtils.getSignedUrl(source, encodeURIComponent(newItem), 'GET', 1);
+    let urlHead;
+    let urlGet;
+
+    if (source.type === types.SOURCE_TYPE_AWS_BUCKET) {
+      urlHead = awsUtils.getSignedUrl(source, encodeURIComponent(newItem), 'HEAD', 1);
+      urlGet = awsUtils.getSignedUrl(source, encodeURIComponent(newItem), 'GET', 1);
+    }
 
     meta.loadTags(urlGet, urlHead, () => {
       const {
@@ -184,18 +220,20 @@ function getAttributesForNewTrack(source, newItem) {
         year,
       } = meta.getAllTags(urlGet);
 
-      resolve({
+      resolve(makeTrackObject({
         path: newItem,
         sourceId: source.uid,
 
-        album: album ? album.toString() : undefined,
-        artist: artist ? artist.toString() : undefined,
-        genre: genre ? genre.toString() : undefined,
-        title: title ? title.toString() : undefined,
-        year: year ? year.toString() : undefined,
+        properties: {
+          album: album ? album.toString() : undefined,
+          artist: artist ? artist.toString() : undefined,
+          genre: genre ? genre.toString() : undefined,
+          title: title ? title.toString() : undefined,
+          year: year ? year.toString() : undefined,
 
-        track: track,
-      });
+          track: track,
+        },
+      }));
     }, {
       onError: () => {
         resolve(null);

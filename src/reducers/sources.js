@@ -10,7 +10,7 @@ const initialSource = {
   },
 
   settings: {
-    directory_collections: false,
+    directoryCollections: false,
   },
 };
 

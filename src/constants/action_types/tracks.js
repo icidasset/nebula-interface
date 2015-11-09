@@ -1,6 +1,4 @@
 export const FETCH_TRACKS = 'FETCH_TRACKS';
 export const FETCH_TRACKS_DONE = 'FETCH_TRACKS_DONE';
 
-export const ADD_TRACKS = 'ADD_TRACKS';
-export const UPDATE_TRACKS = 'UPDATE_TRACKS';
-export const DELETE_TRACKS = 'DELETE_TRACKS';
+export const REPLACE_TRACKS = 'REPLACE_TRACKS';

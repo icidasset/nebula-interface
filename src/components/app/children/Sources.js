@@ -31,13 +31,13 @@ class Sources extends Component {
       name: this.refs.name.value,
 
       properties: {
-        access_key: this.refs.access_key.value,
-        secret_key: this.refs.secret_key.value,
+        accessKey: this.refs.accessKey.value,
+        secretKey: this.refs.secretKey.value,
         bucket: this.refs.bucket.value,
       },
 
       settings: {
-        directory_collections: this.refs.directory_collections.checked,
+        directoryCollections: this.refs.directoryCollections.checked,
       },
     });
 
@@ -112,11 +112,11 @@ class Sources extends Component {
         <label htmlFor="name">Name</label>
         <input type="text" id="name" ref="name" placeholder="Music collection" autoFocus required />
 
-        <label htmlFor="access_key">Access Key</label>
-        <input type="text" id="access_key" ref="access_key" placeholder="Access key" required />
+        <label htmlFor="accessKey">Access Key</label>
+        <input type="text" id="accessKey" ref="accessKey" placeholder="Access key" required />
 
-        <label htmlFor="secret_key">Secret Key</label>
-        <input type="password" id="secret_key" ref="secret_key" placeholder="•••••••••" required />
+        <label htmlFor="secretKey">Secret Key</label>
+        <input type="password" id="secretKey" ref="secretKey" placeholder="•••••••••" required />
 
         <label htmlFor="bucket">Bucket</label>
         <input type="text" id="bucket" ref="bucket" placeholder="Bucket" required />
@@ -124,8 +124,8 @@ class Sources extends Component {
         <h3>Settings</h3>
 
         <div className="input__checkbox">
-          <input type="checkbox" id="directory_collections" ref="directory_collections" />
-          <label htmlFor="directory_collections">Enable directory collections</label>
+          <input type="checkbox" id="directoryCollections" ref="directoryCollections" />
+          <label htmlFor="directoryCollections">Enable directory collections</label>
         </div>
       </div>
     );

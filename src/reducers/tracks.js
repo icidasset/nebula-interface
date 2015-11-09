@@ -2,11 +2,18 @@ import * as types from '../constants/action_types/tracks';
 
 
 const initialTrack = {
-  title: 'Untitled',
-  artist: 'Untitled',
-
   sourceId: null,
   path: null,
+
+  properties: {
+    album: 'Unknown',
+    artist: 'Unknown',
+    title: 'Unknown',
+    genre: 'Unknown',
+    year: 'Unknown',
+
+    track: 1,
+  },
 };
 
 
@@ -15,6 +22,16 @@ const initialState = {
 
   items: [],
 };
+
+
+export function makeTrackObject(attributes) {
+  return {
+    sourceId: attributes.sourceId,
+    path: attributes.path,
+
+    properties: Object.assign({}, initialTrack.properties, attributes.properties),
+  };
+}
 
 
 export default function tracks(state = initialState, action) {
@@ -29,23 +46,9 @@ export default function tracks(state = initialState, action) {
       isFetching: false,
     });
 
-  case types.ADD_TRACKS:
+  case types.REPLACE_TRACKS:
     return Object.assign({}, state, {
-      items: state.items.concat(
-        action.items.map((item) => {
-          return Object.assign({}, initialTrack, item.attributes);
-        })
-      ),
-    });
-
-  case types.REMOVE_TRACKS:
-    return Object.assign({}, state, {
-      items: state.items.filter(
-        () => {
-          // TODO
-          return true;
-        }
-      ),
+      items: action.items,
     });
 
   default:

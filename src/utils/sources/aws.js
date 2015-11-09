@@ -31,8 +31,8 @@ export function getTree(source, pathRegex) {
 
 export function getSignedUrl(source, path, method = 'GET', expiresInMinutes = 1440) {
   const bucket = asus.urlSigner(
-    source.properties.access_key,
-    source.properties.secret_key,
+    source.properties.accessKey,
+    source.properties.secretKey,
     { useSubdomain: true }
   );
 
@@ -69,8 +69,8 @@ function makeSignature(source, region, queryAttributes = {}) {
     service: 's3',
     signQuery: true,
   }, {
-    accessKeyId: source.properties.access_key,
-    secretAccessKey: source.properties.secret_key,
+    accessKeyId: source.properties.accessKey,
+    secretAccessKey: source.properties.secretKey,
   });
 }
 
