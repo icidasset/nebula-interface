@@ -23,11 +23,9 @@ class AppPage extends Component {
   componentDidMount() {
     this.props.actions.fetchSources().then(
       () => this.props.actions.fetchTracks()
+    ).then(
+      () => this.props.actions.processSources()
     );
-
-    // ).then(
-    //   () => this.props.actions.processSources()
-    // );
   }
 
 

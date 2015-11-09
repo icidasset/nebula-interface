@@ -129,18 +129,20 @@ function compareTrees(args) {
     }
   });
 
+  console.log(JSON.stringify(diff));
+
   return diff;
 }
 
 
 /**
- * Get the metadata from the remote audio files.
+ * Get the metadata from the (new) remote audio files.
  */
 function getAttributesForNewTracks(args) {
   const diffPaired = pairs(args.diff);
   const sourcesGroupedById = groupBy(args.sources, 'uid');
   const results = mapValues(args.diff, (d) => {
-    return { missing: d.missing };
+    return { new: [], missing: d.missing };
   });
 
   return getAttributesForNewTrackLoop(
@@ -168,9 +170,6 @@ function getAttributesForNewTrackLoop(diffs, sources, sourceIdx, itemIdx, result
   }
 
   return getAttributesForNewTrack(source, newItem).then((tags) => {
-    results[source.uid] = results[source.uid] || {};
-    results[source.uid].new = results[source.uid].new || [];
-
     if (tags) {
       results[source.uid].new.push(tags);
     }
