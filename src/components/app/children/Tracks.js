@@ -12,9 +12,9 @@ class Tracks extends Component {
 
     this.props.tracks.items.forEach((track, idx) => {
       listItems.push(<li key={idx} styleName="track">
-        <strong>{track.title}</strong>
+        <strong>{track.properties.title}</strong>
         <span> by </span>
-        <strong>{track.artist}</strong>
+        <strong>{track.properties.artist}</strong>
       </li>);
     });
 

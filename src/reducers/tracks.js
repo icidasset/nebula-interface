@@ -44,6 +44,7 @@ export default function tracks(state = initialState, action) {
   case types.FETCH_TRACKS_DONE:
     return Object.assign({}, state, {
       isFetching: false,
+      items: action.items,
     });
 
   case types.REPLACE_TRACKS:
