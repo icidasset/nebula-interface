@@ -98,10 +98,11 @@ function refill() {
       // randomize
       indexes = shuffle(indexes);
 
-    } else if (state.queue.activeItem) {
+    } else if (currentItems.length) {
       // continue
       i = trackIds.indexOf(last(currentItems));
-      i = findIndex(indexes, (n) => (n > i)) || 0;
+      i = findIndex(indexes, (n) => (n > i));
+      i = i < 0 ? 0 : i;
 
     }
 
