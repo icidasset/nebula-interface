@@ -8,7 +8,7 @@ import Header from '../components/app/Header';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Middle from '../components/Middle';
-import SoundPanel from '../components/app/SoundPanel';
+import Mixer from '../components/app/Mixer';
 
 import childComponents from '../components/app/children';
 import childTypes from '../constants/app/children';
@@ -80,7 +80,7 @@ class AppPage extends Component {
           {this.getMainContent()}
         </main>
 
-        <SoundPanel />
+        <Mixer />
       </div>
     );
   }

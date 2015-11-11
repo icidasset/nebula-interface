@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import Loader from '../components/Loader';
 
-import * as history from '../utils/history';
 import actions from '../actions';
 import { pages } from './index';
 
@@ -23,7 +22,7 @@ class App extends Component {
     // - After initial fetch hide loading animation (this.props.showLoader)
 
     this.props.actions.performInitialAuthCheck().then(() => {
-      history.listen();
+      this.props.history.listen();
 
       // this.props.actions.processSources();
       // this.props.actions.fetchTracks();
@@ -46,6 +45,7 @@ class App extends Component {
 
 App.propTypes = {
   auth: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
 };

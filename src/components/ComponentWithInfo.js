@@ -25,7 +25,7 @@ class ComponentWithInfo extends Component {
   setInfo(type, item) {
     const obj = { type: type, text: item.toString() };
     this.setState({ info: [obj] });
-    this.render();
+    // this.render();
   }
 
 }
