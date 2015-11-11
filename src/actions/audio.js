@@ -8,13 +8,8 @@ export function setAudioDuration(value) {
 }
 
 
-export function setAudioCurrentTime(value) {
-  return { type: types.SET_AUDIO_CURRENT_TIME, value };
-}
-
-
-export function setAudioProgress(value) {
-  return { type: types.SET_AUDIO_PROGRESS, value };
+export function setAudioIsPlaying(value) {
+  return { type: types.SET_AUDIO_IS_PLAYING, value };
 }
 
 
