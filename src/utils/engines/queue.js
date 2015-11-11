@@ -14,7 +14,7 @@ class QueueEngine {
 
   constructor(store) {
     this.store = store;
-    this.store.subscribe(this.storeChangeHandler);
+    this.store.subscribe(this.storeChangeHandler.bind(this));
     this.lastState = { tracks: null };
   }
 

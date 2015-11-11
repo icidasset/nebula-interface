@@ -1,7 +1,7 @@
 import { createHistory } from 'history';
 
-import * as routingActions from '../actions/routing';
-import * as statusCodes from '../constants/status_codes';
+import * as routingActions from '../../actions/routing';
+import * as statusCodes from '../../constants/status_codes';
 
 
 const history = createHistory();
@@ -20,7 +20,7 @@ class HistoryEngine {
 
   constructor(store) {
     this.store = store;
-    this.store.subscribe(this.storeChangeHandler);
+    this.store.subscribe(this.storeChangeHandler.bind(this));
     this.lastState = { path: null };
   }
 
@@ -61,7 +61,7 @@ class HistoryEngine {
   listen() {
     history.listen((location) => {
       if (location.action === 'POP') {
-        store.dispatch(routingActions.goTo(location.pathname, statusCodes.NO_HISTORY));
+        this.store.dispatch(routingActions.goTo(location.pathname, statusCodes.NO_HISTORY));
       }
     });
   }

@@ -1,4 +1,5 @@
 import * as firebase from '../utils/firebase';
+import * as trackUtils from '../utils/tracks';
 import * as types from '../constants/action_types/tracks';
 
 
@@ -55,7 +56,7 @@ function handleDiff(oldCollection, diff) {
     const d = diff[sourceId];
 
     d.missing.forEach((missingItem) => {
-      missingItems.push(`${sourceId}/${missingItem}`);
+      missingItems.push(trackUtils.generateTrackIdWithAttributes(sourceId, missingItem));
     });
 
     if (d.new.length) {
@@ -66,7 +67,7 @@ function handleDiff(oldCollection, diff) {
   // remove missing tracks
   if (missingItems.length) {
     newCollection = oldCollection.filter((track) => {
-      return missingItems.indexOf(`${track.sourceId}/${track.path}`) === -1;
+      return missingItems.indexOf(trackUtils.generateTrackId(track)) === -1;
     });
   }
 

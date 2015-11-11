@@ -5,9 +5,9 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 // import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
-import * as audioEngine from '../utils/engines/audio';
+import * as audioEngine from './utils/engines/audio';
 import * as historyEngine from './utils/engines/history';
-import * as queueEngine from '../utils/engines/queue';
+import * as queueEngine from './utils/engines/queue';
 import store from './main-store';
 import App from './containers/App';
 

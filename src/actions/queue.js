@@ -1,5 +1,9 @@
+import findIndex from 'lodash/array/findIndex';
+import last from 'lodash/array/last';
+import range from 'lodash/utility/range';
 import shuffle from 'lodash/collection/shuffle';
 
+import * as trackUtils from '../utils/tracks';
 import * as types from '../constants/action_types/queue';
 
 
@@ -57,28 +61,58 @@ export function toggleRepeat() {
 
 /// Private
 ///
+
+/**
+ * Refill queue.
+ * Only add tracks to the queue which have not been played before,
+ * are currently playing or that are already in the queue.
+ */
 function refill() {
   return (dispatch, getState) => {
     const state = getState();
-    const tracks = state.queue.shuffle ?
-      shuffle(state.tracks.items) :
-      state.tracks.items;
+    const doShuffle = state.queue.shuffle;
+    const trackIds = state.tracks.filteredItemIds;
 
-    const newItems = [];
-    const currentItems = getState().queue.items.map((item) => {
-      return `${item.sourceId}/${item.path}`;
-    });
-
-    for (let i = 0, j = tracks.length; i < j; i++) {
-      const track = tracks[i];
-
-      if (newItems.length >= types.QUEUE_LENGTH) {
-        break;
-      } else if (currentItems.indexOf(`${track.sourceId}/${track.path}`) === -1) {
-        newItems.push(Object.assign({}, track));
-      }
+    if (state.queue.items.length >= types.QUEUE_LENGTH) {
+      return 'EXIT - ALREADY FULL';
+    } else if (!trackIds.length) {
+      return 'EXIT - NO TRACKS';
     }
 
-    return dispatch({ type: types.REFILL_QUEUE, newItems });
+    const newItems = [];
+    const currentItems = []
+      .concat(state.queue.activeItem ? [state.queue.activeItem] : [])
+      .concat(state.queue.items)
+      .concat(state.queue.history)
+      .map(trackUtils.generateTrackId);
+
+    let i = 0;
+    let indexes = range(0, trackIds.length).filter((n) => {
+      return currentItems.indexOf(trackIds[n]) === -1;
+    });
+
+    if (!indexes.length) {
+      return 'EXIT - NO TRACKS LEFT';
+
+    } else if (doShuffle) {
+      // randomize
+      indexes = shuffle(indexes);
+
+    } else if (state.queue.activeItem) {
+      // continue
+      i = trackIds.indexOf(last(currentItems));
+      i = findIndex(indexes, (n) => (n > i)) || 0;
+
+    }
+
+    while (newItems.length < indexes.length && newItems.length < types.QUEUE_LENGTH) {
+      const newItem = Object.assign({}, state.tracks.filteredItems[indexes[i]]);
+      newItems.push(newItem);
+
+      if (i + 1 >= indexes.length) i = 0;
+      else i = i + 1;
+    }
+
+    dispatch({ type: types.REFILL_QUEUE, newItems });
   };
 }

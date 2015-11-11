@@ -1,7 +1,7 @@
 import * as awsUtils from './aws';
-import * as sourceActionTypes from '../constants/action_types/sources';
+import * as sourceActionTypes from '../../constants/action_types/sources';
 
-import FILE_FORMATS from '../constants/supported_file_formats';
+import FILE_FORMATS from '../../constants/supported_file_formats';
 
 
 const pathRegex = new RegExp(

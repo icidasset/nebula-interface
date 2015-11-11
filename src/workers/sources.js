@@ -116,8 +116,6 @@ function compareTrees(args) {
     }
   });
 
-  console.log(JSON.stringify(diff));
-
   return diff;
 }
 

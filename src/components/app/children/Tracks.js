@@ -10,7 +10,7 @@ class Tracks extends Component {
   render() {
     const listItems = [];
 
-    this.props.tracks.items.forEach((track, idx) => {
+    this.props.tracks.filteredItems.forEach((track, idx) => {
       listItems.push(<li key={idx} styleName="track">
         <strong>{track.properties.title}</strong>
         <span> by </span>

@@ -1,4 +1,8 @@
+import findWhere from 'lodash/collection/findWhere';
+
 import * as actions from '../../actions/audio';
+import * as sourceUtils from '../sources';
+import * as trackUtils from '../tracks';
 
 
 /// Public
@@ -14,7 +18,7 @@ class AudioEngine {
 
   constructor(store) {
     this.store = store;
-    this.store.subscribe(this.handleExternalEvents);
+    this.store.subscribe(this.handleExternalEvents.bind(this));
     this.lastState = { audio: null, queue: null };
 
     // audio
@@ -114,9 +118,9 @@ class AudioEngine {
   /// Prerequisites
   ///
   setAudioContext() {
-    if (!window.AudioContext) {
+    if (window.AudioContext) {
       this.ac = new window.AudioContext();
-    } else if (!window.webkitAudioContext) {
+    } else if (window.webkitAudioContext) {
       this.ac = new window.webkitAudioContext();
     }
 
@@ -202,11 +206,12 @@ class AudioEngine {
   ///
   createNewAudioElement(track) {
     const audioElement = new window.Audio();
-    const src = 'TODO';
+    const source = findWhere(this.store.getState().sources.items, { id: track.sourceId });
+    const url = sourceUtils.getSignedUrl(source, track.path);
 
     // track
-    audioElement.setAttribute('src', src);
-    audioElement.setAttribute('rel', track.id);
+    audioElement.setAttribute('src', url);
+    audioElement.setAttribute('rel', trackUtils.generateTrackId(track));
     audioElement.setAttribute('crossorigin', 'anonymous');
 
     // events, in order of the w3c spec
