@@ -23,7 +23,12 @@ export default function queue(state = initialState, action) {
     //    stops `previous`
     //    and starts playing `next`
 
-    newHistory = state.history.concat([state.activeItem]);
+    if (state.activeItem) {
+      newHistory = [...state.history, state.activeItem];
+    } else {
+      newHistory = [...state.history];
+    }
+
     newActiveItem = state.items.shift();
 
     return {
@@ -35,13 +40,16 @@ export default function queue(state = initialState, action) {
 
 
   case types.UNSHIFT_QUEUE:
-    newItems = state.items.slice(0, state.items.length - 1);
-    newItems.unshift(state.activeItem);
+    if (state.activeItem) {
+      newItems = state.items.slice(0, state.items.length - 1);
+      newItems.unshift(state.activeItem);
+    }
+
     newActiveItem = state.history.pop();
 
     if (newActiveItem) {
       return {
-        items: newItems,
+        items: newItems || [],
         history: [...state.history],
 
         activeItem: newActiveItem,
