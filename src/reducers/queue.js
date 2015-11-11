@@ -64,7 +64,7 @@ export default function queue(state = initialState, action) {
 
   case types.REFILL_QUEUE:
     return Object.assign({}, state, {
-      items: action.newItems,
+      items: state.items.concat(action.newItems),
     });
 
 
