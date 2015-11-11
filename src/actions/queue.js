@@ -81,9 +81,9 @@ function refill() {
 
     const newItems = [];
     const currentItems = []
+      .concat(state.queue.history)
       .concat(state.queue.activeItem ? [state.queue.activeItem] : [])
       .concat(state.queue.items)
-      .concat(state.queue.history)
       .map(trackUtils.generateTrackId);
 
     let i = 0;
