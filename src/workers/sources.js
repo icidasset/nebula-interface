@@ -5,11 +5,8 @@ import pairs from 'lodash/object/pairs';
 
 import { ID3 as meta } from 'imports?this=>{},window=>self!exports?this!../../vendor/id3-minimized.js';
 
-import * as awsUtils from '../utils/sources/aws';
-import * as types from '../constants/action_types/sources';
+import * as sourceUtils from '../utils/sources';
 import { makeTrackObject } from '../reducers/tracks';
-
-import FILE_FORMATS from '../constants/supported_file_formats';
 
 
 self.addEventListener('message', (event) => {
@@ -53,18 +50,8 @@ function process(args) {
  * { `${source-id}` : tree }
  */
 function getExternalTrees(sources) {
-  const pathRegex = new RegExp(
-    `\.(${FILE_FORMATS.join('|')})$`
-  );
-
   const promises = sources.map((source) => {
-    let promise;
-
-    if (source.type === types.SOURCE_TYPE_AWS_BUCKET) {
-      promise = awsUtils.getTree(source, pathRegex);
-    }
-
-    return promise.then(
+    return sourceUtils.getTree(source).then(
       (tree) => {
         return { sourceId: source.uid, tree };
       }
@@ -201,13 +188,8 @@ function getAttributesForNewTrackLoop(diffs, sources, sourceIdx, itemIdx, result
 function getAttributesForNewTrack(source, newItem) {
   return new Promise((resolve) => {
 
-    let urlHead;
-    let urlGet;
-
-    if (source.type === types.SOURCE_TYPE_AWS_BUCKET) {
-      urlHead = awsUtils.getSignedUrl(source, encodeURIComponent(newItem), 'HEAD', 1);
-      urlGet = awsUtils.getSignedUrl(source, encodeURIComponent(newItem), 'GET', 1);
-    }
+    const urlHead = sourceUtils.getSignedUrl(source, newItem, 'HEAD', 1);
+    const urlGet = sourceUtils.getSignedUrl(source, newItem, 'GET', 1);
 
     meta.loadTags(urlGet, urlHead, () => {
       const {

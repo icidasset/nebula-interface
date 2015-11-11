@@ -9,6 +9,9 @@ import xmlParser from 'xml-parser';
 
 /// Public
 ///
+/// ! DO NOT USE THESE DIRECTLY
+//  ! USE THE COMMON INTERFACE INSTEAD (./index.js)
+///
 export function getTree(source, pathRegex) {
   const filterFunc = (key) => {
     return !!key.match(pathRegex);
@@ -29,7 +32,7 @@ export function getTree(source, pathRegex) {
 }
 
 
-export function getSignedUrl(source, path, method = 'GET', expiresInMinutes = 1440) {
+export function getSignedUrl(source, path, method, expiresInMinutes) {
   const bucket = asus.urlSigner(
     source.properties.accessKey,
     source.properties.secretKey,
