@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 import { findDOMNode } from 'react-dom';
 
@@ -7,7 +7,6 @@ import Info from '../components/Info';
 import styles from './Form.scss';
 
 
-@CSSModules(styles)
 class Form extends Component {
 
   onSubmit(event) {
@@ -70,4 +69,4 @@ Form.defaultProps = {
 };
 
 
-export default Form;
+export default CSSModules(Form, styles);

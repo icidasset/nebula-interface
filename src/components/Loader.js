@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import { createElement, Component } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './Loader.scss';
 
 
-@CSSModules(styles)
 class Loader extends Component {
 
   render() {
@@ -20,4 +19,4 @@ class Loader extends Component {
 }
 
 
-export default Loader;
+export default CSSModules(Loader, styles);

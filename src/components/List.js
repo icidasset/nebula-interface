@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './List.scss';
 
 
-@CSSModules(styles)
 class List extends Component {
 
   render() {
@@ -60,4 +59,4 @@ List.defaultProps = {
 };
 
 
-export default List;
+export default CSSModules(List, styles);

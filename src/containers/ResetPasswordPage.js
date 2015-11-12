@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import { createElement, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import ComponentWithInfo from '../components/ComponentWithInfo';

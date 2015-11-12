@@ -11,14 +11,9 @@ export default function babel() {
   return {
     module: {
       loaders: [{
-        name: 'babel',
         test: /\.jsx?$/,
         include: path.join(root, 'src'),
-        loader: 'babel-loader',
-        query: {
-          stage: 0,
-          optional: ['runtime'],
-        },
+        loader: 'babel',
       }],
     },
   };

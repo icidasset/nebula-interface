@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './Tracks.scss';
 
 
-@CSSModules(styles)
 class Tracks extends Component {
 
   render() {
@@ -33,4 +32,4 @@ Tracks.propTypes = {
 };
 
 
-export default Tracks;
+export default CSSModules(Tracks, styles);

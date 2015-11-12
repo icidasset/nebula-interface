@@ -1,5 +1,5 @@
 import pick from 'lodash/object/pick';
-import React, { PropTypes } from 'react';
+import { createElement, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 

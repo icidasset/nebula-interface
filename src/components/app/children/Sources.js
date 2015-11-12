@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 
 import ContentWithMenu from '../../ContentWithMenu';
 import Form from '../../Form';

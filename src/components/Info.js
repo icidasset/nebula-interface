@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './Info.scss';
 
 
-@CSSModules(styles)
 class Info extends Component {
 
   render() {
@@ -53,4 +52,4 @@ Info.propTypes = {
 };
 
 
-export default Info;
+export default CSSModules(Info, styles);

@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './ContentWithMenu.scss';
 
 
-@CSSModules(styles)
 class ContentWithMenu extends Component {
 
   render() {
@@ -34,4 +33,4 @@ ContentWithMenu.propTypes = {
 };
 
 
-export default ContentWithMenu;
+export default CSSModules(ContentWithMenu, styles);

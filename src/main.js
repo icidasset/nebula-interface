@@ -1,6 +1,4 @@
-import 'babel/polyfill';
-
-import React from 'react';
+import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 // import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';

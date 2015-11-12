@@ -1,5 +1,5 @@
 import pick from 'lodash/object/pick';
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -34,7 +34,7 @@ class App extends Component {
     if (!this.props.auth.passedInitialCheck) {
       return (<Loader />);
     } else if (this.props.routing.container) {
-      return React.createElement( pages[this.props.routing.container] );
+      return createElement( pages[this.props.routing.container] );
     }
 
     return (<div />);

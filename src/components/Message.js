@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './Message.scss';
 
 
-@CSSModules(styles)
 class Message extends Component {
 
   render() {
@@ -35,4 +34,4 @@ Message.propTypes = {
 };
 
 
-export default Message;
+export default CSSModules(Message, styles);

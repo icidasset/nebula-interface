@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './Middle.scss';
 
 
-@CSSModules(styles)
 class Middle extends Component {
 
   render() {
@@ -23,4 +22,4 @@ Middle.propTypes = {
 };
 
 
-export default Middle;
+export default CSSModules(Middle, styles);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createElement, Component } from 'react';
 
 import Message from '../components/Message';
 import Middle from '../components/Middle';

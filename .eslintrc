@@ -16,6 +16,8 @@
   "rules": {
     "default-case": 0,
     "id-length": 0,
+    "react/jsx-uses-react": [2, { "pragma": "createElement" }],
+    "react/react-in-jsx-scope": 0,
     "new-cap": 0,
     "no-alert": 0,
     "no-console": 0,

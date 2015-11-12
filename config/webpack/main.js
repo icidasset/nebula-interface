@@ -2,6 +2,10 @@ import nearest from 'find-nearest-file';
 import partial from 'webpack-partial';
 import path from 'path';
 
+import cssConfig from './partial/css';
+import imagesConfig from './partial/images';
+import javascriptConfig from './partial/javascript';
+
 
 const root = path.dirname(
   nearest('package.json')
@@ -22,12 +26,9 @@ const config = {
     ],
   },
 
-  target: 'web',
   context: root,
-  cache: false,
 
   output: {
-    libraryTarget: 'umd',
     filename: '[name].[hash].js',
     chunkFilename: '[id].[hash].js',
     publicPath: '/',
@@ -37,7 +38,7 @@ const config = {
 
 export default partial(
   config,
-  './partial/css.js',
-  './partial/javascript.js',
-  './partial/images.js'
+  cssConfig,
+  imagesConfig,
+  javascriptConfig
 );

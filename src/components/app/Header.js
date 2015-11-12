@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import { createElement, Component } from 'react';
 import CSSModules from 'react-css-modules';
 
 import styles from './Header.scss';
 
 
-@CSSModules(styles)
-export default class Header extends Component {
+class Header extends Component {
 
   render() {
     return (
@@ -14,3 +13,6 @@ export default class Header extends Component {
   }
 
 }
+
+
+export default CSSModules(Header, styles);
