@@ -1,7 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './List.scss';
+import styles from './List.pcss';
 
 
 class List extends Component {

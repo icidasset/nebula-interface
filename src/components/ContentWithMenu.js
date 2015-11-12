@@ -1,7 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './ContentWithMenu.scss';
+import styles from './ContentWithMenu.pcss';
 
 
 class ContentWithMenu extends Component {

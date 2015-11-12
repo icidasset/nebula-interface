@@ -1,7 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './Message.scss';
+import styles from './Message.pcss';
 
 
 class Message extends Component {

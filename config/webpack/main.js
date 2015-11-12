@@ -18,11 +18,11 @@ const config = {
   entry: {
     main: [
       path.join(root, 'src', 'main.js'),
-      path.join(root, 'src', 'main.scss'),
+      path.join(root, 'src', 'main.pcss'),
     ],
     static: [
       path.join(root, 'src', 'static.js'),
-      path.join(root, 'src', 'static.scss'),
+      path.join(root, 'src', 'static.pcss'),
     ],
   },
 

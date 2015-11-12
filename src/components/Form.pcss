@@ -7,8 +7,10 @@
     font-weight: 300;
   }
 
-  /// Inputs
-  ///
+
+  /**
+   * Inputs
+   */
   .inputs {
     margin: 0.5rem 0 1.75rem;
   }
@@ -29,7 +31,7 @@
       outline: none;
     }
 
-    &::placeholder {
+    &:placeholder {
       color: $subtle-gray-text;
     }
   }
@@ -46,8 +48,7 @@
     text-transform: uppercase;
   }
 
-  // checkbox
-  :global(.input__checkbox) {
+  :global .input__checkbox {
     &:after {
       clear: both;
       content: " ";
@@ -70,8 +71,10 @@
 }
 
 
-/// Errors and additional text
-///
+
+/**
+ * Note
+ */
 .note {
   font-size: 0.85rem;
   margin-top: 1.75rem;

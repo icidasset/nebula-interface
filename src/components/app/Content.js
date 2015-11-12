@@ -1,7 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './Content.scss';
+import styles from './Content.pcss';
 
 
 class Content extends Component {

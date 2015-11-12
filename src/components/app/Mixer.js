@@ -1,7 +1,7 @@
 import { createElement, Component } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './Mixer.scss';
+import styles from './Mixer.pcss';
 
 
 class Mixer extends Component {

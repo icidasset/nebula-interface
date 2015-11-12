@@ -1,7 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './Middle.scss';
+import styles from './Middle.pcss';
 
 
 class Middle extends Component {

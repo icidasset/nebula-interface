@@ -1,7 +1,7 @@
 import { createElement, Component } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './Loader.scss';
+import styles from './Loader.pcss';
 
 
 class Loader extends Component {

@@ -4,7 +4,7 @@ import { findDOMNode } from 'react-dom';
 
 import Info from '../components/Info';
 
-import styles from './Form.scss';
+import styles from './Form.pcss';
 
 
 class Form extends Component {

@@ -1,7 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './Tracks.scss';
+import styles from './Tracks.pcss';
 
 
 class Tracks extends Component {

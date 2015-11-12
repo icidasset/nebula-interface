@@ -1,7 +1,7 @@
 import { createElement, Component } from 'react';
 import CSSModules from 'react-css-modules';
 
-import styles from './Header.scss';
+import styles from './Header.pcss';
 
 
 class Header extends Component {
