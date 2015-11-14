@@ -1,15 +1,16 @@
 export default {
   stats: {
     assets: true,
-    colors: true,
-    version: false,
-    modules: false,
-    hash: false,
-    timings: false,
+    cached: true,
     chunks: true,
     chunkModules: false,
-    reasons: true,
-    cached: true,
     chunkOrigins: false,
+    colors: true,
+    errorDetails: true,
+    hash: false,
+    modules: false,
+    reasons: true,
+    timings: true,
+    version: false,
   },
 };
