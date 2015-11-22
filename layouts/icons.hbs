@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Icons</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .icon {
+      margin: 10px;
+      text-align: center;
+    }
+    svg {
+      color: blue;
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+
+
+  <svg style="display: none;" src="/sprite.svg"></svg>
+
+  Stroke width <input type="range" value="10"> <span class="display">1</span>
+
+  <div class="container">
+    {{#shapes}}
+      <div class="icon">
+        <p>{{base}}</p>
+        <p><svg><use xlink:href="/sprite.svg#{{base}}"></use></svg></p>
+      </div>
+    {{/shapes}}
+  </div>
+
+
+  <script>
+    var display = document.querySelector('.display');
+    function handleRangeChange(event) {
+      var width = ('' + (event.target.value * 0.05 + 0.5)).slice(0, 3);
+      document.body.setAttribute('style', 'stroke-width: ' + width)
+      display.innerHTML = width;
+    }
+    document.querySelector('input[type=range]').addEventListener('input', handleRangeChange);
+  </script>
+
+
+</body>
+</html>

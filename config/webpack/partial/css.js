@@ -9,6 +9,7 @@ import postCalc from 'postcss-calc';
 import postColorFunction from 'postcss-color-function';
 import postCustomProperties from 'postcss-custom-properties';
 import postCustomMedia from 'postcss-custom-media';
+import postFunctions from 'postcss-functions';
 import postMediaMinmax from 'postcss-media-minmax';
 import postMixins from 'postcss-mixins';
 import postNested from 'postcss-nested';
@@ -71,7 +72,24 @@ export default function css() {
 
     postcss() {
       const defaults = [
-        postPartialImport({ extension: 'pcss', prefix: '' }),
+        postPartialImport({
+          extension: 'pcss',
+          prefix: ''
+        }),
+
+        postFunctions({
+          functions: {
+
+            // 12px: grid
+            // 16px: default font-size
+            grid(number) {
+              const sizeInRem = parseFloat(number) * (12 / 16);
+              // e.g. 1 = 1 column of 12px
+              return sizeInRem.toString() + 'rem';
+            }
+
+          }
+        }),
 
         postMixins,
 

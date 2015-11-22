@@ -1,20 +1,6 @@
 @import "styles/colors";
+@import "styles/fonts";
 @import "styles/button";
-
-@define-mixin default-font {
-  font-family: "Palanquin", sans-serif;
-}
-
-html {
-  font-size: 16px;
-}
-
-body {
-  @mixin default-font;
-  color: $text-color;
-  font-size: 1rem;
-  line-height: 1.7;
-}
 
 :global .wrapper {
   margin: 3rem auto;

@@ -1,19 +1,7 @@
 @import "styles/colors";
+@import "styles/fonts";
 @import "styles/button";
 @import "styles/loading";
-
-@define-mixin defaultFont {
-  font-family: "Palanquin", sans-serif;
-}
-
-body {
-  @mixin defaultFont;
-  color: $text-color;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  @mixin defaultFont;
-}
 
 h1 {
   color: $shade-text;

@@ -1,12 +1,193 @@
 @import "../../styles/colors";
+@import "../../styles/fonts";
 
 
 .mixer {
-  background: $shade;
-  bottom: 0;
-  height: 5.5rem;
+  @mixin displayFont;
+  color: color(black a(.45));
+  display: flex;
+}
+
+.mixer svg {
+  fill: currentColor;
+}
+
+
+/**
+ * General
+ */
+.time,
+.now-playing,
+.button,
+.button-group {
+  background: linear-gradient(white, color(white a(0.87)));
+  border-radius: 4px;
+  box-shadow: 0 0px 2px 2px rgba(0, 0, 0, 0.025),
+              0 1px 1px 0px rgba(0, 0, 0, 0.15),
+              0 -1px 1px 0px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  height: grid(6);
+  margin-right: grid(1);
+  position: relative;
+}
+
+.light {
+  background-color: #0cf;
+  border-radius: 50%;
+  box-shadow: 0 0 25px 2px #0cf;
+  height: 6px;
+  left: 50%;
+  opacity: .65;
+  position: absolute;
+  top: 15px;
+  transform: translate(-50%, -50%);
+  width: 6px;
+}
+
+.button {
+  line-height: 1.5;
+  text-align: center;
+  width: grid(3.5);
+}
+
+.button__label {
+  bottom: 27px;
+  color: color(black a(.35));
+  font-size: .7em;
+  font-weight: 500;
   left: 0;
-  position: fixed;
-  width: 100%;
-  z-index: 4;
+  letter-spacing: .15em;
+  position: absolute;
+  right: 0;
+}
+
+.button__icons {
+  bottom: 4px;
+  left: 0;
+  position: absolute;
+  right: 0;
+
+  span, svg {
+    vertical-align: middle;
+  }
+
+  span {
+    display: inline-block;
+    font-size: .9rem;
+    font-weight: 300;
+    margin: 0 3px;
+    opacity: .75;
+    transform: translateY(1px);
+  }
+
+  svg {
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+  }
+}
+
+.button-group {
+  width: grid(3.5);
+
+  &::after {
+    background-color: color(black a(.075));
+    content: '';
+    height: 1px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    z-index: 1;
+  }
+
+  .button {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    height: grid(3);
+    width: 100%;
+    z-index: 2;
+
+    &:last-child .button__icons { margin-top: 1px; }
+  }
+
+  .button__icons {
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+
+/**
+ * Time
+ */
+.time {
+  font-weight: 100;
+  line-height: 1;
+  width: grid(11);
+}
+
+
+.time__current {
+  font-size: 1.9rem;
+  left: 9px;
+  letter-spacing: -0.05em;
+  position: absolute;
+  top: 11px;
+}
+
+.time__duration {
+  bottom: 12px;
+  font-size: .75rem;
+  font-weight: 400;
+  left: 12px;
+  letter-spacing: 1px;
+  opacity: .55;
+  position: absolute;
+}
+
+
+/**
+ * Now playing
+ */
+.now-playing {
+  font-weight: 100;
+  line-height: 1;
+  width: grid(11);
+}
+
+
+.now-playing__main {
+  font-size: 1.9rem;
+  left: 9px;
+  letter-spacing: -0.05em;
+  position: absolute;
+  top: 11px;
+}
+
+.now-playing__extra {
+  bottom: 12px;
+  font-size: .75rem;
+  font-weight: 400;
+  left: 12px;
+  letter-spacing: 1px;
+  opacity: .55;
+  position: absolute;
+}
+
+
+/**
+ * Play / pause
+ */
+.play-pause {
+  width: grid(6);
+
+  .light {
+    background: linear-gradient(90deg, #D6F290, #BFF156);
+    border-radius: 4px;
+    box-shadow: 0 0 25px 2px #bcf865;
+    width: 20px;
+  }
 }

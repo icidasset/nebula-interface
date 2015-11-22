@@ -8,31 +8,27 @@ import msLayouts from 'metalsmith-layouts';
 import msPermalinks from 'metalsmith-permalinks';
 import msRename from 'metalsmith-rename';
 import msServe from 'metalsmith-serve';
+import msSvgSprite from 'metalsmith-svg-sprite';
 import msWatch from 'metalsmith-watch';
 import msWebpack from 'metalsmith-webpack';
 
 import webpackConfig from './config/webpack';
 
 
+const envFile = fs.readFileSync('./.env');
+const envVariables = dotenv.parse(envFile);
+
 const watchPaths = {
   '${source}/**/*': true,
-  'images/**/*': '**/*',
-  'layouts/**/*': '**/*',
-  'partials/**/*': '**/*',
-  'src/**/*': '**/*'
+  'src/**/*': '**/*',
 };
-
 
 const serveOptions = {
   port: 8080,
   verbose: true,
-  http_error_files: { 404: '/200.html' }
+  http_error_files: { 404: '/200.html' },
 };
 
-
-const envFile = fs.readFileSync('./.env');
-const envVariables = dotenv.parse(envFile);
-const m = ms(__dirname);
 const templateOptions = {
   pattern: '*.hbs',
   engine: 'handlebars',
@@ -40,26 +36,50 @@ const templateOptions = {
   env: process.env.NODE_ENV,
 };
 
-m.source('pages');
-m.destination('build');
+const layoutOptions = Object.assign(
+  {},
+  templateOptions,
+  {
+    default: 'default.hbs',
+  }
+);
+
+const m = ms(__dirname);
+
+m.source('metal');
 
 m.use(msDefine({ envVariables: JSON.stringify(envVariables) }));
 m.use(msWebpack(webpackConfig));
+m.use(msSvgSprite(compileSvgSpriteConfig()));
 m.use(msFilenames());
 m.use(msInPlace(templateOptions));
-m.use(msLayouts(Object.assign({}, templateOptions, { default: 'default.hbs' })));
-
-// remove .hbs extension from compiled templates in build dir
+m.use(msLayouts(layoutOptions));
 m.use(msRename([['.hbs', '.html']]));
-
-// remove .html extensions by setting each file as an index in a named dir
 m.use(msPermalinks({ relative: false }));
 
-// # watch, serve, etc.
 if (process.env.SERVE) m.use(msServe(serveOptions));
 if (process.env.WATCH) m.use(msWatch({ paths: watchPaths }));
 
-// # build
 m.build(function buildCallback(err) {
   if (err) throw err;
 });
+
+
+/// Icon settings
+///
+/// @author: Neal Granger (@nealgranger)
+///
+function compileSvgSpriteConfig() {
+  return {
+    mode: { symbol: {
+      dest: '.',
+      sprite: 'sprite.svg',
+      render: {
+        html: {
+          template: 'layouts/icons.hbs',
+          dest: 'icons',
+        },
+      },
+    } },
+  };
+}
