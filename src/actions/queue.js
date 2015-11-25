@@ -44,10 +44,25 @@ export function refreshQueue() {
 
 
 /**
+ * Reset.
+ * Clear queue and refill.
+ */
+export function resetQueue() {
+  return (dispatch) => {
+    dispatch({ type: types.RESET_QUEUE });
+    dispatch(refill());
+  };
+}
+
+
+/**
  * Toggle shuffle
  */
 export function toggleShuffle() {
-  return { type: types.TOGGLE_SHUFFLE };
+  return (dispatch) => {
+    dispatch({ type: types.TOGGLE_SHUFFLE });
+    dispatch(resetQueue());
+  };
 }
 
 

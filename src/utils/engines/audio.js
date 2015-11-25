@@ -27,9 +27,17 @@ export function initialize(store) {
 class AudioEngine {
 
   constructor(store) {
+    const state = store.getState();
+
     this.store = store;
     this.store.subscribe(this.handleExternalEvents.bind(this));
-    this.lastState = { audio: null, queue: null };
+
+    // last state
+    this.lastState = {
+      activeQueueItem: state.queue.activeItem,
+      audio: state.audio,
+      seek: state.audio.seek,
+    };
 
     // audio
     this.activeConnection = null;
@@ -48,11 +56,31 @@ class AudioEngine {
   }
 
 
+  getNodeValue(nodeKey) {
+    const node = this.nodes[nodeKey];
+
+    // set value
+    switch (nodeKey) {
+    case 'low':
+    case 'mid':
+    case 'hi':
+      return node.gain.value;
+      break;
+
+    default:
+      return node.value;
+    }
+  }
+
+
   setNodeValue(nodeKey, value) {
     const node = this.nodes[nodeKey];
 
     // check if node exists
     if (!node) return;
+
+    // check again
+    if (this.getNodeValue(nodeKey) === value) return;
 
     // set value
     switch (nodeKey) {
@@ -74,27 +102,35 @@ class AudioEngine {
     const state = this.store.getState();
     const audio = state.audio;
     const activeQueueItem = state.queue.activeItem;
+    const seek = state.audio.seek;
 
     const audioChanged = (audio !== this.lastState.audio);
     const activeQueueItemChanged = (activeQueueItem !== this.lastState.activeQueueItem);
+    const seekChanged = (seek !== this.lastState.seek);
 
     // check if the state, that we need, changed
-    if (!audioChanged && !activeQueueItemChanged) return;
+    if (!audioChanged && !activeQueueItemChanged && !seekChanged) return;
 
     this.lastState.audio = audio;
     this.lastState.activeQueueItem = activeQueueItem;
+    this.lastState.seek = seek;
+
+    const connection = this.activeConnection;
 
     // (1) active queue item
     if (activeQueueItemChanged && activeQueueItem) {
       this.insert(activeQueueItem);
     }
 
-    // (2) audio
+    // (2) seek
+    if (seekChanged && connection) {
+      this.seek(connection, seek);
+    }
+
+    // (3) audio
     if (!audioChanged) return;
 
-    // (2.1) play / pause
-    const connection = this.activeConnection;
-
+    // (3.1) play / pause
     if (connection) {
       if (connection.mediaElement.paused && audio.isPlaying) {
         this.play(connection);
@@ -103,7 +139,7 @@ class AudioEngine {
       }
     }
 
-    // (2.2) volume
+    // (3.2) volume
     this.setNodeValue(
       'volume',
       audio.isMuted ? 0 : audio.volume
@@ -162,19 +198,10 @@ class AudioEngine {
   }
 
 
-  // NOTE:
-  // THESE EVENTS DO NOT TRIGGER STATE CHANGES,
-  // I.E. THEY DO NOT DISPATCH AN ACTION.
-  //
-  // This was done for performance reasons.
-  // These values change every 250ms, more or less.
-  // Instead use requestAnimationFrame, setInterval
-  // or something else to render these values.
-  //
   onCurrentTimeChange(event) {
     const currentTime = event.target.currentTime;
 
-    this.store.getState().audio.currentTime = currentTime;
+    this.store.dispatch(actions.setAudioCurrentTime(currentTime));
   }
 
 
@@ -183,7 +210,7 @@ class AudioEngine {
       (event.target.buffered.end(0) / event.target.duration) * 100 :
       0;
 
-    this.store.getState().audio.progress = progress;
+    this.store.dispatch(actions.setAudioProgressLoaded(progress));
   }
 
 
@@ -408,8 +435,8 @@ class AudioEngine {
   }
 
 
-  seek(connection, percent) {
-    connection.mediaElement.currentTime = connection.mediaElement.duration * percent;
+  seek(connection, percentageDecimal) {
+    connection.mediaElement.currentTime = connection.mediaElement.duration * percentageDecimal;
   }
 
 }

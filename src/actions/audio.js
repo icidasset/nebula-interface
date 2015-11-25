@@ -4,19 +4,11 @@ import * as queueActions from './queue';
 
 /// Actions
 ///
-export function setAudioDuration(value) {
-  return { type: types.SET_AUDIO_DURATION, value };
-}
-
-
-export function setAudioIsPlaying(value) {
-  return { type: types.SET_AUDIO_IS_PLAYING, value };
-}
-
-
-export function setAudioVolume(value) {
-  return { type: types.SET_AUDIO_VOLUME, value };
-}
+export const setAudioCurrentTime = (value) => ({ type: types.SET_AUDIO_CURRENT_TIME, value });
+export const setAudioDuration = (value) => ({ type: types.SET_AUDIO_DURATION, value });
+export const setAudioIsPlaying = (value) => ({ type: types.SET_AUDIO_IS_PLAYING, value });
+export const setAudioProgressLoaded = (value) => ({ type: types.SET_AUDIO_PROGRESS_LOADED, value });
+export const setAudioVolume = (value) => ({ type: types.SET_AUDIO_VOLUME, value });
 
 
 export function toggleMute() {
@@ -34,4 +26,9 @@ export function togglePlay() {
 
     return dispatch({ type: types.TOGGLE_PLAY });
   };
+}
+
+
+export function seekAudio(percentageDecimal) {
+  return { type: types.SEEK_AUDIO, percentageDecimal };
 }

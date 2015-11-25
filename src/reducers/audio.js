@@ -7,27 +7,49 @@ const initialState = {
 
   // feedback
   duration: 0,
+  durationStamp: '0:00',
   isPlaying: false,
+  seek: 0,
 
-  // feedback, do not trigger change handlers
+  // fast feedback
   currentTime: 0,
-  progress: 0,
+  progressLoaded: 0,
+  progressPlayed: 0,
 };
 
 
 export default function audio(state = initialState, action) {
   switch (action.type) {
 
+  case types.SET_AUDIO_CURRENT_TIME:
+    return {
+      ...state,
+      currentTime: action.value,
+    };
+
   case types.SET_AUDIO_DURATION:
+    let minutes = Math.floor(action.value / 60);
+    let seconds = Math.floor(action.value - (minutes * 60));
+
+    if (minutes.toString().length === 1) minutes = `0${minutes}`;
+    if (seconds.toString().length === 1) seconds = `0${seconds}`;
+
     return {
       ...state,
       duration: action.value,
+      durationStamp: `${minutes}:${seconds}`,
     };
 
   case types.SET_AUDIO_IS_PLAYING:
     return {
       ...state,
       isPlaying: !!action.value,
+    };
+
+  case types.SET_AUDIO_PROGRESS_LOADED:
+    return {
+      ...state,
+      progressLoaded: action.value,
     };
 
   case types.SET_AUDIO_VOLUME:
@@ -46,6 +68,12 @@ export default function audio(state = initialState, action) {
     return {
       ...state,
       isPlaying: !state.isPlaying,
+    };
+
+  case types.SEEK_AUDIO:
+    return {
+      ...state,
+      seek: action.percentageDecimal,
     };
 
   default:

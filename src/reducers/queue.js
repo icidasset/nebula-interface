@@ -27,9 +27,9 @@ export default function queue(state = initialState, action) {
     newActiveItem = state.items.shift();
 
     return {
-      items: [...state.items],
-      history: newHistory,
+      ...state,
 
+      history: newHistory,
       activeItem: newActiveItem,
     };
 
@@ -44,9 +44,9 @@ export default function queue(state = initialState, action) {
 
     if (newActiveItem) {
       return {
-        items: newItems || [],
-        history: [...state.history],
+        ...state,
 
+        items: newItems || [],
         activeItem: newActiveItem,
       };
 
@@ -69,6 +69,14 @@ export default function queue(state = initialState, action) {
     return Object.assign({}, state, {
       items: state.items.concat(action.newItems),
     });
+
+
+  case types.RESET_QUEUE:
+    return {
+      ...state,
+
+      items: [],
+    };
 
 
   case types.TOGGLE_SHUFFLE:

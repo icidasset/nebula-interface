@@ -5,11 +5,20 @@
 .mixer {
   @mixin displayFont;
   color: color(black a(.45));
-  display: flex;
+  flex: 1;
 }
 
 .mixer svg {
   fill: currentColor;
+}
+
+.mixer-row {
+  display: flex;
+  padding-bottom: grid(1);
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 }
 
 
@@ -28,6 +37,7 @@
   box-sizing: border-box;
   height: grid(6);
   margin-right: grid(1);
+  overflow: hidden;
   position: relative;
 }
 
@@ -126,9 +136,42 @@
 
 
 /**
+ * Now playing
+ */
+.now-playing {
+  background: transparent;
+  flex: 1;
+  line-height: 1.5;
+  width: grid(18);
+}
+
+
+.now-playing__main {
+  left: 10px;
+  position: absolute;
+  top: 10px;
+  white-space: nowrap;
+
+  span {
+    display: block;
+  }
+
+  span[rel="title"] {
+    font-size: 1.1em;
+    font-weight: 500;
+  }
+
+  span[rel="artist"] {
+    font-size: .85em;
+  }
+}
+
+
+/**
  * Time
  */
 .time {
+  background: transparent;
   font-weight: 100;
   line-height: 1;
   width: grid(11);
@@ -141,6 +184,7 @@
   letter-spacing: -0.05em;
   position: absolute;
   top: 11px;
+  z-index: 2;
 }
 
 .time__duration {
@@ -151,35 +195,33 @@
   letter-spacing: 1px;
   opacity: .55;
   position: absolute;
+  z-index: 2;
 }
 
-
-/**
- * Now playing
- */
-.now-playing {
-  font-weight: 100;
-  line-height: 1;
-  width: grid(11);
-}
-
-
-.now-playing__main {
-  font-size: 1.9rem;
-  left: 9px;
-  letter-spacing: -0.05em;
+.time__progress {
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
   position: absolute;
-  top: 11px;
+  right: 0;
+  top: 0;
+  z-index: 1;
+
+  & > div {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 0%;
+  }
 }
 
-.now-playing__extra {
-  bottom: 12px;
-  font-size: .75rem;
-  font-weight: 400;
-  left: 12px;
-  letter-spacing: 1px;
-  opacity: .55;
-  position: absolute;
+.time__progress__loaded {
+  background: color(white a(.15));
+}
+
+.time__progress__played {
+  background: color(white a(.3)); /* .45 */
 }
 
 
