@@ -18,11 +18,6 @@ export default function queue(state = initialState, action) {
 
   switch (action.type) {
   case types.SHIFT_QUEUE:
-    // set `state.queue.activeItem`
-    // -> audioEngine picks this up,
-    //    stops `previous`
-    //    and starts playing `next`
-
     if (state.activeItem) {
       newHistory = [...state.history, state.activeItem];
     } else {

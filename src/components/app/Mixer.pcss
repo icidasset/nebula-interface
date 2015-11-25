@@ -32,9 +32,8 @@
 }
 
 .light {
-  background-color: #0cf;
+  background-color: color(black a(.175));
   border-radius: 50%;
-  box-shadow: 0 0 25px 2px #0cf;
   height: 6px;
   left: 50%;
   opacity: .65;
@@ -42,6 +41,11 @@
   top: 15px;
   transform: translate(-50%, -50%);
   width: 6px;
+
+  &.is-on {
+    background-color: #0cf;
+    box-shadow: 0 0 25px 2px #0cf;
+  }
 }
 
 .button {
@@ -51,12 +55,13 @@
 }
 
 .button__label {
-  bottom: 27px;
-  color: color(black a(.35));
-  font-size: .7em;
+  bottom: 29px;
+  color: color(black a(.325));
+  font-size: .65em;
   font-weight: 500;
   left: 0;
-  letter-spacing: .15em;
+  letter-spacing: .2em;
+  padding-left: .2em;
   position: absolute;
   right: 0;
 }
@@ -185,9 +190,12 @@
   width: grid(6);
 
   .light {
-    background: linear-gradient(90deg, #D6F290, #BFF156);
     border-radius: 4px;
-    box-shadow: 0 0 25px 2px #bcf865;
     width: 20px;
+  }
+
+  .light.is-on {
+    background: linear-gradient(90deg, #D6F290, #BFF156);
+    box-shadow: 0 0 25px 2px #bcf865;
   }
 }

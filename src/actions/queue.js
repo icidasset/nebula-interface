@@ -92,9 +92,10 @@ function refill() {
     });
 
     if (!indexes.length) {
-      return 'EXIT - NO TRACKS LEFT';
+      indexes = range(0, trackIds.length);
+    }
 
-    } else if (doShuffle) {
+    if (doShuffle) {
       // randomize
       indexes = shuffle(indexes);
 

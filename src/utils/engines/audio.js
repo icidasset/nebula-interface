@@ -141,8 +141,24 @@ class AudioEngine {
   }
 
 
-  onError() {
-    console.error('PLAYBACK ERROR (TODO)');
+  onError(e) {
+    switch (e.target.error.code) {
+     case e.target.error.MEDIA_ERR_ABORTED:
+       console.error('You aborted the audio playback.');
+       break;
+     case e.target.error.MEDIA_ERR_NETWORK:
+       console.error('A network error caused the audio download to fail.');
+       break;
+     case e.target.error.MEDIA_ERR_DECODE:
+       console.error('The audio playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+       break;
+     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+       console.error('The audio not be loaded, either because the server or network failed or because the format is not supported.');
+       break;
+     default:
+       console.error('An unknown error occurred.');
+       break;
+    }
   }
 
 
@@ -284,7 +300,9 @@ class AudioEngine {
     audioElement.load();
 
     // play
-    audioElement.addEventListener('canplay', (event) => event.target.play());
+    const promise = new Promise((resolve) => {
+      audioElement.addEventListener('canplay', resolve);
+    });
 
     // add element to dom
     document
@@ -295,32 +313,28 @@ class AudioEngine {
     this.audioElements.push(audioElement);
 
     // return
-    return audioElement;
+    return { audioElement, promise };
   }
 
 
   createConnection(track, trackId) {
-    let audioElement;
-
-    audioElement = this.createNewAudioElement(track);
+    const { audioElement, promise } = this.createNewAudioElement(track, trackId);
     audioElement.volume = 1;
 
     // make a connection between the audio element and the volume node
-    // -> do a setTimeout to ensure the audio element has been added to the DOM
-    const makeConnection = () => {
-      const connection = this.ac.createMediaElementSource(audioElement);
+    const connection = this.ac.createMediaElementSource(audioElement);
 
-      if (!connection.mediaElement) {
-        connection.mediaElement = audioElement;
-      }
+    if (!connection.mediaElement) {
+      connection.mediaElement = audioElement;
+    }
 
-      connection.connect(this.nodes.volume);
-      connection.trackId = trackId;
+    connection.connect(this.nodes.volume);
+    connection.trackId = trackId;
 
-      this.connections.push(connection);
-    };
+    this.connections.push(connection);
 
-    setTimeout(makeConnection, 0);
+    // return
+    return { connection, promise };
   }
 
 
@@ -333,12 +347,11 @@ class AudioEngine {
     connection.mediaElement.removeEventListener('timeupdate');
     connection.mediaElement.removeEventListener('ended');
     connection.mediaElement.removeEventListener('durationchange');
-    connection.audioElement.removeEventListener('play');
-    connection.audioElement.removeEventListener('pause');
+    connection.mediaElement.removeEventListener('play');
+    connection.mediaElement.removeEventListener('pause');
     connection.mediaElement.removeEventListener('canplay');
 
     // disconnect
-    connection.mediaElement.setAttribute('src', '');
     connection.disconnect();
 
     // remove audio element from array
@@ -349,7 +362,6 @@ class AudioEngine {
 
     // nullify
     this.connections.splice(this.connections.indexOf(connection), 1);
-    connection.mediaElement = null;
   }
 
 
@@ -367,11 +379,20 @@ class AudioEngine {
     const existingConnection = find(this.connections, (c) => c.trackId === trackId);
 
     if (existingConnection) {
+      this.activeConnection = existingConnection;
       this.removeAllConnectionsExcept(existingConnection);
       this.play(existingConnection);
 
     } else {
-      this.createConnection(track, trackId);
+      const { connection, promise } = this.createConnection(track, trackId);
+      this.activeConnection = connection;
+
+      promise.then(
+        () => {
+          this.removeAllConnectionsExcept(connection);
+          setTimeout(() => this.play(connection), 0);
+        }
+      );
 
     }
   }

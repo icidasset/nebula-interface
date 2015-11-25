@@ -81,7 +81,11 @@ class AppPage extends Component {
 
     return (
       <div>
-        <AppHeader />
+        <AppHeader
+          actions={this.props.actions}
+          audio={this.props.audio}
+          queue={this.props.queue}
+        />
 
         <AppContent>
           {this.renderMainContent()}
@@ -95,6 +99,8 @@ class AppPage extends Component {
 
 AppPage.propTypes = {
   actions: PropTypes.object.isRequired,
+  audio: PropTypes.object.isRequired,
+  queue: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
   sources: PropTypes.object.isRequired,
   tracks: PropTypes.object.isRequired,
@@ -102,7 +108,7 @@ AppPage.propTypes = {
 
 
 function mapStateToProps(state) {
-  return pick(state, ['routing', 'sources', 'tracks']);
+  return pick(state, ['audio', 'queue', 'routing', 'sources', 'tracks']);
 }
 
 

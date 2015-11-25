@@ -1,4 +1,5 @@
 import * as types from '../constants/action_types/audio';
+import * as queueActions from './queue';
 
 
 /// Actions
@@ -20,4 +21,17 @@ export function setAudioVolume(value) {
 
 export function toggleMute() {
   return { type: types.TOGGLE_MUTE };
+}
+
+
+export function togglePlay() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    if (!state.queue.activeItem) {
+      dispatch(queueActions.shiftQueue());
+    }
+
+    return dispatch({ type: types.TOGGLE_PLAY });
+  };
 }

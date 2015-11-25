@@ -42,6 +42,12 @@ export default function audio(state = initialState, action) {
       isMuted: !state.isMuted,
     };
 
+  case types.TOGGLE_PLAY:
+    return {
+      ...state,
+      isPlaying: !state.isPlaying,
+    };
+
   default:
     return state;
   }

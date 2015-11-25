@@ -12,20 +12,8 @@ import { pages } from './index';
 class App extends Component {
 
   componentDidMount() {
-    // TODO:
-    // - Store sources on Firebase
-    // - Store tracks on Firebase
-    // - Store collections on Firebase
-    //
-    // - When one of those changes in the Redux store, save data on Firebase (sync)
-    // - Initial fetch (or sync) of all data
-    // - After initial fetch hide loading animation (this.props.showLoader)
-
     this.props.actions.performInitialAuthCheck().then(() => {
       this.props.history.listen();
-
-      // this.props.actions.processSources();
-      // this.props.actions.fetchTracks();
     });
   }
 
