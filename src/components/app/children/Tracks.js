@@ -8,9 +8,15 @@ class Tracks extends Component {
 
   render() {
     const listItems = [];
+    const clickHandler = (event) => {
+      const idx = parseInt(event.target.closest('li').getAttribute('rel'), 10);
+      const track = this.props.tracks.filteredItems[idx];
+
+      this.props.actions.injectIntoQueue(track);
+    };
 
     this.props.tracks.filteredItems.forEach((track, idx) => {
-      listItems.push(<li key={idx} styleName="track">
+      listItems.push(<li key={idx} styleName="track" onDoubleClick={clickHandler} rel={idx}>
         <strong>{track.properties.title}</strong>
         <span> by </span>
         <strong>{track.properties.artist}</strong>
@@ -28,6 +34,7 @@ class Tracks extends Component {
 
 
 Tracks.propTypes = {
+  actions: PropTypes.object.isRequired,
   tracks: PropTypes.object.isRequired,
 };
 

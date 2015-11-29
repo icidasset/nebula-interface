@@ -56,6 +56,17 @@ export function resetQueue() {
 
 
 /**
+ * Inject track into queue.
+ */
+export function injectIntoQueue(track) {
+  return (dispatch) => {
+    dispatch({ type: types.INJECT_INTO_QUEUE, track });
+    dispatch(refill());
+  };
+}
+
+
+/**
  * Toggle shuffle
  */
 export function toggleShuffle() {

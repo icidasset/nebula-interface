@@ -70,7 +70,12 @@ class AppPage extends Component {
     }
 
     // default
-    return (<childComponents.Tracks tracks={this.props.tracks} />);
+    return (
+      <childComponents.Tracks
+        tracks={this.props.tracks}
+        actions={this.props.actions}
+      />
+    );
   }
 
 

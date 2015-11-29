@@ -1,4 +1,5 @@
 import * as types from '../constants/action_types/queue';
+import * as trackUtils from '../utils/tracks';
 
 
 const initialState = {
@@ -55,6 +56,24 @@ export default function queue(state = initialState, action) {
     return state;
 
 
+  case types.INJECT_INTO_QUEUE:
+    const injectedTrackId = trackUtils.generateTrackId(action.track);
+
+    if (state.activeItem) {
+      newHistory = [...state.history, state.activeItem];
+    } else {
+      newHistory = [...state.history];
+    }
+
+    return {
+      ...state,
+
+      history: newHistory,
+      items: state.items.filter((i) => trackUtils.generateTrackId(i) !== injectedTrackId),
+      activeItem: action.track,
+    };
+
+
   case types.REFRESH_QUEUE:
     // TODO:
     // - remove old items from
@@ -95,3 +114,7 @@ export default function queue(state = initialState, action) {
     return state;
   }
 }
+
+
+/// Private
+///

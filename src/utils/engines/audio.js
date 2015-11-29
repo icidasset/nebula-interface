@@ -4,6 +4,7 @@ import last from 'lodash/array/last';
 
 import * as audioActions from '../../actions/audio';
 import * as queueActions from '../../actions/queue';
+import * as reduxUtils from '../redux';
 import * as sourceUtils from '../sources';
 import * as trackUtils from '../tracks';
 
@@ -29,18 +30,7 @@ class AudioEngine {
   constructor(store) {
     const state = store.getState();
 
-    this.store = store;
-    this.store.subscribe(this.handleExternalEvents.bind(this));
-
-    // last state
-    this.lastState = {
-      activeQueueItem: state.queue.activeItem,
-      audio: state.audio,
-      seek: state.audio.seek,
-    };
-
     // audio
-    this.activeConnection = null;
     this.connections = [];
     this.audioElements = [];
     this.nodes = {};
@@ -53,6 +43,10 @@ class AudioEngine {
     this.createChannelSplitterNode();
     this.createBiquadFilterNodes();
     this.createVolumeNode();
+
+    // store
+    this.store = store;
+    this.observeStore();
   }
 
 
@@ -98,51 +92,45 @@ class AudioEngine {
 
   /// External events
   ///
-  handleExternalEvents() {
-    const state = this.store.getState();
-    const audio = state.audio;
-    const activeQueueItem = state.queue.activeItem;
-    const seek = state.audio.seek;
+  observeStore() {
+    reduxUtils.observeStore(
+      this.store,
+      (s) => s.queue.activeItem,
+      (i) => { if (i) this.insert(i); }
+    );
 
-    const audioChanged = (audio !== this.lastState.audio);
-    const activeQueueItemChanged = (activeQueueItem !== this.lastState.activeQueueItem);
-    const seekChanged = (seek !== this.lastState.seek);
+    // audio - isPlaying
+    reduxUtils.observeStore(
+      this.store,
+      (s) => s.audio.isPlaying,
+      (isPlaying) => {
+        const connection = this.getActiveConnection();
 
-    // check if the state, that we need, changed
-    if (!audioChanged && !activeQueueItemChanged && !seekChanged) return;
-
-    this.lastState.audio = audio;
-    this.lastState.activeQueueItem = activeQueueItem;
-    this.lastState.seek = seek;
-
-    const connection = this.activeConnection;
-
-    // (1) active queue item
-    if (activeQueueItemChanged && activeQueueItem) {
-      this.insert(activeQueueItem);
-    }
-
-    // (2) seek
-    if (seekChanged && connection) {
-      this.seek(connection, seek);
-    }
-
-    // (3) audio
-    if (!audioChanged) return;
-
-    // (3.1) play / pause
-    if (connection) {
-      if (connection.mediaElement.paused && audio.isPlaying) {
-        this.play(connection);
-      } else if (!connection.mediaElement.paused && !audio.isPlaying) {
-        this.pause(connection);
+        if (connection) {
+          if (connection.mediaElement.paused && isPlaying) {
+            this.play(connection);
+          } else if (!connection.mediaElement.paused && !isPlaying) {
+            this.pause(connection);
+          }
+        }
       }
-    }
+    );
 
-    // (3.2) volume
-    this.setNodeValue(
-      'volume',
-      audio.isMuted ? 0 : audio.volume
+    // audio - seek
+    reduxUtils.observeStore(
+      this.store,
+      (s) => s.audio.seek,
+      (p) => {
+        const activeConnection = this.getActiveConnection();
+        if (activeConnection) this.seek(activeConnection, p);
+      }
+    );
+
+    // audio - volume
+    reduxUtils.observeStore(
+      this.store,
+      (s) => s.audio.volume,
+      (v) => this.setNodeValue('volume', this.store.getState().audio.isMuted ? 0 : v)
     );
   }
 
@@ -153,17 +141,10 @@ class AudioEngine {
     const repeat = this.store.getState().audio.repeat;
 
     if (repeat) {
-      this.play(this.activeConnection);
+      this.play(this.getActiveConnection());
     } else {
       this.store.dispatch(actions.shiftQueue());
     }
-  }
-
-
-  onDurationChange(event) {
-    const duration = event.target.duration;
-
-    this.store.dispatch(actions.setAudioDuration(duration));
   }
 
 
@@ -303,32 +284,34 @@ class AudioEngine {
 
   /// Connections
   ///
-  createNewAudioElement(track, rel) {
+  createNewAudioElement(track, trackId) {
     const audioElement = new window.Audio();
     const source = findWhere(this.store.getState().sources.items, { uid: track.sourceId });
     const url = sourceUtils.getSignedUrl(source, track.path);
 
     // track
     audioElement.setAttribute('src', url);
-    audioElement.setAttribute('rel', rel);
+    audioElement.setAttribute('rel', trackId);
     audioElement.setAttribute('crossorigin', 'anonymous');
-
-    // events
-    audioElement.addEventListener('progress', ::this.onProgress);
-    audioElement.addEventListener('error', ::this.onError);
-    audioElement.addEventListener('timeupdate', ::this.onCurrentTimeChange);
-    audioElement.addEventListener('ended', ::this.onEnd);
-    audioElement.addEventListener('durationchange', ::this.onDurationChange);
-
-    audioElement.addEventListener('play', ::this.onPlay);
-    audioElement.addEventListener('pause', ::this.onPause);
 
     // load
     audioElement.load();
 
     // play
     const promise = new Promise((resolve) => {
-      audioElement.addEventListener('canplay', resolve);
+      audioElement.addEventListener('canplay', () => {
+        resolve({
+          trackId,
+          bindAudioEvents: () => {
+            audioElement.addEventListener('progress', ::this.onProgress);
+            audioElement.addEventListener('error', ::this.onError);
+            audioElement.addEventListener('timeupdate', ::this.onCurrentTimeChange);
+            audioElement.addEventListener('ended', ::this.onEnd);
+            audioElement.addEventListener('play', ::this.onPlay);
+            audioElement.addEventListener('pause', ::this.onPause);
+          }
+        });
+      });
     });
 
     // add element to dom
@@ -358,6 +341,7 @@ class AudioEngine {
     connection.connect(this.nodes.volume);
     connection.trackId = trackId;
 
+    // store connection
     this.connections.push(connection);
 
     // return
@@ -373,7 +357,6 @@ class AudioEngine {
     connection.mediaElement.removeEventListener('error');
     connection.mediaElement.removeEventListener('timeupdate');
     connection.mediaElement.removeEventListener('ended');
-    connection.mediaElement.removeEventListener('durationchange');
     connection.mediaElement.removeEventListener('play');
     connection.mediaElement.removeEventListener('pause');
     connection.mediaElement.removeEventListener('canplay');
@@ -399,6 +382,18 @@ class AudioEngine {
   }
 
 
+  getActiveConnection() {
+    const activeItem = this.store.getState().queue.activeItem;
+
+    if (!activeItem) {
+      return null;
+    }
+
+    const trackId = trackUtils.generateTrackId(activeItem);
+    return find(this.connections, (c) => c.trackId === trackId);
+  }
+
+
   /// Playback
   ///
   insert(track) {
@@ -406,18 +401,27 @@ class AudioEngine {
     const existingConnection = find(this.connections, (c) => c.trackId === trackId);
 
     if (existingConnection) {
-      this.activeConnection = existingConnection;
       this.removeAllConnectionsExcept(existingConnection);
       this.play(existingConnection);
 
     } else {
       const { connection, promise } = this.createConnection(track, trackId);
-      this.activeConnection = connection;
 
       promise.then(
-        () => {
-          this.removeAllConnectionsExcept(connection);
-          setTimeout(() => this.play(connection), 0);
+        (connectionFeedback) => {
+          // check if connection is still the last in line
+          const a = this.connections.map((c) => c.trackId).indexOf(connectionFeedback.trackId);
+          const b = this.connections.length - 1;
+          const isLast = (a === b);
+
+          if (isLast) {
+            this.removeAllConnectionsExcept( this.connections[this.connections.length - 1] );
+            this.store.dispatch( actions.setAudioDuration(connection.mediaElement.duration) );
+
+            connectionFeedback.bindAudioEvents();
+
+            setTimeout(() => this.play(connection), 0);
+          }
         }
       );
 
@@ -436,7 +440,11 @@ class AudioEngine {
 
 
   seek(connection, percentageDecimal) {
-    connection.mediaElement.currentTime = connection.mediaElement.duration * percentageDecimal;
+    const duration =  connection.mediaElement.duration;
+
+    if (!isNaN(duration) && !isNaN(percentageDecimal)) {
+      connection.mediaElement.currentTime = duration * percentageDecimal;
+    }
   }
 
 }
