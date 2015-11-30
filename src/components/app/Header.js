@@ -1,6 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
+import Boxes from './Boxes';
 import Mixer from './Mixer';
 
 import styles from './Header.pcss';
@@ -15,6 +16,10 @@ class Header extends Component {
           actions={this.props.actions}
           audio={this.props.audio}
           queue={this.props.queue}
+        />
+
+        <Boxes
+          actions={this.props.actions}
         />
       </header>
     );

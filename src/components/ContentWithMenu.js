@@ -15,7 +15,7 @@ class ContentWithMenu extends Component {
           {this.props.menuItems}
         </nav>
 
-        <div styleName="content">
+        <div>
           {this.props.children}
         </div>
 

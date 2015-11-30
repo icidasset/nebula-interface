@@ -139,10 +139,10 @@
  * Now playing
  */
 .now-playing {
-  background: transparent;
-  flex: 1;
+  background: color(white a(.15));
+  font-size: 0.85rem;
   line-height: 1.5;
-  width: grid(18);
+  width: grid(22);
 }
 
 
@@ -157,7 +157,6 @@
   }
 
   span[rel="title"] {
-    font-size: 1.1em;
     font-weight: 500;
   }
 
@@ -171,7 +170,7 @@
  * Time
  */
 .time {
-  background: transparent;
+  background: color(white a(.15));
   font-weight: 100;
   line-height: 1;
   width: grid(11);
@@ -216,12 +215,8 @@
   }
 }
 
-.time__progress__loaded {
-  background: color(white a(.15));
-}
-
 .time__progress__played {
-  background: color(white a(.3)); /* .45 */
+  background: color(white a(.45));
 }
 
 

@@ -72,8 +72,9 @@ class AppPage extends Component {
     // default
     return (
       <childComponents.Tracks
-        tracks={this.props.tracks}
         actions={this.props.actions}
+        queue={this.props.queue}
+        tracks={this.props.tracks}
       />
     );
   }

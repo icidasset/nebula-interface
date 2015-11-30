@@ -57,7 +57,6 @@ class Mixer extends Component {
     if (minutes.toString().length === 1) minutes = `0${minutes}`;
     if (seconds.toString().length === 1) seconds = `0${seconds}`;
 
-    const progressLoadedStyle = { width: `${this.props.audio.progressLoaded}%` };
     const progressPlayedStyle = { width: `${progressPlayed}%` };
 
     return (
@@ -65,7 +64,6 @@ class Mixer extends Component {
         <div styleName="time__current">{minutes}:{seconds}</div>
         <div styleName="time__duration">{this.props.audio.durationStamp}</div>
         <div styleName="time__progress">
-          <div styleName="time__progress__loaded" style={progressLoadedStyle}></div>
           <div styleName="time__progress__played" style={progressPlayedStyle}></div>
         </div>
       </div>
