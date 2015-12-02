@@ -44,32 +44,32 @@ export function makeTrackObject(attributes) {
 export default function tracks(state = initialState, action) {
   switch (action.type) {
   case types.FETCH_TRACKS:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: true,
-    });
+    };
 
   case types.FETCH_TRACKS_DONE:
-    return Object.assign(
-      {},
-      state,
-      gatherItems(action.items, state.filter),
-      { isFetching: false },
-    );
+    cleanUpItems(action.items);
+
+    return {
+      ...state,
+      ...gatherItems(action.items, state.filter),
+      isFetching: false,
+    };
 
   case types.REPLACE_TRACKS:
-    return Object.assign(
-      {},
-      state,
-      gatherItems(action.items, state.filter),
-    );
+    return {
+      ...state,
+      ...gatherItems(action.items, state.filter),
+    };
 
   case types.FILTER_TRACKS:
-    return Object.assign(
-      {},
-      state,
-      gatherItems(action.items, action.filter, true),
-      { filter: action.filter },
-    );
+    return {
+      ...state,
+      ...gatherItems(action.items, action.filter, true),
+      filter: action.filter,
+    };
 
   default:
     return state;
@@ -95,4 +95,12 @@ function gatherItems(items, filter, filteredOnly = false) {
 function runThroughFilter(items) {
   // TODO:
   return [...items];
+}
+
+
+function cleanUpItems(items) {
+  items.forEach((item) => {
+    if (!item.properties.title) item.properties.title = 'Unknown';
+    if (!item.properties.artist) item.properties.artist = 'Unknown';
+  });
 }

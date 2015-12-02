@@ -86,7 +86,7 @@ class AppPage extends Component {
     }
 
     return (
-      <div>
+      <div className="root__fh-child">
         <AppHeader
           actions={this.props.actions}
           audio={this.props.audio}

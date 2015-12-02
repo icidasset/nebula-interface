@@ -4,6 +4,16 @@
 @import "styles/loading";
 
 
+:root, body, :global(#root) {
+  height: 100%;
+}
+
+:global(.root__fh-child) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 h1 {
   color: $shade-text;
   font-weight: 300;

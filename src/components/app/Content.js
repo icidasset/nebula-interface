@@ -8,7 +8,7 @@ class Content extends Component {
 
   render() {
     return (
-      <main>
+      <main styleName="main">
         {this.props.children}
       </main>
     );
