@@ -71,13 +71,13 @@ class Mixer extends Component {
   }
 
 
-  renderRowOne() {
+  render() {
     const playPauseLight = `light ${this.props.audio.isPlaying ? 'is-on' : ''}`;
     const shuffleLight = `light ${this.props.queue.shuffle ? 'is-on' : ''}`;
     const repeatLight = `light ${this.props.queue.repeat ? 'is-on' : ''}`;
 
     return (
-      <div styleName="mixer-row">
+      <div styleName="mixer">
 
         { /* now playing */ }
         <div styleName="now-playing">
@@ -128,15 +128,6 @@ class Mixer extends Component {
           </div>
         </div>
 
-      </div>
-    );
-  }
-
-
-  render() {
-    return (
-      <div styleName="mixer">
-        { this.renderRowOne() }
       </div>
     );
   }

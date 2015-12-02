@@ -62,7 +62,7 @@ class AppPage extends Component {
     if (this.props.tracks.items.length === 0) {
       return (
         <Middle>
-          <Message icon="change_history">
+          <Message icon="text-document">
             Nothing here yet.
           </Message>
         </Middle>

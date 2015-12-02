@@ -56,7 +56,7 @@ export default function css() {
           loaderOptions[1] + JSON.stringify({
             pack: 'withNormalize',
             parser: 'postcss-safe-parser',
-          }),
+          })
         ),
       }, {
         test: /\.pcss$/,
@@ -65,7 +65,7 @@ export default function css() {
           loaderOptions[0],
           loaderOptions[1] + JSON.stringify({
             parser: 'postcss-safe-parser',
-          }),
+          })
         ),
       }],
     },
@@ -74,7 +74,7 @@ export default function css() {
       const defaults = [
         postPartialImport({
           extension: 'pcss',
-          prefix: ''
+          prefix: '',
         }),
 
         postFunctions({
@@ -86,9 +86,14 @@ export default function css() {
               const sizeInRem = parseFloat(number) * (12 / 16);
               // e.g. 1 = 1 column of 12px
               return sizeInRem.toString() + 'rem';
-            }
+            },
 
-          }
+            rem(pixels) {
+              const sizeInRem = parseFloat(pixels.replace(/px$/, '')) / 16;
+              return sizeInRem.toString() + 'rem';
+            },
+
+          },
         }),
 
         postMixins,

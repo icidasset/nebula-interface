@@ -12,7 +12,7 @@ import { makeTrackObject } from '../reducers/tracks';
 self.addEventListener('message', (event) => {
   process(event.data).then((diff) => {
     self.postMessage({ isDone: true, diff });
-    self.close();
+    // self.close();
   });
 });
 
@@ -186,8 +186,8 @@ function getAttributesForNewTrackLoop(diffs, sources, sourceIdx, itemIdx, result
 function getAttributesForNewTrack(source, newItem) {
   return new Promise((resolve) => {
 
-    const urlHead = sourceUtils.getSignedUrl(source, newItem, 'HEAD', 1);
-    const urlGet = sourceUtils.getSignedUrl(source, newItem, 'GET', 1);
+    const urlHead = sourceUtils.getSignedUrl(source, newItem, 'HEAD', 10);
+    const urlGet = sourceUtils.getSignedUrl(source, newItem, 'GET', 10);
 
     meta.loadTags(urlGet, urlHead, () => {
       const {
@@ -215,6 +215,7 @@ function getAttributesForNewTrack(source, newItem) {
       }));
     }, {
       onError: () => {
+        console.log('BOOM!');
         resolve(null);
       },
     });

@@ -1,0 +1,19 @@
+@import "./colors";
+@import "./fonts";
+@import "./queries";
+
+
+:root {
+  @mixin defaultFont;
+  color: $text-color;
+  font-size: 14px;
+  line-height: 1.7;
+
+  @media (--small) {
+    font-size: 15px;
+  }
+
+  @media (--medium) {
+    font-size: 16px;
+  }
+}

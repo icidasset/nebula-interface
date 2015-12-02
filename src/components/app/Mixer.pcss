@@ -1,24 +1,18 @@
 @import "../../styles/colors";
-@import "../../styles/fonts";
+@import "../../styles/queries";
 
 
 .mixer {
-  @mixin displayFont;
-  color: color(black a(.45));
-  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+
+  @media (--xsmall) {
+    flex-wrap: nowrap;
+  }
 }
 
 .mixer svg {
   fill: currentColor;
-}
-
-.mixer-row {
-  display: flex;
-  padding-bottom: grid(1);
-
-  &:last-child {
-    padding-bottom: 0;
-  }
 }
 
 
@@ -29,10 +23,9 @@
 .now-playing,
 .button,
 .button-group {
-  background: linear-gradient(white, color(white a(0.87)));
+  background: linear-gradient(color(white a(1)), color(white a(0.87)));
   border-radius: 4px;
-  box-shadow: 0 0px 2px 2px rgba(0, 0, 0, 0.025),
-              0 1px 1px 0px rgba(0, 0, 0, 0.15),
+  box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.175),
               0 -1px 1px 0px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   height: grid(6);
@@ -48,9 +41,9 @@
   left: 50%;
   opacity: .65;
   position: absolute;
-  top: 15px;
+  top: rem(15px);
   transform: translate(-50%, -50%);
-  width: 6px;
+  width: rem(6px);
 
   &.is-on {
     background-color: #0cf;
@@ -62,10 +55,14 @@
   line-height: 1.5;
   text-align: center;
   width: grid(3.5);
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .button__label {
-  bottom: 29px;
+  bottom: rem(29px);
   color: color(black a(.325));
   font-size: .65em;
   font-weight: 500;
@@ -77,7 +74,7 @@
 }
 
 .button__icons {
-  bottom: 4px;
+  bottom: rem(4px);
   left: 0;
   position: absolute;
   right: 0;
@@ -90,15 +87,15 @@
     display: inline-block;
     font-size: .9rem;
     font-weight: 300;
-    margin: 0 3px;
+    margin: 0 rem(3px);
     opacity: .75;
     transform: translateY(1px);
   }
 
   svg {
     display: inline-block;
-    height: 14px;
-    width: 14px;
+    height: rem(14px);
+    width: rem(14px);
   }
 }
 
@@ -140,20 +137,47 @@
  */
 .now-playing {
   background: color(white a(.15));
-  font-size: 0.85rem;
-  line-height: 1.5;
-  width: grid(22);
+  border: 1px solid color(white a(.075));
+  font-size: 0.9rem;
+  height: grid(3);
+  line-height: grid(3);
+  margin-bottom: grid(1);
+  margin-right: 0;
+  width: 100%;
+
+  @media (--xsmall) {
+    flex: 1;
+    height: grid(6);
+    line-height: 1.5;
+    margin-bottom: 0;
+    margin-right: grid(1);
+  }
+
+  @media (--medium) {
+    flex: auto;
+    width: grid(22);
+  }
 }
 
 
 .now-playing__main {
-  left: 10px;
-  position: absolute;
-  top: 10px;
+  overflow: hidden;
+  padding: 0 rem(10px);
+  text-overflow: ellipsis;
   white-space: nowrap;
 
+  @media (--xsmall) {
+    left: 0;
+    position: absolute;
+    top: rem(8px);
+  }
+
   span {
-    display: block;
+    display: inline-block;
+
+    @media (--xsmall) {
+      display: block;
+    }
   }
 
   span[rel="title"] {
@@ -162,6 +186,11 @@
 
   span[rel="artist"] {
     font-size: .85em;
+    margin: 0 0 0 rem(10px);
+
+    @media (--xsmall) {
+      margin: rem(2px) 0 0;
+    }
   }
 }
 
@@ -171,26 +200,33 @@
  */
 .time {
   background: color(white a(.15));
+  border: 1px solid color(white a(.075));
+  flex-grow: 1;
   font-weight: 100;
   line-height: 1;
-  width: grid(11);
+  overflow: visible;
+
+  @media (--xsmall) {
+    flex-grow: 0;
+    width: grid(11);
+  }
 }
 
 
 .time__current {
   font-size: 1.9rem;
-  left: 9px;
+  left: rem(9px);
   letter-spacing: -0.05em;
   position: absolute;
-  top: 11px;
+  top: rem(10px);
   z-index: 2;
 }
 
 .time__duration {
-  bottom: 12px;
+  bottom: rem(11px);
   font-size: .75rem;
   font-weight: 400;
-  left: 12px;
+  left: rem(12px);
   letter-spacing: 1px;
   opacity: .55;
   position: absolute;
@@ -198,12 +234,13 @@
 }
 
 .time__progress {
-  bottom: 0;
-  left: 0;
+  border-radius: 4px;
+  bottom: -1px;
+  left: -1px;
   overflow: hidden;
   position: absolute;
-  right: 0;
-  top: 0;
+  right: -1px;
+  top: -1px;
   z-index: 1;
 
   & > div {
@@ -228,7 +265,7 @@
 
   .light {
     border-radius: 4px;
-    width: 20px;
+    width: rem(20px);
   }
 
   .light.is-on {

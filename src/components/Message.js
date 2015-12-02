@@ -1,6 +1,8 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
+import Icon from './Icon';
+
 import styles from './Message.pcss';
 
 
@@ -10,11 +12,7 @@ class Message extends Component {
     let icon;
 
     if (this.props.icon) {
-      if (this.props.isNonMaterialIcon) {
-        icon = (<i styleName="icon">{this.props.icon}</i>);
-      } else {
-        icon = (<i className="material-icons" styleName="icon">{this.props.icon}</i>);
-      }
+      icon = (<Icon icon={this.props.icon} styleName="icon" />);
     }
 
     return (
@@ -30,7 +28,6 @@ class Message extends Component {
 Message.propTypes = {
   children: PropTypes.node,
   icon: PropTypes.string,
-  isNonMaterialIcon: PropTypes.bool,
 };
 
 

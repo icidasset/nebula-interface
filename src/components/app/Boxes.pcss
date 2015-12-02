@@ -1,1 +1,75 @@
-.boxes {}
+@import "../../styles/queries";
+
+
+.boxes {
+  display: flex;
+  flex: 1;
+  line-height: 1;
+  margin-top: grid(1);
+  text-align: center;
+  white-space: nowrap;
+
+  @media (--medium) {
+    margin-left: grid(1);
+    margin-top: 0;
+  }
+}
+
+
+.box {
+  background: color(white a(0.15));
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 4px;
+  box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.175),
+              0 -1px 1px 0px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  cursor: pointer;
+  flex: 1;
+  height: grid(6);
+  margin-right: grid(1);
+  overflow: hidden;
+  position: relative;
+  width: grid(10);
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  .box__label,
+  .box__category,
+  :global(.icon) {
+    position: absolute;
+  }
+}
+
+
+.box__label,
+.box__category {
+  left: rem(5px);
+  overflow: hidden;
+  right: rem(5px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.box__label {
+  bottom: rem(22px);
+}
+
+
+.box__category {
+  bottom: rem(8px);
+  font-size: 0.45em;
+  letter-spacing: .2em;
+  opacity: .55;
+}
+
+.box :global(.icon) {
+  fill: currentColor;
+  height: grid(1.25);
+  left: 50%;
+  transform: translateX(-50%);
+  top: rem(8px);
+  width: grid(1.25);
+}
