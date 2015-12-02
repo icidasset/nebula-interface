@@ -5,6 +5,9 @@ import * as trackActions from './tracks';
 import SourcesWorker from 'worker!../workers/sources.js';
 
 
+const worker = new SourcesWorker();
+
+
 /// Actions
 ///
 export function addSource(attributes) {
@@ -66,8 +69,6 @@ function execProcess() {
     dispatch({ type: types.START_PROCESS_SOURCES });
 
     // process & notify 'end'
-    const worker = new SourcesWorker();
-
     worker.onmessage = (event) => {
       const data = event.data || {};
 

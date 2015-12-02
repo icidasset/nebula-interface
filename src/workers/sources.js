@@ -12,7 +12,6 @@ import { makeTrackObject } from '../reducers/tracks';
 self.addEventListener('message', (event) => {
   process(event.data).then((diff) => {
     self.postMessage({ isDone: true, diff });
-    // self.close();
   });
 });
 
