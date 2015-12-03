@@ -148,13 +148,23 @@ class AudioEngine {
   }
 
 
-  onPlay() {
-    this.store.dispatch(actions.setAudioIsPlaying(true));
+  onPlay(event) {
+    const rel = event.target.getAttribute('rel');
+    const activeConnection = this.getActiveConnection();
+
+    if (activeConnection.trackId === rel) {
+      this.store.dispatch(actions.setAudioIsPlaying(true));
+    }
   }
 
 
-  onPause() {
-    this.store.dispatch(actions.setAudioIsPlaying(false));
+  onPause(event) {
+    const rel = event.target.getAttribute('rel');
+    const activeConnection = this.getActiveConnection();
+
+    if (activeConnection.trackId === rel && !event.target.ended) {
+      this.store.dispatch(actions.setAudioIsPlaying(false));
+    }
   }
 
 
@@ -339,16 +349,16 @@ class AudioEngine {
 
 
   removeConnection(connection) {
-    connection.mediaElement.pause();
-
     // remove all event listeners
-    connection.mediaElement.removeEventListener('progress');
     connection.mediaElement.removeEventListener('error');
     connection.mediaElement.removeEventListener('timeupdate');
     connection.mediaElement.removeEventListener('ended');
     connection.mediaElement.removeEventListener('play');
     connection.mediaElement.removeEventListener('pause');
     connection.mediaElement.removeEventListener('canplay');
+
+    // pause
+    connection.mediaElement.pause();
 
     // disconnect
     connection.disconnect();
@@ -409,7 +419,10 @@ class AudioEngine {
 
             connectionFeedback.bindAudioEvents();
 
-            setTimeout(() => this.play(connection), 0);
+            setTimeout(() => {
+              window.currentAudioTime = 0;
+              if (this.store.getState().audio.isPlaying) this.play(connection);
+            }, 0);
           }
         }
       );

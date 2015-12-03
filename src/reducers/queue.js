@@ -9,6 +9,8 @@ const initialState = {
   activeItem: null,
   shuffle: false,
   repeat: false,
+
+  ...retrieveSettings(),
 };
 
 
@@ -16,6 +18,7 @@ export default function queue(state = initialState, action) {
   let newItems;
   let newHistory;
   let newActiveItem;
+  let newState;
 
   switch (action.type) {
   case types.SHIFT_QUEUE:
@@ -99,15 +102,23 @@ export default function queue(state = initialState, action) {
 
 
   case types.TOGGLE_SHUFFLE:
-    return Object.assign({}, state, {
+    newState = {
+      ...state,
       shuffle: !state.shuffle,
-    });
+    };
+
+    storeSettings(newState);
+    return newState;
 
 
   case types.TOGGLE_REPEAT:
-    return Object.assign({}, state, {
+    newState = {
+      ...state,
       repeat: !state.repeat,
-    });
+    };
+
+    storeSettings(newState);
+    return newState;
 
 
   default:
@@ -118,3 +129,12 @@ export default function queue(state = initialState, action) {
 
 /// Private
 ///
+function storeSettings(state) {
+  const settings = { shuffle: state.shuffle, repeat: state.repeat };
+  window.localStorage.setItem('queueSettings', JSON.stringify(settings));
+}
+
+
+function retrieveSettings() {
+  return JSON.parse(window.localStorage.getItem('queueSettings') || '{}');
+}

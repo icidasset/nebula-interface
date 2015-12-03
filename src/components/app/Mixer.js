@@ -20,7 +20,7 @@ class Mixer extends Component {
     this.boundHandleTimeClick = this.handleTimeClick.bind(this);
     this.timeIntervalId = setInterval(() => {
       this.setState({ currentTime: window.currentAudioTime });
-    }, 500);
+    }, 250);
   }
 
 
