@@ -37,17 +37,17 @@
 .light {
   background-color: color(black a(.175));
   border-radius: 50%;
-  height: 6px;
+  height: rem(6px);
   left: 50%;
-  opacity: .65;
+  opacity: .7;
   position: absolute;
   top: rem(15px);
   transform: translate(-50%, -50%);
   width: rem(6px);
 
   &.is-on {
-    background-color: #0cf;
-    box-shadow: 0 0 25px 2px #0cf;
+    background-color: $shade-accent;
+    box-shadow: 0 0 rem(25px) 2px $shade-accent;
   }
 }
 

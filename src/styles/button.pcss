@@ -1,9 +1,10 @@
 :global .button {
-  background: $shade-text;
+  background: transparent;
   border: 0;
   border-radius: 4px;
-  box-shadow: 0 2px 2px 0 color($shade a(0.125));
-  color: white;
+  box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.175),
+              0 -1px 1px 0px rgba(0, 0, 0, 0.05);
+  color: $shade-accent;
   display: inline-block;
   font-size: 0.95rem;
   font-weight: 500;
@@ -13,17 +14,8 @@
   padding: 6px 13px 7px;
   text-decoration: none;
 
-  &:focus,
-  &:active {
-    box-shadow: none;
-  }
-
   &:focus {
     outline: 0;
-  }
-
-  &:active {
-    box-shadow: 0 -2px 2px 0 rgba(0, 0, 0, 0.125) inset;
   }
 
   &[disabled] {

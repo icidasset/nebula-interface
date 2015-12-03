@@ -27,11 +27,15 @@
     width: 100%;
 
     &:focus {
-      border-bottom-color: $shade;
+      border-bottom-color: $shade-light;
       outline: none;
+
+      &::placeholder {
+        color: $shade-light;
+      }
     }
 
-    &:placeholder {
+    &::placeholder {
       color: $subtle-gray-text;
     }
   }
