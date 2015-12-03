@@ -19,15 +19,21 @@ class Boxes extends Component {
         </div>
 
         <div styleName="box">
-          <Icon icon="browser"/>
-          <div styleName="box__label">Tracks</div>
-          <div styleName="box__category">VIEW</div>
-        </div>
-
-        <div styleName="box">
           <Icon icon="inbox"/>
           <div styleName="box__label">Queue</div>
           <div styleName="box__category">DROPZONE</div>
+        </div>
+
+        <div styleName="box">
+          <Icon icon="bar-graph"/>
+          <div styleName="box__label">Equalizer</div>
+          <div styleName="box__category">CONTROL</div>
+        </div>
+
+        <div styleName="box">
+          <Icon icon="browser"/>
+          <div styleName="box__label">Tracks</div>
+          <div styleName="box__category">VIEW</div>
         </div>
 
       </div>

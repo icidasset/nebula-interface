@@ -12,6 +12,8 @@ class Tracks extends Component {
 
   constructor(props) {
     super(props);
+
+    this.rowHeight = 25;
     this.state = { mainContentHeight: 0 };
   }
 
@@ -19,11 +21,9 @@ class Tracks extends Component {
   componentDidMount() {
     this.boundHandleResize = this.handleResize.bind(this);
     window.addEventListener('resize', this.boundHandleResize);
-  }
 
-
-  componentWillReceiveProps() {
     this.setSpaceProperties();
+    this.detectRowHeight();
   }
 
 
@@ -42,8 +42,19 @@ class Tracks extends Component {
   }
 
 
+  detectRowHeight() {
+    const node = ReactDOM.findDOMNode(this);
+    const trackNode = node.querySelector(`.${styles.track}`);
+
+    if (trackNode) {
+      this.rowHeight = trackNode.offsetHeight;
+    }
+  }
+
+
   handleResize() {
     this.setSpaceProperties();
+    this.detectRowHeight();
   }
 
 
@@ -86,8 +97,9 @@ class Tracks extends Component {
       </div>);
     });
 
-    const rowHeight = 50;
-    const amountOfVisibleRows = Math.round(this.state.mainContentHeight / rowHeight);
+    const amountOfVisibleRows = Math.ceil(
+      this.state.mainContentHeight / this.rowHeight
+    );
 
     return (
       <ReactListView
@@ -95,7 +107,7 @@ class Tracks extends Component {
           height: this.state.mainContentHeight,
         }}
         rowCount={listItems.length}
-        rowHeight={rowHeight}
+        rowHeight={this.rowHeight}
         renderItem={(x, y, style) => {
           const _listItems = listItems.slice(
             Math.abs(y),

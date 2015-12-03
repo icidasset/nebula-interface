@@ -7,7 +7,6 @@ import * as queueActions from './queue';
 export const setAudioCurrentTime = (value) => ({ type: types.SET_AUDIO_CURRENT_TIME, value });
 export const setAudioDuration = (value) => ({ type: types.SET_AUDIO_DURATION, value });
 export const setAudioIsPlaying = (value) => ({ type: types.SET_AUDIO_IS_PLAYING, value });
-export const setAudioProgressLoaded = (value) => ({ type: types.SET_AUDIO_PROGRESS_LOADED, value });
 export const setAudioVolume = (value) => ({ type: types.SET_AUDIO_VOLUME, value });
 
 

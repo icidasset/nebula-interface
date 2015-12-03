@@ -13,8 +13,6 @@ const initialState = {
 
   // fast feedback
   currentTime: 0,
-  progressLoaded: 0,
-  progressPlayed: 0,
 };
 
 
@@ -44,12 +42,6 @@ export default function audio(state = initialState, action) {
     return {
       ...state,
       isPlaying: !!action.value,
-    };
-
-  case types.SET_AUDIO_PROGRESS_LOADED:
-    return {
-      ...state,
-      progressLoaded: action.value,
     };
 
   case types.SET_AUDIO_VOLUME:

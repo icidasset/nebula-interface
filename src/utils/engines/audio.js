@@ -181,17 +181,7 @@ class AudioEngine {
 
   onCurrentTimeChange(event) {
     const currentTime = event.target.currentTime;
-
-    this.store.dispatch(actions.setAudioCurrentTime(currentTime));
-  }
-
-
-  onProgress(event) {
-    const progress = event.target.buffered.length && event.target.duration ?
-      (event.target.buffered.end(0) / event.target.duration) * 100 :
-      0;
-
-    this.store.dispatch(actions.setAudioProgressLoaded(progress));
+    window.currentAudioTime = currentTime;
   }
 
 
@@ -303,7 +293,6 @@ class AudioEngine {
         resolve({
           trackId,
           bindAudioEvents: () => {
-            audioElement.addEventListener('progress', ::this.onProgress);
             audioElement.addEventListener('error', ::this.onError);
             audioElement.addEventListener('timeupdate', ::this.onCurrentTimeChange);
             audioElement.addEventListener('ended', ::this.onEnd);

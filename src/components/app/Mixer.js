@@ -7,7 +7,29 @@ import styles from './Mixer.pcss';
 
 class Mixer extends Component {
 
-  timeClickHandler(event) {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentTime: 0,
+    };
+  }
+
+
+  componentWillMount() {
+    this.boundHandleTimeClick = this.handleTimeClick.bind(this);
+    this.timeIntervalId = setInterval(() => {
+      this.setState({ currentTime: window.currentAudioTime });
+    }, 500);
+  }
+
+
+  componentWillUnmount() {
+    clearInterval(this.timeIntervalId);
+  }
+
+
+  handleTimeClick(event) {
     const timeNode = event.target.closest(`.${styles.time}`);
 
     let offset;
@@ -44,7 +66,7 @@ class Mixer extends Component {
 
   renderTime() {
     const duration = this.props.audio.duration;
-    const time = this.props.audio.currentTime;
+    const time = this.state.currentTime || 0;
 
     let minutes = Math.floor(time / 60);
     let seconds = Math.floor(time - (minutes * 60));
@@ -60,7 +82,7 @@ class Mixer extends Component {
     const progressPlayedStyle = { width: `${progressPlayed}%` };
 
     return (
-      <div styleName="time" onClick={this.timeClickHandler.bind(this)}>
+      <div styleName="time" onClick={this.boundHandleTimeClick}>
         <div styleName="time__current">{minutes}:{seconds}</div>
         <div styleName="time__duration">{this.props.audio.durationStamp}</div>
         <div styleName="time__progress">
