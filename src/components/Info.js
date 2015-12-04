@@ -1,6 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
+import Icon from './Icon';
 import styles from './Info.pcss';
 
 
@@ -19,7 +20,7 @@ class Info extends Component {
 
       switch (item.type) {
       case 'error':
-        icon = 'error_outline';
+        icon = 'warning';
         break;
       case 'success':
         icon = 'check';
@@ -29,7 +30,7 @@ class Info extends Component {
       }
 
       if (icon) {
-        icon = <i className="material-icons">{icon}</i>;
+        icon = <Icon icon={icon} />;
       }
 
       // nodes

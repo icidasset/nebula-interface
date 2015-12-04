@@ -26,6 +26,8 @@ export function deleteSource(uid) {
     const state = getState();
 
     dispatch({ type: types.DELETE_SOURCE, uid });
+    dispatch(trackActions.removeTracksBySourceUid(uid));
+    // TODO: remove tracks from collections, mark them as missing
 
     return firebase.remove('sources', uid, state.auth.user.uid);
   };
@@ -71,6 +73,8 @@ function execProcess() {
     // process & notify 'end'
     worker.onmessage = (event) => {
       const data = event.data || {};
+
+      dispatch({ type: types.SET_PROCESS_SOURCES_PROGRESS, value: data.progress });
 
       if (data.isDone) {
         dispatch(trackActions.diffTracks(data.diff));

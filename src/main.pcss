@@ -4,6 +4,9 @@
 @import "styles/loading";
 
 
+/**
+ * Containers
+ */
 :root, body, :global(#root) {
   height: 100%;
 }
@@ -12,24 +15,31 @@ body {
   background-color: $shade-light;
 }
 
-:global(#root) {
+:global #root {
   background-color: white;
 }
 
-:global(.root__fh-child) {
+:global .root__fh-child {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-h1 {
-  font-weight: 300;
+
+/**
+ * Content
+ */
+:global(.icon) {
+  display: inline-block;
+  fill: currentColor;
+  height: 1.2em;
+  width: 1.2em;
 }
 
-h1 i {
-  margin-right: 10px;
-  position: relative;
-  top: 4px;
+h1 :global(.icon) {
+  height: .85em;
+  margin-right: .4em;
+  width: .85em;
 }
 
 a {

@@ -11,7 +11,12 @@ import { makeTrackObject } from '../reducers/tracks';
 
 self.addEventListener('message', (event) => {
   process(event.data).then((diff) => {
-    self.postMessage({ isDone: true, diff });
+    // = done
+    self.postMessage({
+      isDone: true,
+      progress: 1.0,
+      diff,
+    });
   });
 });
 
@@ -52,20 +57,20 @@ function getExternalTrees(sources) {
   const promises = sources.map((source) => {
     return sourceUtils.getTree(source).then(
       (tree) => {
-        return { sourceId: source.uid, tree };
+        return { sourceUid: source.uid, tree };
       }
     );
   });
 
   return Promise.all(promises).then(
     (treesWithSource) => {
-      const treesGroupedBySourceId = {};
+      const treesGroupedBySourceUid = {};
 
       treesWithSource.forEach((t) => {
-        treesGroupedBySourceId[t.sourceId] = t.tree;
+        treesGroupedBySourceUid[t.sourceUid] = t.tree;
       });
 
-      return treesGroupedBySourceId;
+      return treesGroupedBySourceUid;
     }
   );
 }
@@ -81,11 +86,11 @@ function getExternalTrees(sources) {
   * { `${source-id}` : tree }
  */
 function getInternalTrees(tracks) {
-  const tracksGroupedBySourceId = groupBy(tracks, 'sourceId');
+  const tracksGroupedBySourceUid = groupBy(tracks, 'sourceUid');
   const trees = {};
 
-  Object.keys(tracksGroupedBySourceId).forEach((sourceId) => {
-    trees[sourceId] = tracksGroupedBySourceId[sourceId].map((track) => track.path);
+  Object.keys(tracksGroupedBySourceUid).forEach((sourceUid) => {
+    trees[sourceUid] = tracksGroupedBySourceUid[sourceUid].map((track) => track.path);
   });
 
   return trees;
@@ -103,15 +108,15 @@ function compareTrees(args) {
   const { external, internal } = args;
   const diff = {};
 
-  Object.keys(external).forEach((sourceId) => {
-    const sourceOfTruth = external[sourceId];
-    const internalItems = internal[sourceId] || [];
+  Object.keys(external).forEach((sourceUid) => {
+    const sourceOfTruth = external[sourceUid];
+    const internalItems = internal[sourceUid] || [];
 
     const newItems = difference(sourceOfTruth, internalItems);
     const missingItems = difference(internalItems, sourceOfTruth);
 
     if (newItems.length || missingItems.length) {
-      diff[sourceId] = { 'new': newItems, 'missing': missingItems };
+      diff[sourceUid] = { 'new': newItems, 'missing': missingItems };
     }
   });
 
@@ -129,12 +134,20 @@ function getAttributesForNewTracks(args) {
     return { new: [], missing: d.missing };
   });
 
+  let totalNewItems = 0;
+
+  diffPaired.forEach((pair) => {
+    totalNewItems = totalNewItems + pair[1].new.length;
+  });
+
   return getAttributesForNewTrackLoop(
     diffPaired,
     sourcesGroupedById,
     0,
     0,
-    results
+    results,
+    totalNewItems,
+    0
 
   ).then((newAttributes) => {
     return Object.assign({}, args.diff, newAttributes);
@@ -143,7 +156,10 @@ function getAttributesForNewTracks(args) {
 }
 
 
-function getAttributesForNewTrackLoop(diffs, sources, sourceIdx, itemIdx, results) {
+function getAttributesForNewTrackLoop(
+  diffs, sources, sourceIdx, itemIdx,
+  results, totalNew, totalItemIdx
+) {
   const diff = diffs[sourceIdx];
   const newItems = diff ? diff[1].new : [];
   const newItem = newItems[itemIdx];
@@ -171,12 +187,19 @@ function getAttributesForNewTrackLoop(diffs, sources, sourceIdx, itemIdx, result
       return results;
     }
 
+    self.postMessage({
+      isDone: false,
+      progress: ((totalItemIdx + 1) / totalNew),
+    });
+
     return getAttributesForNewTrackLoop(
       diffs,
       sources,
       nextSourceIdx,
       nextItemIdx,
-      results
+      results,
+      totalNew,
+      totalItemIdx + 1
     );
   });
 }
@@ -200,7 +223,7 @@ function getAttributesForNewTrack(source, newItem) {
 
       resolve(makeTrackObject({
         path: newItem,
-        sourceId: source.uid,
+        sourceUid: source.uid,
 
         properties: {
           album: album ? album.toString() : undefined,

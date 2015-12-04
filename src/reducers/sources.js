@@ -18,6 +18,7 @@ const initialSource = {
 const initialState = {
   isProcessing: false,
   isFetching: true,
+  processingProgress: 0.0,
 
   items: [],
 };
@@ -26,39 +27,50 @@ const initialState = {
 export default function sources(state = initialState, action) {
   switch (action.type) {
   case types.START_PROCESS_SOURCES:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isProcessing: true,
-    });
+    };
+
+  case types.SET_PROCESS_SOURCES_PROGRESS:
+    return {
+      ...state,
+      processingProgress: action.value || 0.0,
+    };
 
   case types.END_PROCESS_SOURCES:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isProcessing: false,
-    });
+    };
 
   case types.FETCH_SOURCES:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: true,
-    });
+    };
 
   case types.FETCH_SOURCES_DONE:
-    // resets the local-items collection
-    return Object.assign({}, state, {
+    return {
+      ...state,
       isFetching: false,
       items: action.items || [],
-    });
+    };
 
   case types.ADD_SOURCE:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       items: [
         ...state.items,
-        Object.assign({}, initialSource, action.source),
+        { ...initialSource, ...action.source },
       ],
-    });
+    };
 
   case types.DELETE_SOURCE:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       items: state.items.filter((item) => item.uid !== action.uid),
-    });
+    };
 
   default:
     return state;

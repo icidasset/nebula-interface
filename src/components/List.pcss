@@ -35,8 +35,8 @@
  * Empty state
  */
 .empty-state {
-  background: #F9F9F9;
-  color: #BBB;
+  background: color($shade-light a(.25));
+  color: color(black a(.25));
   cursor: pointer;
   height: 170px;
   position: relative;
@@ -50,14 +50,19 @@
   top: 50%;
   transform: translateY(-50%);
   width: 100%;
+}
 
-  > i,
-  > span {
-    display: block;
-  }
+.empty-state :global(.icon) {
+  height: grid(2);
+  width: grid(2);
+}
 
-  > i {
-    font-size: 2.25rem;
-    margin-bottom: 3px;
-  }
+.empty-state__message {
+  display: block;
+}
+
+.empty-state__note {
+  color: color(black a(.5));
+  display: block;
+  font-size: 0.9em;
 }

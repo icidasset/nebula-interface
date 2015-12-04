@@ -54,6 +54,14 @@ export function fetchTracks() {
 }
 
 
+/**
+ * Remove matching tracks
+ */
+export function removeTracksBySourceUid(sourceUid) {
+  // TODO
+}
+
+
 /// Private
 ///
 function handleDiff(oldCollection, diff) {
@@ -62,11 +70,11 @@ function handleDiff(oldCollection, diff) {
 
   let newCollection;
 
-  Object.keys(diff).forEach((sourceId) => {
-    const d = diff[sourceId];
+  Object.keys(diff).forEach((sourceUid) => {
+    const d = diff[sourceUid];
 
     d.missing.forEach((missingItem) => {
-      missingItems.push(trackUtils.generateTrackIdWithAttributes(sourceId, missingItem));
+      missingItems.push(trackUtils.generateTrackIdWithAttributes(sourceUid, missingItem));
     });
 
     if (d.new.length) {

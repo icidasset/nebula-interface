@@ -2,6 +2,7 @@ import { createElement, Component, PropTypes } from 'react';
 
 import ContentWithMenu from '../../ContentWithMenu';
 import Form from '../../Form';
+import Icon from '../../Icon';
 import Link from '../../Link';
 import List from '../../List';
 
@@ -55,9 +56,10 @@ class Sources extends Component {
   renderIndexProcessing() {
     return (
       <List
-        items={[]}
-        emptyIcon="sync"
+        items={ [] }
+        emptyIcon="cycle"
         emptyMessage="Processing sources"
+        emptyNote={ Math.round(this.props.sources.processingProgress * 100).toString() + '%' }
       />
     );
   }
@@ -73,13 +75,13 @@ class Sources extends Component {
         key: 'delete',
         label: 'Delete',
         icon: 'close',
-        clickHandler: ::this.handleIndexDelete,
+        clickHandler: this.handleIndexDelete.bind(this),
       },
       {
         key: 'edit',
         label: 'Edit',
         icon: 'mode_edit',
-        clickHandler: ::this.handleIndexEdit,
+        clickHandler: this.handleIndexEdit.bind(this),
       },
     ];
 
@@ -87,8 +89,8 @@ class Sources extends Component {
       <List
         items={items}
         emptyClickHandler={this.goToAdd.bind(this)}
-        emptyIcon="add_circle"
-        emptyMessage="Add some music to your life"
+        emptyIcon="add-to-list"
+        emptyMessage="Add some music"
         actions={actions}
       />
     );
@@ -150,10 +152,10 @@ class Sources extends Component {
 
     const menuItems = [
       <Link key="index" to="/app/sources">
-        <i className="material-icons">list</i> Index
+        <Icon icon="text-document-inverted" /> Index
       </Link>,
       <Link key="add" to="/app/sources/add">
-        <i className="material-icons">add</i> Add new
+        <Icon icon="plus" /> Add new
       </Link>,
     ];
 

@@ -18,12 +18,13 @@ const initialState = {
 export default function tracks(state = initialState, action) {
   switch (action.type) {
   case types.ADD_COLLECTION:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       items: [
         ...state.items,
-        Object.assign({}, initialCollection, action.attributes),
+        { ...initialCollection, ...action.attributes },
       ],
-    });
+    };
 
   default:
     return state;

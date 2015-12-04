@@ -13,25 +13,25 @@ class Boxes extends Component {
       <div styleName="boxes">
 
         <div styleName="box">
-          <Icon icon="star"/>
+          <Icon icon="beamed-note"/>
           <div styleName="box__label">Favourites</div>
           <div styleName="box__category">COLLECTION</div>
         </div>
 
         <div styleName="box">
-          <Icon icon="inbox"/>
+          <Icon icon="clock"/>
           <div styleName="box__label">Queue</div>
           <div styleName="box__category">DROPZONE</div>
         </div>
 
         <div styleName="box">
-          <Icon icon="bar-graph"/>
+          <Icon icon="sound-mix"/>
           <div styleName="box__label">Equalizer</div>
           <div styleName="box__category">CONTROL</div>
         </div>
 
         <div styleName="box">
-          <Icon icon="browser"/>
+          <Icon icon="mask"/>
           <div styleName="box__label">Tracks</div>
           <div styleName="box__category">VIEW</div>
         </div>

@@ -286,7 +286,7 @@ class AudioEngine {
   ///
   createNewAudioElement(track, trackId) {
     const audioElement = new window.Audio();
-    const source = findWhere(this.store.getState().sources.items, { uid: track.sourceId });
+    const source = findWhere(this.store.getState().sources.items, { uid: track.sourceUid });
     const url = sourceUtils.getSignedUrl(source, track.path);
 
     // track

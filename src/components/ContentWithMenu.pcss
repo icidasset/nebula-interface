@@ -28,9 +28,14 @@
     cursor: default;
   }
 
-  a i {
-    font-size: 1.45em;
+  a :global(.icon) {
+    height: 1.2em;
     margin-right: 3px;
-    transform: translateY(25%);
+    vertical-align: middle;
+    width: 1.2em;
+  }
+
+  a > span {
+    vertical-align: middle;
   }
 }

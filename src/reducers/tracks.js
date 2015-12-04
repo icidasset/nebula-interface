@@ -5,7 +5,7 @@ import * as types from '../constants/action_types/tracks';
 
 
 const initialTrack = {
-  sourceId: null,
+  sourceUid: null,
   path: null,
 
   properties: {
@@ -37,10 +37,9 @@ const initialState = {
 
 export function makeTrackObject(attributes) {
   return {
-    sourceId: attributes.sourceId,
+    sourceUid: attributes.sourceUid,
     path: attributes.path,
-
-    properties: Object.assign({}, initialTrack.properties, attributes.properties),
+    properties: { ...initialTrack.properties, ...attributes.properties },
   };
 }
 
@@ -125,6 +124,6 @@ function cleanUpItems(items) {
   items.forEach((item) => {
     if (!item.properties.title) item.properties.title = 'Unknown';
     if (!item.properties.artist) item.properties.artist = 'Unknown';
-    if (!item.properties.album) item.properties.album = '';
+    if (!item.properties.album) item.properties.album = 'Unknown';
   });
 }

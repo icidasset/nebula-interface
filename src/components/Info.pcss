@@ -17,12 +17,14 @@
   &[data-info-type="success"] {
     color: green;
   }
-}
 
-.info li i {
-  font-size: 1.15em;
-  left: 0;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  :global(.icon) {
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  > span {
+    display: inline-block;
+    vertical-align: middle;
+  }
 }

@@ -1,6 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import CSSModules from 'react-css-modules';
 
+import Icon from './Icon';
 import styles from './List.pcss';
 
 
@@ -10,7 +11,7 @@ class List extends Component {
     const actions = this.props.actions.map((action) => {
       return (
         <a key={action.key} title={action.label} onClick={action.clickHandler}>
-          <i className="material-icons">{action.icon}</i>
+          <Icon icon={action.icon} />
         </a>
       );
     });
@@ -32,8 +33,9 @@ class List extends Component {
       <div styleName="empty-state" onClick={this.props.emptyClickHandler}>
         <div styleName="empty-state__inner">
 
-          <i className="material-icons">{this.props.emptyIcon}</i>
-          <span>{this.props.emptyMessage}</span>
+          <Icon icon={this.props.emptyIcon} />
+          <span styleName="empty-state__message">{this.props.emptyMessage}</span>
+          <span styleName="empty-state__note">{this.props.emptyNote}</span>
 
         </div>
       </div>
@@ -48,6 +50,7 @@ List.propTypes = {
   emptyClickHandler: PropTypes.func,
   emptyIcon: PropTypes.string.isRequired,
   emptyMessage: PropTypes.string.isRequired,
+  emptyNote: PropTypes.string,
   items: PropTypes.array,
   onClick: PropTypes.func,
 };

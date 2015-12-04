@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import ComponentWithInfo from '../components/ComponentWithInfo';
 import Form from '../components/Form';
+import Icon from '../components/Icon';
 import Link from '../components/Link';
 import Middle from '../components/Middle';
 
@@ -97,7 +98,7 @@ class SignInUpPage extends ComponentWithInfo {
       <Middle>
 
         <h1>
-          <i className="material-icons">perm_identity</i>
+          <Icon icon="user" />
           { labelArray[0] }<strong> { labelArray.reverse()[0] }</strong>
         </h1>
 

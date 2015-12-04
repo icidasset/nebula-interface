@@ -11,19 +11,22 @@ const initialState = {
 export default function routing(state = initialState, action) {
   switch (action.type) {
   case types.SET_PATH:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       path: action.path,
-    });
+    };
 
   case types.SET_STATUS:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       status: action.status,
-    });
+    };
 
   case types.SET_CONTAINER:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       container: action.container,
-    });
+    };
 
   default:
     return state;
