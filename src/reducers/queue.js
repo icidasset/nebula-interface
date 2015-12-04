@@ -73,13 +73,13 @@ export default function queue(state = initialState, action) {
 
       history: newHistory,
       items: state.items.filter((i) => trackUtils.generateTrackId(i) !== injectedTrackId),
-      activeItem: action.track,
+      activeItem: { ...action.track, injected: true },
     };
 
 
   case types.REFRESH_QUEUE:
     // TODO:
-    // - remove old items from
+    // - remove non-existing (old) items from
     //   `state.queue.items`,
     //   `state.queue.history`,
     //   `state.queue.activeItem`
@@ -88,16 +88,16 @@ export default function queue(state = initialState, action) {
 
 
   case types.REFILL_QUEUE:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       items: state.items.concat(action.newItems),
-    });
+    };
 
 
   case types.RESET_QUEUE:
     return {
       ...state,
-
-      items: [],
+      items: state.items.filter((i) => i.injected),
     };
 
 

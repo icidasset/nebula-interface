@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ReactListView from 'react-list-view';
 
 import * as trackUtils from '../../../utils/tracks';
-
+import Icon from '../../Icon';
 import contentStyles from '../Content.pcss';
 import styles from './Tracks.pcss';
 
@@ -14,7 +14,7 @@ class Tracks extends Component {
     super(props);
 
     this.rowHeight = 25;
-    this.state = { mainContentHeight: 0 };
+    this.state = { tracksContainerHeight: 0 };
   }
 
 
@@ -35,9 +35,10 @@ class Tracks extends Component {
   setSpaceProperties() {
     const node = ReactDOM.findDOMNode(this);
     const mainNode = node.closest(`.${contentStyles.main}`);
+    const filterNode = node.querySelector(`.${styles.filter}`);
 
     this.setState({
-      mainContentHeight: mainNode.clientHeight,
+      tracksContainerHeight: mainNode.clientHeight - filterNode.clientHeight,
     });
   }
 
@@ -62,20 +63,27 @@ class Tracks extends Component {
     const idx = parseInt(event.target.closest(`.${styles.track}`).getAttribute('rel'), 10);
     const track = this.props.tracks.filteredItems[idx];
 
-    if (this.props.queue.activeItem === track) {
-      this.props.actions.setAudioIsPlaying(true);
-    } else {
+    if (this.props.queue.activeItem !== track) {
       this.props.actions.injectIntoQueue(track);
     }
+
+    this.props.actions.setAudioIsPlaying(true);
+  }
+
+
+  handleFilterChange(event) {
+    this.props.actions.filterTracks(event.target.value);
   }
 
 
   render() {
     const listItems = [];
-    const trackClickHandler = this.handleTrackClick.bind(this);
     const activeTrackId = this.props.queue.activeItem ?
       trackUtils.generateTrackId(this.props.queue.activeItem) :
       false;
+
+    const trackClickHandler = this.handleTrackClick.bind(this);
+    const filterChangeHandler = this.handleFilterChange.bind(this);
 
     this.props.tracks.filteredItemIds.forEach((trackId, idx) => {
       const track = this.props.tracks.filteredItems[idx];
@@ -91,32 +99,46 @@ class Tracks extends Component {
         onDoubleClick={trackClickHandler}
         rel={idx}
       >
-        <strong>{track.properties.title}</strong>
-        <span> by </span>
-        <strong>{track.properties.artist}</strong>
+        <div>{track.properties.title}</div>
+        <div>{track.properties.artist}</div>
+        <div>{track.properties.album}</div>
       </div>);
     });
 
     const amountOfVisibleRows = Math.ceil(
-      this.state.mainContentHeight / this.rowHeight
+      this.state.tracksContainerHeight / this.rowHeight
     );
 
     return (
-      <ReactListView
-        style={{
-          height: this.state.mainContentHeight,
-        }}
-        rowCount={listItems.length}
-        rowHeight={this.rowHeight}
-        renderItem={(x, y, style) => {
-          const _listItems = listItems.slice(
-            Math.abs(y),
-            y + amountOfVisibleRows
-          );
+      <div>
 
-          return (<div className={styles.tracks} style={style}>{_listItems}</div>);
-        }}
-      />
+        <div className={styles.filter}>
+          <Icon icon="magnifying-glass" />
+          <input
+            type="text"
+            placeholder="Search"
+            value={this.props.tracks.filter}
+            onChange={filterChangeHandler}
+          />
+        </div>
+
+        <ReactListView
+          style={{
+            height: this.state.tracksContainerHeight,
+          }}
+          rowCount={listItems.length}
+          rowHeight={this.rowHeight}
+          renderItem={(x, y, style) => {
+            const _listItems = listItems.slice(
+              Math.abs(y),
+              y + amountOfVisibleRows
+            );
+
+            return (<div className={styles.tracks} style={style}>{_listItems}</div>);
+          }}
+        />
+
+      </div>
     );
   }
 

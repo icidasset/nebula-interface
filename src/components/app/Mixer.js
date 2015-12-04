@@ -43,6 +43,18 @@ class Mixer extends Component {
   }
 
 
+  handlePreviousClick() {
+    this.props.actions.unshiftQueue();
+    this.props.actions.setAudioIsPlaying(true);
+  }
+
+
+  handleNextClick() {
+    this.props.actions.shiftQueue();
+    this.props.actions.setAudioIsPlaying(true);
+  }
+
+
   /// Render
   ///
   renderNowPlaying() {
@@ -122,12 +134,12 @@ class Mixer extends Component {
 
         { /* previous - next */ }
         <div styleName="button-group">
-          <div styleName="button" onClick={this.props.actions.unshiftQueue}>
+          <div styleName="button" onClick={this.handlePreviousClick.bind(this)}>
             <div styleName="button__icons">
               <Icon icon="controller-fast-backward"/>
             </div>
           </div>
-          <div styleName="button" onClick={this.props.actions.shiftQueue}>
+          <div styleName="button" onClick={this.handleNextClick.bind(this)}>
             <div styleName="button__icons">
               <Icon icon="controller-fast-forward"/>
             </div>

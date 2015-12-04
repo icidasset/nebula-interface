@@ -1,3 +1,5 @@
+import sortByAll from 'lodash/collection/sortByAll';
+
 import * as trackUtils from '../utils/tracks';
 import * as types from '../constants/action_types/tracks';
 
@@ -20,7 +22,9 @@ const initialTrack = {
 
 const initialState = {
   isFetching: false,
-  filter: '',
+  filter: (typeof importScripts !== 'function') ?
+    (localStorage.getItem('tracksFilter') || '') :
+    (''),
 
   // NOTE:
   // ! FILTERED-ITEMS AND FILTERED-ITEM-IDS
@@ -65,10 +69,12 @@ export default function tracks(state = initialState, action) {
     };
 
   case types.FILTER_TRACKS:
+    localStorage.setItem('tracksFilter', action.value);
+
     return {
       ...state,
-      ...gatherItems(action.items, action.filter, true),
-      filter: action.filter,
+      ...gatherItems(state.items, action.value, true),
+      filter: action.value,
     };
 
   default:
@@ -79,9 +85,11 @@ export default function tracks(state = initialState, action) {
 
 function gatherItems(items, filter, filteredOnly = false) {
   const filtered = runThroughFilter(items, filter);
+  const sorted = sortByAll(filtered, ['artist', 'album', 'track', 'title']);
+
   const result = {
-    filteredItems: filtered,
-    filteredItemIds: filtered.map(trackUtils.generateTrackId),
+    filteredItems: sorted,
+    filteredItemIds: sorted.map(trackUtils.generateTrackId),
   };
 
   if (!filteredOnly) {
@@ -92,9 +100,24 @@ function gatherItems(items, filter, filteredOnly = false) {
 }
 
 
-function runThroughFilter(items) {
-  // TODO:
-  return [...items];
+function runThroughFilter(items, filter) {
+  if (!filter || !filter.length) {
+    return [...items];
+  }
+
+  const r = new RegExp(filter.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&'), 'i');
+  const checkAttr = ['title', 'artist', 'album'];
+
+  return items.filter((item) => {
+    let isMatch = false;
+
+    for (let i = 0, j = checkAttr.length; i < j; i++) {
+      const m = r.test(item.properties[checkAttr[i]]);
+      if (m) { isMatch = true; break; }
+    }
+
+    return isMatch;
+  });
 }
 
 
@@ -102,5 +125,6 @@ function cleanUpItems(items) {
   items.forEach((item) => {
     if (!item.properties.title) item.properties.title = 'Unknown';
     if (!item.properties.artist) item.properties.artist = 'Unknown';
+    if (!item.properties.album) item.properties.album = '';
   });
 }

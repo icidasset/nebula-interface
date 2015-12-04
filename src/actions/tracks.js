@@ -1,10 +1,20 @@
 import * as firebase from '../utils/firebase';
 import * as trackUtils from '../utils/tracks';
+import * as queueActions from './queue';
+
 import * as types from '../constants/action_types/tracks';
 
 
 /// Actions
 ///
+
+export function filterTracks(value) {
+  return (dispatch) => {
+    dispatch({ type: types.FILTER_TRACKS, value });
+    dispatch(queueActions.resetQueue());
+  };
+}
+
 
 /**
  * Add new items and remove missing,

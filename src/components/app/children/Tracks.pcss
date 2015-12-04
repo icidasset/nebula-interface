@@ -1,3 +1,9 @@
+@import "../../../styles/colors";
+
+
+/**
+ * Tracks
+ */
 .tracks {
   color: #6f6f6f;
   font-size: 0.8rem;
@@ -10,32 +16,70 @@
   width: 100%;
 }
 
-
-/**
- * Track
- */
 .track {
-  border-bottom: 1px solid #F0F0F0;
+  border-bottom: 1px solid color($shade-light a(.25));
   cursor: pointer;
-  padding: grid(1.5) grid(1);
+  display: flex;
   position: relative;
   user-select: none;
-}
-
-.track span {
-  display: inline-block;
-  font-size: 0.9em;
-  margin: 0 0.5rem;
-  opacity: .5;
-  vertical-align: baseline;
-}
-
-.track strong {
-  display: inline-block;
-  font-weight: 400;
-  vertical-align: baseline;
+  white-space: nowrap;
 }
 
 .track.is-active {
-  color: #D15F8B;
+  color: $shade-accent;
+}
+
+.track > div {
+  flex: 1;
+  overflow: hidden;
+  padding: grid(1) grid(1);
+  text-overflow: ellipsis;
+
+  &:nth-child(1) { flex-basis: 40%; }
+  &:nth-child(2) { flex-basis: 30%; }
+  &:nth-child(3) { flex-basis: 30%; }
+}
+
+
+/**
+ * Filter
+ */
+.filter {
+  background: color($shade-light a(0.25));
+  box-shadow: 0 -2px 4px 0px rgba(0, 0, 0, 0.05) inset;
+  position: relative;
+
+  :global(.icon) {
+    fill: color($shade-light a(.8));
+    height: 1.9rem;
+    left: grid(1.5);
+    margin-top: 1px;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.9rem;
+  }
+
+  input {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    box-sizing: border-box;
+    color: $shade-text-dark;
+    font-size: 1.5rem;
+    font-weight: 300;
+    height: grid(3);
+    padding: grid(3) grid(1.5);
+    padding-left: grid(5.5);
+    width: 100%;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  input::placeholder {
+    color: $shade-light;
+  }
 }
