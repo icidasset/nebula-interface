@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import AppHeader from '../components/app/Header';
 import AppContent from '../components/app/Content';
 
+import List from '../components/List';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Middle from '../components/Middle';
@@ -62,9 +63,13 @@ class AppPage extends Component {
     if (this.props.tracks.items.length === 0) {
       return (
         <Middle>
-          <Message icon="text-document">
-            Nothing here yet.
-          </Message>
+          <List
+            items={[]}
+            emptyIcon="beamed-note"
+            emptyMessage="No tracks found."
+            emptyNote="Click to add a source."
+            emptyClickHandler={() => this.props.actions.goTo('/app/sources/add')}
+          />
         </Middle>
       );
     }
@@ -91,6 +96,7 @@ class AppPage extends Component {
           actions={this.props.actions}
           audio={this.props.audio}
           queue={this.props.queue}
+          routing={this.props.routing}
         />
 
         <AppContent>

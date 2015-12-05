@@ -4,12 +4,16 @@
   font-weight: 300;
   line-height: 1.35;
   text-align: center;
+
+  > span,
+  > svg {
+    vertical-align: middle;
+  }
 }
 
-.icon {
+.message :global(.icon) {
   display: inline-block;
-  fill: #999;
-  height: rem(24px);
-  margin-right: 9px;
-  width: rem(24px);
+  height: .85em;
+  margin-right: .4em;
+  width: .85em;
 }

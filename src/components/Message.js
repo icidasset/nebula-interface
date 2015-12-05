@@ -12,7 +12,7 @@ class Message extends Component {
     let icon;
 
     if (this.props.icon) {
-      icon = (<Icon icon={this.props.icon} styleName="icon" />);
+      icon = (<Icon icon={this.props.icon} />);
     }
 
     return (

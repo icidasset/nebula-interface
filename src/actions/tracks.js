@@ -58,7 +58,17 @@ export function fetchTracks() {
  * Remove matching tracks
  */
 export function removeTracksBySourceUid(sourceUid) {
-  // TODO
+  return (dispatch, getState) => {
+    const state = getState();
+    const oldCollection = state.tracks.items;
+    const newCollection = oldCollection.filter((item) => item.sourceUid !== sourceUid);
+
+    // if there are changes
+    if (newCollection.length < oldCollection.length) {
+      dispatch({ type: types.REPLACE_TRACKS, items: newCollection });
+      return firebase.replace('tracks', JSON.stringify(newCollection), state.auth.user.uid);
+    }
+  };
 }
 
 

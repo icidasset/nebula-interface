@@ -23,10 +23,10 @@
     margin-left: 7px;
   }
 
-  i {
-    font-size: 1.2rem;
-    transform: translateY(-2px);
+  :global(.icon) {
+    height: 1.1em;
     vertical-align: middle;
+    width: 1.1em;
   }
 }
 
@@ -38,7 +38,7 @@
   background: color($shade-light a(.25));
   color: color(black a(.25));
   cursor: pointer;
-  height: 170px;
+  height: grid(15);
   position: relative;
   text-align: center;
 }

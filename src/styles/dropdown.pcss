@@ -1,0 +1,28 @@
+:global .Dropdown-menu {
+  background: white;
+  box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.175),
+              0 -1px 1px 0px rgba(0, 0, 0, 0.05);
+  font-size: .85rem;
+  position: absolute;
+  text-align: center;
+  width: grid(14);
+
+  &:before {
+    border-style: solid;
+    border-width: 0 6px 6px 6px;
+    border-color: transparent transparent white transparent;
+    content: '';
+    display: block;
+    height: 0;
+    left: 50%;
+    position: absolute;
+    top: 0;
+    transform: translate(-50%, -100%);
+    width: 0;
+  }
+}
+
+:global .Dropdown-option {
+  border-bottom: 1px solid color(black a(.05));
+  padding: grid(1);
+}

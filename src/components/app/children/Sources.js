@@ -74,13 +74,13 @@ class Sources extends Component {
       {
         key: 'delete',
         label: 'Delete',
-        icon: 'close',
+        icon: 'trash',
         clickHandler: this.handleIndexDelete.bind(this),
       },
       {
         key: 'edit',
         label: 'Edit',
-        icon: 'mode_edit',
+        icon: 'edit',
         clickHandler: this.handleIndexEdit.bind(this),
       },
     ];
@@ -88,9 +88,10 @@ class Sources extends Component {
     return (
       <List
         items={items}
-        emptyClickHandler={this.goToAdd.bind(this)}
         emptyIcon="add-to-list"
-        emptyMessage="Add some music"
+        emptyMessage="No sources found."
+        emptyNote="Click to add one."
+        emptyClickHandler={this.goToAdd.bind(this)}
         actions={actions}
       />
     );

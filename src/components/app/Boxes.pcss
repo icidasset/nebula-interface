@@ -27,7 +27,6 @@
   flex: 1;
   height: grid(6);
   margin-right: grid(1);
-  overflow: hidden;
   position: relative;
   width: grid(10);
 
@@ -41,8 +40,10 @@
 
   .box__label,
   .box__category,
-  :global(.icon) {
+  :global(.icon),
+  :global(.Dropdown-control) {
     position: absolute;
+    z-index: 1;
   }
 }
 
@@ -69,10 +70,39 @@
   opacity: .55;
 }
 
+
 .box :global(.icon) {
   height: grid(1.25);
   left: 50%;
   transform: translateX(-50%);
   top: rem(8px);
   width: grid(1.25);
+}
+
+
+/**
+ * Dropdown
+ */
+.box :global(.Dropdown-control) {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 9;
+
+  :global(.placeholder) {
+    bottom: rem(22px);
+    left: rem(5px);
+    overflow: hidden;
+    position: absolute;
+    right: rem(5px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.box :global(.Dropdown-menu) {
+  left: 50%;
+  top: 125%;
+  transform: translateX(-50%);
 }
