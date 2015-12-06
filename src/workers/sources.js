@@ -237,7 +237,6 @@ function getAttributesForNewTrack(source, newItem) {
       }));
     }, {
       onError: () => {
-        console.log('BOOM!');
         resolve(null);
       },
     });

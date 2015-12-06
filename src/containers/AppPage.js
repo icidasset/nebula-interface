@@ -1,4 +1,7 @@
+import camelCase from 'lodash/string/camelCase';
+import capitalize from 'lodash/string/capitalize';
 import pick from 'lodash/object/pick';
+
 import { createElement, Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -8,11 +11,9 @@ import AppContent from '../components/app/Content';
 
 import List from '../components/List';
 import Loader from '../components/Loader';
-import Message from '../components/Message';
 import Middle from '../components/Middle';
 
 import childComponents from '../components/app/children';
-import childTypes from '../constants/app/children';
 
 import actions from '../actions';
 
@@ -21,6 +22,8 @@ class AppPage extends Component {
 
   componentDidMount() {
     this.props.actions.fetchSources().then(
+      () => this.props.actions.fetchCollections()
+    ).then(
       () => this.props.actions.fetchTracks()
     ).then(
       () => this.props.actions.processSources()
@@ -40,22 +43,16 @@ class AppPage extends Component {
   ///
   renderMainContent() {
     const childRoute = this.props.routing.path.split('/')[2];
+    const childComponentName = childRoute ? capitalize(camelCase(childRoute)) : null;
 
     // child
-    if (childRoute && childTypes[childRoute]) {
-      let props;
-
-      switch (childTypes[childRoute]) {
-      case 'Sources':
-        props = ['sources'];
-        break;
-      default:
-        props = [];
-      }
+    if (childComponentName) {
+      const component = childComponents[childComponentName];
+      const props = Object.keys(component.propTypes);
 
       return createElement(
-        childComponents[childTypes[childRoute]],
-        pick(this.props, ['actions', 'routing'].concat(props))
+        component,
+        pick(this.props, props)
       );
     }
 
@@ -95,8 +92,10 @@ class AppPage extends Component {
         <AppHeader
           actions={this.props.actions}
           audio={this.props.audio}
+          collections={this.props.collections}
           queue={this.props.queue}
           routing={this.props.routing}
+          tracks={this.props.tracks}
         />
 
         <AppContent>
@@ -112,6 +111,7 @@ class AppPage extends Component {
 AppPage.propTypes = {
   actions: PropTypes.object.isRequired,
   audio: PropTypes.object.isRequired,
+  collections: PropTypes.object.isRequired,
   queue: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
   sources: PropTypes.object.isRequired,
@@ -120,7 +120,7 @@ AppPage.propTypes = {
 
 
 function mapStateToProps(state) {
-  return pick(state, ['audio', 'queue', 'routing', 'sources', 'tracks']);
+  return pick(state, ['audio', 'collections', 'queue', 'routing', 'sources', 'tracks']);
 }
 
 

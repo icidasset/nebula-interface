@@ -57,7 +57,7 @@ class Sources extends Component {
     return (
       <List
         items={ [] }
-        emptyIcon="cycle"
+        emptyIcon="thunder-cloud"
         emptyMessage="Processing sources"
         emptyNote={ Math.round(this.props.sources.processingProgress * 100).toString() + '%' }
       />
@@ -109,25 +109,54 @@ class Sources extends Component {
 
   /// {view} Add
   ///
-  renderAdd() {
+  renderForm(buttonLabel) {
     const inputs = (
       <div>
         <label htmlFor="name">Name</label>
-        <input type="text" id="name" ref="name" placeholder="Music collection" autoFocus required />
+        <input
+          type="text"
+          id="name"
+          ref="name"
+          placeholder="e.g. Music collection"
+          autoFocus
+          required
+        />
 
         <label htmlFor="accessKey">Access Key</label>
-        <input type="text" id="accessKey" ref="accessKey" placeholder="Access key" required />
+        <input
+          type="text"
+          id="accessKey"
+          ref="accessKey"
+          placeholder="Access key"
+          required
+        />
 
         <label htmlFor="secretKey">Secret Key</label>
-        <input type="password" id="secretKey" ref="secretKey" placeholder="•••••••••" required />
+        <input
+          type="password"
+          id="secretKey"
+          ref="secretKey"
+          placeholder="•••••••••"
+          required
+        />
 
         <label htmlFor="bucket">Bucket</label>
-        <input type="text" id="bucket" ref="bucket" placeholder="Bucket" required />
+        <input
+          type="text"
+          id="bucket"
+          ref="bucket"
+          placeholder="Bucket"
+          required
+        />
 
         <h3>Settings</h3>
 
         <div className="input__checkbox">
-          <input type="checkbox" id="directoryCollections" ref="directoryCollections" />
+          <input
+            type="checkbox"
+            id="directoryCollections"
+            ref="directoryCollections"
+          />
           <label htmlFor="directoryCollections">Enable directory collections</label>
         </div>
       </div>
@@ -135,13 +164,23 @@ class Sources extends Component {
 
     return (
       <Form
-        buttonLabel="Add"
+        buttonLabel={buttonLabel}
         info={[]}
         inputs={inputs}
         note={<span></span>}
         onSubmit={this.handleAdd.bind(this)}
       />
     );
+  }
+
+
+  renderAdd() {
+    return this.renderForm('Add');
+  }
+
+
+  renderEdit() {
+    return this.renderForm('Save');
   }
 
 
@@ -158,6 +197,9 @@ class Sources extends Component {
       <Link key="add" to="/app/sources/add">
         <Icon icon="plus" /> Add new
       </Link>,
+      <a key="process" onClick={this.props.actions.processSources} style={{ cursor: 'pointer' }}>
+        <Icon icon="thunder-cloud" /> Process sources
+      </a>,
     ];
 
     return (

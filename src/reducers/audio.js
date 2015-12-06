@@ -19,11 +19,19 @@ const initialState = {
 export default function audio(state = initialState, action) {
   switch (action.type) {
 
+  case types.SEEK_AUDIO:
+    return {
+      ...state,
+      seek: action.percentageDecimal,
+    };
+
+
   case types.SET_AUDIO_CURRENT_TIME:
     return {
       ...state,
       currentTime: action.value,
     };
+
 
   case types.SET_AUDIO_DURATION:
     let minutes = Math.floor(action.value / 60);
@@ -38,11 +46,13 @@ export default function audio(state = initialState, action) {
       durationStamp: `${minutes}:${seconds}`,
     };
 
+
   case types.SET_AUDIO_IS_PLAYING:
     return {
       ...state,
       isPlaying: !!action.value,
     };
+
 
   case types.SET_AUDIO_VOLUME:
     return {
@@ -50,11 +60,13 @@ export default function audio(state = initialState, action) {
       volume: action.value,
     };
 
+
   case types.TOGGLE_MUTE:
     return {
       ...state,
       isMuted: !state.isMuted,
     };
+
 
   case types.TOGGLE_PLAY:
     return {
@@ -62,11 +74,6 @@ export default function audio(state = initialState, action) {
       isPlaying: !state.isPlaying,
     };
 
-  case types.SEEK_AUDIO:
-    return {
-      ...state,
-      seek: action.percentageDecimal,
-    };
 
   default:
     return state;

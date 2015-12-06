@@ -3,24 +3,66 @@ import * as trackUtils from '../utils/tracks';
 
 
 const initialState = {
-  items: [],
   history: [],
+  items: [],
 
   activeItem: null,
-  shuffle: false,
   repeat: false,
+  shuffle: false,
 
   ...retrieveSettings(),
 };
 
 
 export default function queue(state = initialState, action) {
-  let newItems;
-  let newHistory;
   let newActiveItem;
+  let newHistory;
+  let newItems;
   let newState;
 
   switch (action.type) {
+  case types.INJECT_INTO_QUEUE:
+    const injectedTrackId = trackUtils.generateTrackId(action.track);
+
+    if (state.activeItem) {
+      newHistory = [...state.history, state.activeItem];
+    } else {
+      newHistory = [...state.history];
+    }
+
+    return {
+      ...state,
+
+      activeItem: { ...action.track, injected: true },
+      history: newHistory,
+      items: state.items.filter((i) => trackUtils.generateTrackId(i) !== injectedTrackId),
+    };
+
+
+  case types.REFILL_QUEUE:
+    return {
+      ...state,
+      items: state.items.concat(action.newItems),
+    };
+
+
+  case types.REFRESH_QUEUE:
+    // TODO:
+    // - remove non-existing (old) items from
+    //   `state.queue.items`,
+    //   `state.queue.history`,
+    //   `state.queue.activeItem`
+
+    return state;
+
+
+  case types.RESET_QUEUE:
+    return {
+      ...state,
+      items: state.items.filter((i) => i.injected),
+    };
+
+
   case types.SHIFT_QUEUE:
     if (state.activeItem) {
       newHistory = [...state.history, state.activeItem];
@@ -33,9 +75,29 @@ export default function queue(state = initialState, action) {
     return {
       ...state,
 
-      history: newHistory,
       activeItem: newActiveItem,
+      history: newHistory,
     };
+
+
+  case types.TOGGLE_REPEAT:
+    newState = {
+      ...state,
+      repeat: !state.repeat,
+    };
+
+    storeSettings(newState);
+    return newState;
+
+
+  case types.TOGGLE_SHUFFLE:
+    newState = {
+      ...state,
+      shuffle: !state.shuffle,
+    };
+
+    storeSettings(newState);
+    return newState;
 
 
   case types.UNSHIFT_QUEUE:
@@ -50,75 +112,13 @@ export default function queue(state = initialState, action) {
       return {
         ...state,
 
-        items: newItems || [],
         activeItem: newActiveItem,
+        items: newItems || [],
       };
 
     }
 
     return state;
-
-
-  case types.INJECT_INTO_QUEUE:
-    const injectedTrackId = trackUtils.generateTrackId(action.track);
-
-    if (state.activeItem) {
-      newHistory = [...state.history, state.activeItem];
-    } else {
-      newHistory = [...state.history];
-    }
-
-    return {
-      ...state,
-
-      history: newHistory,
-      items: state.items.filter((i) => trackUtils.generateTrackId(i) !== injectedTrackId),
-      activeItem: { ...action.track, injected: true },
-    };
-
-
-  case types.REFRESH_QUEUE:
-    // TODO:
-    // - remove non-existing (old) items from
-    //   `state.queue.items`,
-    //   `state.queue.history`,
-    //   `state.queue.activeItem`
-
-    return state;
-
-
-  case types.REFILL_QUEUE:
-    return {
-      ...state,
-      items: state.items.concat(action.newItems),
-    };
-
-
-  case types.RESET_QUEUE:
-    return {
-      ...state,
-      items: state.items.filter((i) => i.injected),
-    };
-
-
-  case types.TOGGLE_SHUFFLE:
-    newState = {
-      ...state,
-      shuffle: !state.shuffle,
-    };
-
-    storeSettings(newState);
-    return newState;
-
-
-  case types.TOGGLE_REPEAT:
-    newState = {
-      ...state,
-      repeat: !state.repeat,
-    };
-
-    storeSettings(newState);
-    return newState;
 
 
   default:

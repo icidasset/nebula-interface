@@ -5,6 +5,7 @@ const initialCollection = {
   name: 'Untitled',
 
   tracksIds: [],
+  isGenerated: false,
 };
 
 
@@ -22,9 +23,32 @@ export default function tracks(state = initialState, action) {
       ...state,
       items: [
         ...state.items,
-        { ...initialCollection, ...action.attributes },
+        { ...initialCollection, ...action.collection },
       ],
     };
+
+
+  case types.DELETE_COLLECTION:
+    return {
+      ...state,
+      items: state.items.filter((item) => item.uid !== action.uid),
+    };
+
+
+  case types.FETCH_COLLECTIONS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+
+
+  case types.FETCH_COLLECTIONS_DONE:
+    return {
+      ...state,
+      isFetching: false,
+      items: action.items || [],
+    };
+
 
   default:
     return state;

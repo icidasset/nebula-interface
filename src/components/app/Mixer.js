@@ -29,6 +29,11 @@ class Mixer extends Component {
   }
 
 
+  handleNowPlayingClick() {
+    alert('TODO - Scroll to currently-playing track');
+  }
+
+
   handleTimeClick(event) {
     const timeNode = event.target.closest(`.${styles.time}`);
 

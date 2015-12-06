@@ -5,14 +5,14 @@ import * as types from '../constants/action_types/tracks';
 
 
 const initialTrack = {
-  sourceUid: null,
   path: null,
+  sourceUid: null,
 
   properties: {
     album: 'Unknown',
     artist: 'Unknown',
-    title: 'Unknown',
     genre: 'Unknown',
+    title: 'Unknown',
     year: 'Unknown',
 
     track: 1,
@@ -21,17 +21,19 @@ const initialTrack = {
 
 
 const initialState = {
-  isFetching: false,
+  collection: false,
   filter: (typeof importScripts !== 'function') ?
     (localStorage.getItem('tracksFilter') || '') :
     (''),
 
+  isFetching: false,
+
   // NOTE:
   // ! FILTERED-ITEMS AND FILTERED-ITEM-IDS
   // ! MUST BE IN THE SAME ORDER
-  items: [],
   filteredItems: [],
   filteredItemIds: [],
+  items: [],
 };
 
 
@@ -52,6 +54,7 @@ export default function tracks(state = initialState, action) {
       isFetching: true,
     };
 
+
   case types.FETCH_TRACKS_DONE:
     cleanUpItems(action.items);
 
@@ -61,11 +64,6 @@ export default function tracks(state = initialState, action) {
       isFetching: false,
     };
 
-  case types.REPLACE_TRACKS:
-    return {
-      ...state,
-      ...gatherItems(action.items, state.filter),
-    };
 
   case types.FILTER_TRACKS:
     localStorage.setItem('tracksFilter', action.value);
@@ -75,6 +73,14 @@ export default function tracks(state = initialState, action) {
       ...gatherItems(state.items, action.value, true),
       filter: action.value,
     };
+
+
+  case types.REPLACE_TRACKS:
+    return {
+      ...state,
+      ...gatherItems(action.items, state.filter),
+    };
+
 
   default:
     return state;

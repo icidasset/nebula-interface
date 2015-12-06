@@ -38,8 +38,26 @@ class Boxes extends Component {
   render() {
     const styleNames = this.getBoxStyleNames();
 
+    // collection
+    const collections = [
+      { value: '', label: (<strong>All</strong>) },
+
+      ...(this.props.collections.items.map((c) => {
+        return { value: c.uid, label: c.name };
+      })),
+    ];
+
+    const collection = this.props.tracks.collection;
+    const collectionSelector = collection ? collection.uid : '';
+    const selectedCollection = collections.find((c) => c.value === collectionSelector);
+    const selectCollection = (option) => {
+      alert('TODO - Select collection');
+    };
+
+    // views
     const views = [
-      { value: '/app', label: 'Tracks' },
+      { value: '/app/collections', label: 'Collections' },
+      { value: '/app', label: (<strong>Tracks</strong>) },
       { value: '/app/sources', label: 'Sources' },
     ];
 
@@ -51,8 +69,13 @@ class Boxes extends Component {
 
         <div styleName={styleNames.collection}>
           <Icon icon="beamed-note"/>
-          <div styleName="box__label">Favourites</div>
           <div styleName="box__category">COLLECTION</div>
+          <Dropdown
+            options={collections}
+            onChange={selectCollection.bind(this)}
+            value={selectedCollection}
+            placeholder="Collection"
+          />
         </div>
 
         <div styleName={styleNames.dropzone}>
@@ -74,7 +97,7 @@ class Boxes extends Component {
             options={views}
             onChange={selectView.bind(this)}
             value={selectedView}
-            placeholder="Select an option"
+            placeholder="View"
           />
         </div>
 
@@ -87,7 +110,9 @@ class Boxes extends Component {
 
 Boxes.propTypes = {
   actions: PropTypes.object.isRequired,
+  collections: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
+  tracks: PropTypes.object.isRequired,
 };
 
 

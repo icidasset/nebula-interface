@@ -15,17 +15,20 @@ export default function auth(state = initialState, action) {
       user: action.user,
     };
 
+
   case types.DEAUTHENTICATE:
     return {
       ...state,
       user: undefined,
     };
 
+
   case types.PASS_INITIAL_AUTH_CHECK:
     return {
       ...state,
       passedInitialCheck: true,
     };
+
 
   default:
     return state;

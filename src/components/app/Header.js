@@ -20,7 +20,9 @@ class Header extends Component {
 
         <Boxes
           actions={this.props.actions}
+          collections={this.props.collections}
           routing={this.props.routing}
+          tracks={this.props.tracks}
         />
       </header>
     );
@@ -32,8 +34,10 @@ class Header extends Component {
 Header.propTypes = {
   actions: PropTypes.object.isRequired,
   audio: PropTypes.object.isRequired,
+  collections: PropTypes.object.isRequired,
   queue: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
+  tracks: PropTypes.object.isRequired,
 };
 
 

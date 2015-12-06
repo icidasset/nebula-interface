@@ -10,11 +10,19 @@ const initialState = {
 
 export default function routing(state = initialState, action) {
   switch (action.type) {
+  case types.SET_CONTAINER:
+    return {
+      ...state,
+      container: action.container,
+    };
+
+
   case types.SET_PATH:
     return {
       ...state,
       path: action.path,
     };
+
 
   case types.SET_STATUS:
     return {
@@ -22,11 +30,6 @@ export default function routing(state = initialState, action) {
       status: action.status,
     };
 
-  case types.SET_CONTAINER:
-    return {
-      ...state,
-      container: action.container,
-    };
 
   default:
     return state;
