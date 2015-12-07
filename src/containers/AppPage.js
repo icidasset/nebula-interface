@@ -33,6 +33,7 @@ class AppPage extends Component {
 
   isLoading() {
     return (
+      this.props.collections.isFetching ||
       this.props.sources.isFetching ||
       this.props.tracks.isFetching
     );

@@ -60,7 +60,10 @@ export default function tracks(state = initialState, action) {
 
     return {
       ...state,
-      ...gatherItems(action.items, state.filter),
+      ...gatherItems(action.items, {
+        collection: state.collection,
+        filter: state.filter,
+      }),
       isFetching: false,
     };
 
@@ -70,7 +73,11 @@ export default function tracks(state = initialState, action) {
 
     return {
       ...state,
-      ...gatherItems(state.items, action.value, true),
+      ...gatherItems(state.items, {
+        collection: state.collection,
+        filter: action.value,
+        filteredOnly: true,
+      }),
       filter: action.value,
     };
 
@@ -78,7 +85,21 @@ export default function tracks(state = initialState, action) {
   case types.REPLACE_TRACKS:
     return {
       ...state,
-      ...gatherItems(action.items, state.filter),
+      ...gatherItems(action.items, {
+        collection: state.collection,
+        filter: state.filter,
+      }),
+    };
+
+
+  case types.SET_ACTIVE_COLLECTION:
+    return {
+      ...state,
+      ...gatherItems(state.items, {
+        collection: action.collection,
+        filter: state.filter,
+      }),
+      collection: action.collection,
     };
 
 
@@ -88,16 +109,22 @@ export default function tracks(state = initialState, action) {
 }
 
 
-function gatherItems(items, filter, filteredOnly = false) {
-  const filtered = runThroughFilter(items, filter);
-  const sorted = sortByAll(filtered, ['artist', 'album', 'track', 'title']);
+function gatherItems(items, options = {}) {
+  const filtered = runThroughFilter(items, options.filter);
+  const sorted = sortByAll(filtered, [
+    'properties.artist',
+    'properties.album',
+    'properties.track',
+    'properties.title',
+    'path',
+  ]);
 
   const result = {
     filteredItems: sorted,
     filteredItemIds: sorted.map(trackUtils.generateTrackId),
   };
 
-  if (!filteredOnly) {
+  if (!options.filteredOnly) {
     Object.assign(result, { items: [...items] });
   }
 

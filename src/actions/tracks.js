@@ -72,6 +72,14 @@ export function removeTracksBySourceUid(sourceUid) {
 }
 
 
+/**
+ * Set active collection
+ */
+export function setActiveCollection(collection) {
+  return { type: types.SET_ACTIVE_COLLECTION, collection };
+}
+
+
 /// Private
 ///
 function handleDiff(oldCollection, diff) {

@@ -51,13 +51,14 @@ class Boxes extends Component {
     const collectionSelector = collection ? collection.uid : '';
     const selectedCollection = collections.find((c) => c.value === collectionSelector);
     const selectCollection = (option) => {
-      alert('TODO - Select collection');
+      const c = collections.find((c) => c.value === collectionSelector);
+      if (c) this.props.actions.setActiveCollection(c);
     };
 
     // views
     const views = [
-      { value: '/app/collections', label: 'Collections' },
       { value: '/app', label: (<strong>Tracks</strong>) },
+      { value: '/app/collections', label: 'Collections' },
       { value: '/app/sources', label: 'Sources' },
     ];
 

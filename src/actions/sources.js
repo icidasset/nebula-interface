@@ -68,6 +68,7 @@ function execProcess() {
     const tracks = state.tracks.items;
 
     // notify 'start'
+    dispatch({ type: types.SET_PROCESS_SOURCES_PROGRESS, value: 0.0 });
     dispatch({ type: types.START_PROCESS_SOURCES });
 
     // process & notify 'end'

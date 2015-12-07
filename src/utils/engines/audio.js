@@ -330,6 +330,9 @@ class AudioEngine {
     const { audioElement, promise } = this.createNewAudioElement(track, trackId);
     audioElement.volume = 1;
 
+    // set loading to 'true'
+    this.store.dispatch(audioActions.setAudioIsLoading(true));
+
     // make a connection between the audio element and the volume node
     const connection = this.ac.createMediaElementSource(audioElement);
 
@@ -421,6 +424,7 @@ class AudioEngine {
 
             setTimeout(() => {
               window.currentAudioTime = 0;
+              this.store.dispatch(audioActions.setAudioIsLoading(false));
               if (this.store.getState().audio.isPlaying) this.play(connection);
             }, 0);
           }

@@ -64,12 +64,26 @@ class Mixer extends Component {
   ///
   renderNowPlaying() {
     if (this.props.queue.activeItem) {
+      if (this.props.audio.isLoading) {
+        return (
+          <span styleName="now-playing__main">
+            <span rel="title">Loading ...</span>
+            <span rel="artist">
+              {this.props.queue.activeItem.properties.title}
+              <span> - </span>
+              {this.props.queue.activeItem.properties.artist}
+            </span>
+          </span>
+        );
+      }
+
       return (
         <span styleName="now-playing__main">
           <span rel="title">{this.props.queue.activeItem.properties.title}</span>
           <span rel="artist">{this.props.queue.activeItem.properties.artist}</span>
         </span>
       );
+
     }
 
     return (

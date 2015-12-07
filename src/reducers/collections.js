@@ -1,3 +1,5 @@
+import sortBy from 'lodash/collection/sortBy';
+
 import * as types from '../constants/action_types/collections';
 
 
@@ -21,17 +23,19 @@ export default function tracks(state = initialState, action) {
   case types.ADD_COLLECTION:
     return {
       ...state,
-      items: [
+      ...gatherItems([
         ...state.items,
         { ...initialCollection, ...action.collection },
-      ],
+      ]),
     };
 
 
   case types.DELETE_COLLECTION:
     return {
       ...state,
-      items: state.items.filter((item) => item.uid !== action.uid),
+      ...gatherItems(
+        state.items.filter((item) => item.uid !== action.uid)
+      ),
     };
 
 
@@ -45,12 +49,23 @@ export default function tracks(state = initialState, action) {
   case types.FETCH_COLLECTIONS_DONE:
     return {
       ...state,
+      ...gatherItems(action.items || []),
       isFetching: false,
-      items: action.items || [],
     };
 
 
   default:
     return state;
   }
+}
+
+
+/// Private
+///
+function gatherItems(items) {
+  const sorted = sortBy(items, 'name');
+
+  return {
+    items: sorted,
+  };
 }

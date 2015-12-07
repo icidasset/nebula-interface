@@ -1,3 +1,5 @@
+import sortBy from 'lodash/collection/sortBy';
+
 import * as types from '../constants/action_types/sources';
 
 
@@ -27,17 +29,19 @@ export default function sources(state = initialState, action) {
   case types.ADD_SOURCE:
     return {
       ...state,
-      items: [
+      ...gatherItems([
         ...state.items,
         { ...initialSource, ...action.source },
-      ],
+      ]),
     };
 
 
   case types.DELETE_SOURCE:
     return {
       ...state,
-      items: state.items.filter((item) => item.uid !== action.uid),
+      ...gatherItems(
+        state.items.filter((item) => item.uid !== action.uid)
+      ),
     };
 
 
@@ -58,8 +62,8 @@ export default function sources(state = initialState, action) {
   case types.FETCH_SOURCES_DONE:
     return {
       ...state,
+      ...gatherItems(action.items || []),
       isFetching: false,
-      items: action.items || [],
     };
 
 
@@ -80,4 +84,15 @@ export default function sources(state = initialState, action) {
   default:
     return state;
   }
+}
+
+
+/// Private
+///
+function gatherItems(items) {
+  const sorted = sortBy(items, 'name');
+
+  return {
+    items: sorted,
+  };
 }

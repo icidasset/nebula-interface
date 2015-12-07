@@ -13,8 +13,10 @@ class Tracks extends Component {
   constructor(props) {
     super(props);
 
-    this.rowHeight = 25;
-    this.state = { tracksContainerHeight: 0 };
+    this.state = {
+      rowHeight: 25,
+      tracksContainerHeight: 0,
+    };
   }
 
 
@@ -23,6 +25,26 @@ class Tracks extends Component {
     window.addEventListener('resize', this.boundHandleResize);
 
     this.setSpaceProperties();
+    this.detectRowHeight();
+  }
+
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const propsChanged = (
+      (nextProps.tracks.filteredItemIds !== this.props.tracks.filteredItemIds) ||
+      (nextProps.queue.activeItem !== this.props.queue.activeItem)
+    );
+
+    const stateChanged = (
+      (nextState.rowHeight !== this.state.rowHeight) ||
+      (nextState.tracksContainerHeight !== this.state.tracksContainerHeight)
+    );
+
+    return propsChanged || stateChanged;
+  }
+
+
+  componentDidUpdate() {
     this.detectRowHeight();
   }
 
@@ -48,7 +70,7 @@ class Tracks extends Component {
     const trackNode = node.querySelector(`.${styles.track}`);
 
     if (trackNode) {
-      this.rowHeight = trackNode.offsetHeight;
+      this.setState({ rowHeight: trackNode.offsetHeight });
     }
   }
 
@@ -76,16 +98,19 @@ class Tracks extends Component {
   }
 
 
-  render() {
-    const listItems = [];
-    const activeTrackId = this.props.queue.activeItem ?
-      trackUtils.generateTrackId(this.props.queue.activeItem) :
-      false;
-
+  /// Render
+  ///
+  renderItems(startIdx, endIdx, activeTrackId) {
     const trackClickHandler = this.handleTrackClick.bind(this);
-    const filterChangeHandler = this.handleFilterChange.bind(this);
 
-    this.props.tracks.filteredItemIds.forEach((trackId, idx) => {
+    // check
+    if (endIdx === -1) {
+      return (<div></div>);
+    }
+
+    // render
+    return this.props.tracks.filteredItemIds.slice(startIdx, endIdx).map((trackId, tempIdx) => {
+      const idx = startIdx + tempIdx;
       const track = this.props.tracks.filteredItems[idx];
       let className = styles.track;
 
@@ -93,7 +118,7 @@ class Tracks extends Component {
         className = className + ' ' + styles['is-active'];
       }
 
-      listItems.push(<div
+      return (<div
         key={idx}
         className={className}
         onDoubleClick={trackClickHandler}
@@ -104,9 +129,16 @@ class Tracks extends Component {
         <div>{track.properties.album}</div>
       </div>);
     });
+  }
+
+
+  render() {
+    const activeTrackId = this.props.queue.activeItem ?
+      trackUtils.generateTrackId(this.props.queue.activeItem) :
+      false;
 
     const amountOfVisibleRows = Math.ceil(
-      this.state.tracksContainerHeight / this.rowHeight
+      this.state.tracksContainerHeight / this.state.rowHeight
     );
 
     return (
@@ -118,23 +150,22 @@ class Tracks extends Component {
             type="text"
             placeholder="Search"
             value={this.props.tracks.filter}
-            onChange={filterChangeHandler}
+            onChange={this.handleFilterChange.bind(this)}
           />
         </div>
 
         <ReactListView
-          style={{
-            height: this.state.tracksContainerHeight,
-          }}
-          rowCount={listItems.length}
-          rowHeight={this.rowHeight}
+          style={{ height: this.state.tracksContainerHeight }}
+          rowCount={this.props.tracks.filteredItemIds.length}
+          rowHeight={this.state.rowHeight}
           renderItem={(x, y, style) => {
-            const _listItems = listItems.slice(
+            const listItems = this.renderItems(
               Math.abs(y),
-              y + amountOfVisibleRows
+              y + amountOfVisibleRows,
+              activeTrackId
             );
 
-            return (<div className={styles.tracks} style={style}>{_listItems}</div>);
+            return (<div className={styles.tracks} style={style}>{listItems}</div>);
           }}
         />
 

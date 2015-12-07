@@ -8,6 +8,7 @@ const initialState = {
   // feedback
   duration: 0,
   durationStamp: '0:00',
+  isLoading: false,
   isPlaying: false,
   seek: 0,
 
@@ -44,6 +45,13 @@ export default function audio(state = initialState, action) {
       ...state,
       duration: action.value,
       durationStamp: `${minutes}:${seconds}`,
+    };
+
+
+  case types.SET_AUDIO_IS_LOADING:
+    return {
+      ...state,
+      isLoading: !!action.value,
     };
 
 
