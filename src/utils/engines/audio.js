@@ -299,7 +299,7 @@ class AudioEngine {
 
     // play
     const promise = new Promise((resolve) => {
-      audioElement.addEventListener('canplay', () => {
+      audioElement.canPlayHandler = () => {
         resolve({
           trackId,
           bindAudioEvents: () => {
@@ -310,7 +310,9 @@ class AudioEngine {
             audioElement.addEventListener('pause', ::this.onPause);
           }
         });
-      });
+      };
+
+      audioElement.addEventListener('canplay', audioElement.canPlayHandler);
     });
 
     // add element to dom
@@ -353,12 +355,12 @@ class AudioEngine {
 
   removeConnection(connection) {
     // remove all event listeners
-    connection.mediaElement.removeEventListener('error');
-    connection.mediaElement.removeEventListener('timeupdate');
-    connection.mediaElement.removeEventListener('ended');
-    connection.mediaElement.removeEventListener('play');
-    connection.mediaElement.removeEventListener('pause');
-    connection.mediaElement.removeEventListener('canplay');
+    connection.mediaElement.removeEventListener('error', ::this.onError);
+    connection.mediaElement.removeEventListener('timeupdate', ::this.onCurrentTimeChange);
+    connection.mediaElement.removeEventListener('ended', ::this.onEnd);
+    connection.mediaElement.removeEventListener('play', ::this.onPlay);
+    connection.mediaElement.removeEventListener('pause', ::this.onPause);
+    connection.mediaElement.removeEventListener('canplay', connection.mediaElement.canPlayHandler);
 
     // pause
     connection.mediaElement.pause();
