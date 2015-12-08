@@ -4,6 +4,7 @@ import ReactListView from 'react-list-view';
 
 import * as trackUtils from '../../../utils/tracks';
 import Icon from '../../Icon';
+
 import contentStyles from '../Content.pcss';
 import styles from './Tracks.pcss';
 
@@ -17,11 +18,12 @@ class Tracks extends Component {
       rowHeight: 25,
       tracksContainerHeight: 0,
     };
+
+    this.boundHandleResize = this.handleResize.bind(this);
   }
 
 
   componentDidMount() {
-    this.boundHandleResize = this.handleResize.bind(this);
     window.addEventListener('resize', this.boundHandleResize);
 
     this.setSpaceProperties();
@@ -54,6 +56,8 @@ class Tracks extends Component {
   }
 
 
+  /// Space properties
+  ///
   setSpaceProperties() {
     const node = ReactDOM.findDOMNode(this);
     const mainNode = node.closest(`.${contentStyles.main}`);
@@ -75,14 +79,29 @@ class Tracks extends Component {
   }
 
 
+  /// Events
+  ///
   handleResize() {
     this.setSpaceProperties();
     this.detectRowHeight();
   }
 
 
-  handleTrackClick(event) {
-    const idx = parseInt(event.target.closest(`.${styles.track}`).getAttribute('rel'), 10);
+  handleTracksWrapperDoubleClick(event) {
+    const target = event.target.closest('.ReactListView');
+    const tracksNode = target.querySelector(`.${styles.tracks}`);
+
+    const scrollOffset = -(target.scrollTop % this.state.rowHeight);
+    const b = target.getBoundingClientRect();
+    const y = event.pageY - b.top - scrollOffset;
+    const n = Math.ceil(y / this.state.rowHeight);
+
+    const idxOffset = parseInt(tracksNode.getAttribute('data-y'), 10);
+    const idx = idxOffset + n - 1;
+
+    event.preventDefault();
+
+    // get track and play it
     const track = this.props.tracks.filteredItems[idx];
 
     if (this.props.queue.activeItem !== track) {
@@ -101,9 +120,6 @@ class Tracks extends Component {
   /// Render
   ///
   renderItems(startIdx, endIdx, activeTrackId) {
-    const trackClickHandler = this.handleTrackClick.bind(this);
-
-    // check
     if (endIdx === -1) {
       return (<div></div>);
     }
@@ -121,7 +137,6 @@ class Tracks extends Component {
       return (<div
         key={idx}
         className={className}
-        onDoubleClick={trackClickHandler}
         rel={idx}
       >
         <div>{track.properties.title}</div>
@@ -139,7 +154,7 @@ class Tracks extends Component {
 
     const amountOfVisibleRows = Math.ceil(
       this.state.tracksContainerHeight / this.state.rowHeight
-    );
+    ) + 1;
 
     return (
       <div>
@@ -154,20 +169,29 @@ class Tracks extends Component {
           />
         </div>
 
-        <ReactListView
-          style={{ height: this.state.tracksContainerHeight }}
-          rowCount={this.props.tracks.filteredItemIds.length}
-          rowHeight={this.state.rowHeight}
-          renderItem={(x, y, style) => {
-            const listItems = this.renderItems(
-              Math.abs(y),
-              y + amountOfVisibleRows,
-              activeTrackId
-            );
+        <div
+          onDoubleClick={this.handleTracksWrapperDoubleClick.bind(this)}
+          onMouseDown={(event) => event.preventDefault()}
+        >
+          <ReactListView
+            style={{ height: this.state.tracksContainerHeight }}
+            rowCount={this.props.tracks.filteredItemIds.length}
+            rowHeight={this.state.rowHeight}
+            renderItem={(x, y, style) => {
+              const listItems = this.renderItems(
+                Math.abs(y),
+                y + amountOfVisibleRows,
+                activeTrackId
+              );
 
-            return (<div className={styles.tracks} style={style}>{listItems}</div>);
-          }}
-        />
+              return (<div
+                className={styles.tracks}
+                style={style}
+                data-y={y}
+              >{listItems}</div>);
+            }}
+          />
+        </div>
 
       </div>
     );
