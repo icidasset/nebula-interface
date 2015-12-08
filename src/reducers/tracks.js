@@ -83,6 +83,8 @@ export default function tracks(state = initialState, action) {
 
 
   case types.REPLACE_TRACKS:
+    cleanUpItems(action.items);
+
     return {
       ...state,
       ...gatherItems(action.items, {
@@ -114,9 +116,9 @@ function gatherItems(items, options = {}) {
   const sorted = sortByAll(filtered, [
     'properties.artist',
     'properties.album',
+    'path',
     'properties.track',
     'properties.title',
-    'path',
   ]);
 
   const result = {

@@ -212,6 +212,8 @@ function getAttributesForNewTrack(source, newItem) {
     const urlGet = sourceUtils.getSignedUrl(source, newItem, 'GET', 10);
 
     meta.loadTags(urlGet, urlHead, () => {
+      const tags = meta.getAllTags(urlGet);
+
       const {
         album,
         artist,
@@ -219,7 +221,7 @@ function getAttributesForNewTrack(source, newItem) {
         title,
         track,
         year,
-      } = meta.getAllTags(urlGet);
+      } = tags;
 
       resolve(makeTrackObject({
         path: newItem,
@@ -239,6 +241,14 @@ function getAttributesForNewTrack(source, newItem) {
       onError: () => {
         resolve(null);
       },
+      tags: [
+        'album',
+        'artist',
+        'genre',
+        'title',
+        'track',
+        'year',
+      ],
     });
 
   });
