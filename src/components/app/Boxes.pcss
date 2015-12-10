@@ -91,17 +91,24 @@
   z-index: 9;
 
   :global(.placeholder) {
+    display: none;
+  }
+
+  :global(.placeholder) strong {
+    font-weight: inherit;
+  }
+}
+
+.box--with-dropdown-placeholder :global(.Dropdown-control) {
+  :global(.placeholder) {
     bottom: rem(22px);
+    display: block;
     left: rem(5px);
     overflow: hidden;
     position: absolute;
     right: rem(5px);
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  :global(.placeholder) strong {
-    font-weight: inherit;
   }
 }
 

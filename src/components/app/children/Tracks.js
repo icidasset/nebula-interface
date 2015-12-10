@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom';
 import ReactListView from 'react-list-view';
 
 import * as trackUtils from '../../../utils/tracks';
+
 import Icon from '../../Icon';
+import List from '../../List';
+import Middle from '../../Middle';
 
 import contentStyles from '../Content.pcss';
 import styles from './Tracks.pcss';
@@ -64,7 +67,11 @@ class Tracks extends Component {
     const filterNode = node.querySelector(`.${styles.filter}`);
 
     this.setState({
-      tracksContainerHeight: mainNode.clientHeight - filterNode.clientHeight,
+      tracksContainerHeight: (
+        mainNode.clientHeight - (
+          filterNode ? filterNode.clientHeight : 0
+        )
+      ),
     });
   }
 
@@ -155,6 +162,20 @@ class Tracks extends Component {
     const amountOfVisibleRows = Math.ceil(
       this.state.tracksContainerHeight / this.state.rowHeight
     ) + 1;
+
+    if (this.props.tracks.items.length === 0) {
+      return (
+        <Middle>
+          <List
+            items={[]}
+            emptyIcon="beamed-note"
+            emptyMessage="No tracks found."
+            emptyNote="Click to add a source."
+            emptyClickHandler={() => this.props.actions.goTo('/app/sources/add')}
+          />
+        </Middle>
+      );
+    }
 
     return (
       <div>

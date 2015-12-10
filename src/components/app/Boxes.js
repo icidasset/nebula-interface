@@ -12,21 +12,27 @@ class Boxes extends Component {
   getBoxStyleNames() {
     const def = 'box';
     const res = {
-      collection: [def],
-      dropzone: [def],
+      tracks: [def],
+      queue: [def],
       equalizer: [def],
-      view: [def],
+      sources: [def],
     };
 
     switch (this.props.routing.path) {
     case '/app':
-      res.collection.push('is-active');
+    case '/app/collections':
+      res.tracks.push('is-active');
       break;
-    case '/app/equalizer':
+    case '/app/queue':
+    case '/app/history':
+      res.queue.push('is-active');
+      break;
+    case '/equalizer':
       res.equalizer.push('is-active');
       break;
-    default:
-      res.view.push('is-active');
+    case '/app/sources':
+      res.sources.push('is-active');
+      break;
     }
 
     Object.keys(res).forEach((k) => res[k] = res[k].join(' '));
@@ -35,70 +41,107 @@ class Boxes extends Component {
   }
 
 
+  getDropdownItems() {
+    return {
+
+      tracks: [
+        { value: '{route}:/app', label: <strong>Show tracks</strong> },
+        { value: '{action}:setActiveCollection', label: 'Select a collection' },
+        { value: '{route}:/app/collections', label: 'Manage collections' },
+      ],
+
+      queue: [
+        { value: '{route}:/app/queue', label: <strong>Show queue</strong> },
+        { value: '{route}:/app/history', label: 'Show history' },
+        { value: '{action}:resetQueue', label: 'Reset queue' },
+      ],
+
+      equalizer: [
+        { value: '{route}:/app/equalizer', label: <strong>Show equalizer</strong> },
+        { value: '{action}:toggleMute', label: 'Toggle mute' },
+      ],
+
+      sources: [
+        { value: '{route}:/app/sources', label: <strong>Show sources</strong> },
+        { value: '{action}:processSources', label: 'Process sources' },
+      ],
+
+    };
+  }
+
+
+  handleDropdownChange(option) {
+    const [type, value] = option.value.split(':');
+
+    switch (type) {
+    case '{action}':
+      this.props.actions[value]();
+      break;
+    case '{route}':
+      this.props.actions.goTo(value);
+      break;
+    }
+  }
+
+
   render() {
     const styleNames = this.getBoxStyleNames();
+    const dropdownItems = this.getDropdownItems();
+    const dropdownChangeHandler = this.handleDropdownChange.bind(this);
 
     // collection
-    const collections = [
-      { value: '', label: (<strong>All</strong>) },
+    let selectedCollection = this.props.tracks.collection;
 
-      ...(this.props.collections.items.map((c) => {
-        return { value: c.uid, label: c.name };
-      })),
-    ];
-
-    const collection = this.props.tracks.collection;
-    const collectionSelector = collection ? collection.uid : '';
-    const selectedCollection = collections.find((c) => c.value === collectionSelector);
-    const selectCollection = (option) => {
-      const c = collections.find((c) => c.value === collectionSelector);
-      if (c) this.props.actions.setActiveCollection(c);
-    };
-
-    // views
-    const views = [
-      { value: '/app', label: (<strong>Tracks</strong>) },
-      { value: '/app/collections', label: 'Collections' },
-      { value: '/app/sources', label: 'Sources' },
-    ];
-
-    const selectedView = views.find((i) => i.value === this.props.routing.path);
-    const selectView = (option) => this.props.actions.goTo(option.value);
+    if (selectedCollection) {
+      selectedCollection = selectedCollection.name;
+    } else {
+      selectedCollection = 'ALL';
+    }
 
     return (
       <div styleName="boxes">
 
-        <div styleName={styleNames.collection}>
+        <div styleName={styleNames.tracks}>
           <Icon icon="beamed-note"/>
-          <div styleName="box__category">COLLECTION</div>
+          <div styleName="box__label">Tracks</div>
+          <div styleName="box__category">{selectedCollection}</div>
           <Dropdown
-            options={collections}
-            onChange={selectCollection.bind(this)}
-            value={selectedCollection}
-            placeholder="Collection"
+            options={dropdownItems.tracks}
+            onChange={dropdownChangeHandler}
+            placeholder="Tracks"
           />
         </div>
 
-        <div styleName={styleNames.dropzone}>
+        <div styleName={styleNames.queue}>
           <Icon icon="clock"/>
           <div styleName="box__label">Queue</div>
-          <div styleName="box__category">DROPZONE</div>
+          <div styleName="box__category">&amp; HISTORY</div>
+          <Dropdown
+            options={dropdownItems.queue}
+            onChange={dropdownChangeHandler}
+            placeholder="Queue"
+          />
         </div>
 
         <div styleName={styleNames.equalizer}>
           <Icon icon="sound-mix"/>
           <div styleName="box__label">Equalizer</div>
-          <div styleName="box__category">CONTROL</div>
+          <div styleName="box__category">CONTROLS</div>
+          <Dropdown
+            options={dropdownItems.equalizer}
+            onChange={dropdownChangeHandler}
+            placeholder="Equalizer"
+          />
         </div>
 
-        <div styleName={styleNames.view}>
+        <div styleName={styleNames.sources}>
           <Icon icon="mask"/>
-          <div styleName="box__category">VIEW</div>
+          <div styleName="box__label">Sources</div>
+          <div styleName="box__category">INPUT</div>
           <Dropdown
-            options={views}
-            onChange={selectView.bind(this)}
-            value={selectedView}
-            placeholder="View"
+            options={dropdownItems.sources}
+            onChange={dropdownChangeHandler}
+            placeholder="Sources"
           />
         </div>
 
@@ -111,7 +154,6 @@ class Boxes extends Component {
 
 Boxes.propTypes = {
   actions: PropTypes.object.isRequired,
-  collections: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
   tracks: PropTypes.object.isRequired,
 };

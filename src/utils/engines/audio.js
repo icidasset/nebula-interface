@@ -81,6 +81,7 @@ class AudioEngine {
     case 'low':
     case 'mid':
     case 'hi':
+    case 'volume':
       node.gain.value = value;
       break;
 
@@ -131,6 +132,13 @@ class AudioEngine {
       this.store,
       (s) => s.audio.volume,
       (v) => this.setNodeValue('volume', this.store.getState().audio.isMuted ? 0 : v)
+    );
+
+    // audio - isMuted
+    reduxUtils.observeStore(
+      this.store,
+      (s) => s.audio.isMuted,
+      (v) => this.setNodeValue('volume', v ? 0 : this.store.getState().audio.volume)
     );
   }
 

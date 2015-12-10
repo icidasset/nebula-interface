@@ -8,11 +8,7 @@ import { connect } from 'react-redux';
 
 import AppHeader from '../components/app/Header';
 import AppContent from '../components/app/Content';
-
-import List from '../components/List';
 import Loader from '../components/Loader';
-import Middle from '../components/Middle';
-
 import childComponents from '../components/app/children';
 
 import actions from '../actions';
@@ -44,42 +40,15 @@ class AppPage extends Component {
   ///
   renderMainContent() {
     const childRoute = this.props.routing.path.split('/')[2];
-    const childComponentName = childRoute ? capitalize(camelCase(childRoute)) : null;
+    const childComponentName = childRoute ? capitalize(camelCase(childRoute)) : 'Tracks';
+    const component = childComponentName ? childComponents[childComponentName] : null;
 
-    // child
-    if (childComponentName) {
-      const component = childComponents[childComponentName];
-      const props = Object.keys(component.propTypes);
-
-      return createElement(
-        component,
-        pick(this.props, props)
-      );
+    if (component) {
+      const props = Object.keys(component.propTypes || {});
+      return createElement(component, pick(this.props, props));
     }
 
-    // empty
-    if (this.props.tracks.items.length === 0) {
-      return (
-        <Middle>
-          <List
-            items={[]}
-            emptyIcon="beamed-note"
-            emptyMessage="No tracks found."
-            emptyNote="Click to add a source."
-            emptyClickHandler={() => this.props.actions.goTo('/app/sources/add')}
-          />
-        </Middle>
-      );
-    }
-
-    // default
-    return (
-      <childComponents.Tracks
-        actions={this.props.actions}
-        queue={this.props.queue}
-        tracks={this.props.tracks}
-      />
-    );
+    return '';
   }
 
 
