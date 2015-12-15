@@ -21,7 +21,6 @@ class Header extends Component {
         <Boxes
           actions={this.props.actions}
           routing={this.props.routing}
-          tracks={this.props.tracks}
         />
       </header>
     );

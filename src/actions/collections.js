@@ -15,6 +15,11 @@ export function addCollection(attributes) {
 }
 
 
+export function addTrackToCollection(track) {
+  // TODO
+}
+
+
 export function deleteCollection(uid) {
   return (dispatch, getState) => {
     const state = getState();

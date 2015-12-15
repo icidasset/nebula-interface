@@ -12,10 +12,10 @@ class Boxes extends Component {
   getBoxStyleNames() {
     const def = 'box';
     const res = {
-      tracks: [def],
-      queue: [def],
-      equalizer: [def],
-      sources: [def],
+      tracks: [ def ],
+      queue: [ def ],
+      equalizer: [ def ],
+      sources: [ def ],
     };
 
     switch (this.props.routing.path) {
@@ -46,7 +46,6 @@ class Boxes extends Component {
 
       tracks: [
         { value: '{route}:/app', label: <strong>Show tracks</strong> },
-        { value: '{action}:setActiveCollection', label: 'Select a collection' },
         { value: '{route}:/app/collections', label: 'Manage collections' },
       ],
 
@@ -57,7 +56,10 @@ class Boxes extends Component {
       ],
 
       equalizer: [
-        { value: '{route}:/app/equalizer', label: <strong>Show equalizer</strong> },
+        {
+          value: '{route}:/app/equalizer',
+          label: <strong>Show equalizer</strong>,
+        },
         { value: '{action}:toggleMute', label: 'Toggle mute' },
       ],
 
@@ -71,7 +73,7 @@ class Boxes extends Component {
 
 
   handleDropdownChange(option) {
-    const [type, value] = option.value.split(':');
+    const [ type, value ] = option.value.split(':');
 
     switch (type) {
     case '{action}':
@@ -89,22 +91,13 @@ class Boxes extends Component {
     const dropdownItems = this.getDropdownItems();
     const dropdownChangeHandler = this.handleDropdownChange.bind(this);
 
-    // collection
-    let selectedCollection = this.props.tracks.collection;
-
-    if (selectedCollection) {
-      selectedCollection = selectedCollection.name;
-    } else {
-      selectedCollection = 'ALL';
-    }
-
     return (
       <div styleName="boxes">
 
         <div styleName={styleNames.tracks}>
           <Icon icon="beamed-note"/>
           <div styleName="box__label">Tracks</div>
-          <div styleName="box__category">{selectedCollection}</div>
+          <div styleName="box__category">&amp; COLLECTIONS</div>
           <Dropdown
             options={dropdownItems.tracks}
             onChange={dropdownChangeHandler}
@@ -135,7 +128,7 @@ class Boxes extends Component {
         </div>
 
         <div styleName={styleNames.sources}>
-          <Icon icon="mask"/>
+          <Icon icon="cog"/>
           <div styleName="box__label">Sources</div>
           <div styleName="box__category">INPUT</div>
           <Dropdown
@@ -155,7 +148,6 @@ class Boxes extends Component {
 Boxes.propTypes = {
   actions: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
-  tracks: PropTypes.object.isRequired,
 };
 
 

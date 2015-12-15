@@ -1,3 +1,5 @@
+/* globals __dirname process */
+
 import dotenv from 'dotenv';
 import fs from 'fs';
 import ms from 'metalsmith';
@@ -10,10 +12,9 @@ import msRename from 'metalsmith-rename';
 import msServe from 'metalsmith-serve';
 import msSvgSprite from 'metalsmith-svg-sprite';
 import msWatch from 'metalsmith-watch';
-import msWebpack from 'metalsmith-webpack';
+import msWebpack from 'ms-webpack';
 
 import webpackConfig from './config/webpack';
-
 
 const envFile = fs.readFileSync('./.env');
 const envVariables = dotenv.parse(envFile);
@@ -26,7 +27,7 @@ const watchPaths = {
 const serveOptions = {
   port: 8080,
   verbose: true,
-  http_error_files: { 404: '/200.html' },
+  http_error_files: { 404: '/200.html' }, // eslint-disable-line
 };
 
 const templateOptions = {
@@ -54,7 +55,7 @@ m.use(msSvgSprite(compileSvgSpriteConfig()));
 m.use(msFilenames());
 m.use(msInPlace(templateOptions));
 m.use(msLayouts(layoutOptions));
-m.use(msRename([['.hbs', '.html']]));
+m.use(msRename([ [ '.hbs', '.html' ] ]));
 m.use(msPermalinks({ relative: false }));
 
 if (process.env.SERVE) m.use(msServe(serveOptions));
@@ -64,11 +65,12 @@ m.build(function buildCallback(err) {
   if (err) throw err;
 });
 
-
-/// Icon settings
-///
-/// @author: Neal Granger (@nealgranger)
-///
+/**
+ * Icon settings
+ *
+ * @author Neal Granger (@nealgranger)
+ * @returns {Object} config for metalsmith-svg-sprite
+ */
 function compileSvgSpriteConfig() {
   return {
     mode: { symbol: {

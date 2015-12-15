@@ -1,4 +1,5 @@
 @import "../../../styles/colors";
+@import "../../../styles/z-indexes";
 
 
 /**
@@ -6,6 +7,7 @@
  */
 .tracks {
   color: #6f6f6f;
+  cursor: pointer;
   font-size: 0.8rem;
   left: 0;
   letter-spacing: 0.025em;
@@ -15,6 +17,7 @@
   padding: 0;
   pointer-events: none;
   width: 100%;
+  z-index: $z-index-tracks-list;
 }
 
 .track {
@@ -49,8 +52,9 @@
   background: color($shade-light a(0.25));
   box-shadow: 0 -2px 4px 0px rgba(0, 0, 0, 0.05) inset;
   position: relative;
+  z-index: $z-index-tracks-filter;
 
-  :global(.icon) {
+  > :global(.icon) {
     fill: color($shade-light a(.8));
     height: 1.9rem;
     left: grid(1.5);
@@ -69,7 +73,6 @@
     box-sizing: border-box;
     color: $shade-text-dark;
     font-size: 1.5rem;
-    font-weight: 300;
     height: grid(3);
     padding: grid(3) grid(1.5);
     padding-left: grid(5.5);
@@ -91,4 +94,76 @@
     background-color: $shade-accent;
     color: $shade-light;
   }
+}
+
+
+/**
+ * Filter > Settings
+ */
+.settings {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  position: absolute;
+  right: grid(1.5);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 99999;
+}
+
+.settings :global(.Dropdown-menu) {
+  right: 0;
+  top: 155%;
+
+  &::before {
+    left: auto;
+    right: rem(8px);
+  }
+}
+
+.active-collection :global(.Dropdown-control) {
+  background: $shade-accent;
+  border-radius: 3px;
+  color: white;
+  font-size: .75rem;
+  font-weight: 500;
+  padding: .25rem .65rem;
+  text-transform: uppercase;
+
+  :global(.placeholder) strong {
+    font-weight: inherit;
+  }
+}
+
+.target-collection {
+  margin-right: grid(1.5)
+  position: relative;
+}
+
+.target-collection__icon-wrapper {
+  line-height: 0;
+}
+
+.target-collection :global(.icon) {
+  color: color(black a(.55));
+  position: relative;
+  z-index: 1;
+}
+
+.target-collection :global(.placeholder) {
+  display: none;
+}
+
+.target-collection :global(.Dropdown-control) {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+}
+
+.settings .target-collection :global(.Dropdown-menu) {
+  right: -0.65rem;
+  top: 175%;
 }

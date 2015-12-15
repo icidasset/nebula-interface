@@ -56,6 +56,9 @@ export function fetchTracks() {
 
 /**
  * Remove matching tracks
+ *
+ * @param {string} sourceUid
+ * @returns {Promise} from Firebase
  */
 export function removeTracksBySourceUid(sourceUid) {
   return (dispatch, getState) => {
@@ -73,10 +76,16 @@ export function removeTracksBySourceUid(sourceUid) {
 
 
 /**
- * Set active collection
+ * Collections
  */
+
 export function setActiveCollection(collection) {
   return { type: types.SET_ACTIVE_COLLECTION, collection };
+}
+
+
+export function setTargetCollection(collection) {
+  return { type: types.SET_TARGET_COLLECTION, collection };
 }
 
 

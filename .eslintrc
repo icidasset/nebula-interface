@@ -1,28 +1,16 @@
 {
-  "env": {
-    "browser": true
-  },
-  "extends": "eslint-config-airbnb",
-  "ecmaFeatures": {
-    "jsx": true,
-    "experimentalObjectRestSpread": true
-  },
-  "plugins": [
-    "react"
+  "extends": [
+    "metalab/browser",
+    "metalab/react"
   ],
   "globals": {
     "ENV": true
   },
   "rules": {
     "default-case": 0,
-    "id-length": 0,
-    "react/jsx-uses-react": [2, { "pragma": "createElement" }],
-    "react/react-in-jsx-scope": 0,
-    "new-cap": 0,
-    "no-alert": 0,
-    "no-console": 0,
-    "no-use-before-define": 0,
-    "padded-blocks": 0,
-    "spaced-comment": 0
+    "filenames/filenames": 0,
+    "jsx-quotes": [1, "prefer-double"],
+    "max-len": [1, 100, 2],
+    "no-multiple-empty-lines": 0
   }
 }

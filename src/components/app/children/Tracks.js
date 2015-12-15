@@ -1,6 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import ReactListView from 'react-list-view';
+import Dropdown from 'react-dropdown';
 
 import * as trackUtils from '../../../utils/tracks';
 
@@ -37,7 +38,10 @@ class Tracks extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const propsChanged = (
       (nextProps.tracks.filteredItemIds !== this.props.tracks.filteredItemIds) ||
-      (nextProps.queue.activeItem !== this.props.queue.activeItem)
+      (nextProps.queue.activeItem !== this.props.queue.activeItem) ||
+
+      (nextProps.tracks.activeCollection !== this.props.tracks.activeCollection) ||
+      (nextProps.tracks.targetCollection !== this.props.tracks.targetCollection)
     );
 
     const stateChanged = (
@@ -59,8 +63,10 @@ class Tracks extends Component {
   }
 
 
-  /// Space properties
-  ///
+  /**
+   * Space properties
+   */
+
   setSpaceProperties() {
     const node = ReactDOM.findDOMNode(this);
     const mainNode = node.closest(`.${contentStyles.main}`);
@@ -86,8 +92,10 @@ class Tracks extends Component {
   }
 
 
-  /// Events
-  ///
+  /**
+   * Events
+   */
+
   handleResize() {
     this.setSpaceProperties();
     this.detectRowHeight();
@@ -124,8 +132,144 @@ class Tracks extends Component {
   }
 
 
-  /// Render
-  ///
+  /**
+   * Render
+   */
+
+  getTargetCollectionDropdownAttributes() {
+    let options;
+    let onChange;
+    let value;
+
+    const target = this.props.tracks.targetCollection;
+
+    // options
+    options = this.props.collections.items.map((col) => {
+      const label = target && target.uid === col.uid ?
+        <span className="is-active">{col.name}</span> :
+        col.name;
+
+      return { value: col.uid, label: label };
+    });
+
+    // onChange
+    onChange = (option) => {
+      let collection;
+
+      if (option) {
+        collection = this.props.collections.items.find((col) => {
+          return col.uid === option.value;
+        });
+      }
+
+      this.props.actions.setTargetCollection(collection);
+    };
+
+    // value
+    value = this.props.tracks.targetCollection;
+
+    if (value) {
+      value = {
+        value: value.uid,
+        label: value.name,
+      };
+    }
+
+    // @return
+    const groupName = (
+      <span><strong>Target</strong> collection</span>
+    );
+
+    return {
+      options: [ { type: 'group', name: groupName, items: options } ],
+      onChange,
+      value,
+    };
+  }
+
+
+  getActiveCollectionDropdownAttributes() {
+    let options;
+    let onChange;
+    let value;
+
+    const active = this.props.tracks.activeCollection;
+
+    // options
+    options = [ { value: null, label: <strong>All</strong> } ];
+    options = options.concat(
+      this.props.collections.items.map((col) => {
+        return { value: col.uid, label: col.name };
+      })
+    );
+
+    options.forEach((option) => {
+      if (!option.value) {
+        option.label = (!active ?
+          <span className="is-active">{option.label}</span> :
+          option.label
+        );
+      } else {
+        option.label = (active && active.uid === option.value ?
+          <span className="is-active">{option.label}</span> :
+          option.label
+        );
+      }
+    });
+
+    // onChange
+    onChange = (option) => {
+      let collection;
+
+      if (option) {
+        collection = this.props.collections.items.find((col) => {
+          return col.uid === option.value;
+        });
+      }
+
+      this.props.actions.setActiveCollection(collection);
+    };
+
+    // value
+    value = this.props.tracks.activeCollection;
+
+    if (value) {
+      value = {
+        value: value.uid,
+        label: value.name,
+      };
+    }
+
+    // @return
+    const groupName = (
+      <span><strong>Active</strong> collection</span>
+    );
+
+    return {
+      options: [ { type: 'group', name: groupName, items: options } ],
+      onChange,
+      value,
+    };
+  }
+
+
+  renderEmptyState() {
+    return (
+      <Middle>
+        <List
+          items={[]}
+          emptyIcon="beamed-note"
+          emptyMessage="No tracks found."
+          emptyNote="Click to add a source."
+          emptyClickHandler={() => {
+            this.props.actions.goTo('/app/sources/add');
+          }}
+        />
+      </Middle>
+    );
+  }
+
+
   renderItems(startIdx, endIdx, activeTrackId) {
     if (endIdx === -1) {
       return (<div></div>);
@@ -138,7 +282,7 @@ class Tracks extends Component {
       let className = styles.track;
 
       if (trackId === activeTrackId) {
-        className = className + ' ' + styles['is-active'];
+        className = `${className} ${styles['is-active']}`;
       }
 
       return (<div
@@ -155,6 +299,11 @@ class Tracks extends Component {
 
 
   render() {
+    if (this.props.tracks.items.length === 0) {
+      return this.renderEmptyState();
+    }
+
+    // collect data
     const activeTrackId = this.props.queue.activeItem ?
       trackUtils.generateTrackId(this.props.queue.activeItem) :
       false;
@@ -163,20 +312,11 @@ class Tracks extends Component {
       this.state.tracksContainerHeight / this.state.rowHeight
     ) + 1;
 
-    if (this.props.tracks.items.length === 0) {
-      return (
-        <Middle>
-          <List
-            items={[]}
-            emptyIcon="beamed-note"
-            emptyMessage="No tracks found."
-            emptyNote="Click to add a source."
-            emptyClickHandler={() => this.props.actions.goTo('/app/sources/add')}
-          />
-        </Middle>
-      );
-    }
+    const activeCollectionDropdownOptions = this.getActiveCollectionDropdownAttributes();
+    const targetCollectionDropdownOptions = this.getTargetCollectionDropdownAttributes();
 
+
+    // render
     return (
       <div>
 
@@ -188,6 +328,30 @@ class Tracks extends Component {
             value={this.props.tracks.filter}
             onChange={this.handleFilterChange.bind(this)}
           />
+
+          <div className={styles.settings}>
+
+            <div className={styles['target-collection']}>
+              <div className={styles['target-collection__icon-wrapper']}>
+                <Icon icon="hair-cross" />
+              </div>
+              <Dropdown
+                options={targetCollectionDropdownOptions.options}
+                onChange={targetCollectionDropdownOptions.onChange}
+                value={targetCollectionDropdownOptions.value}
+              />
+            </div>
+
+            <div className={styles['active-collection']}>
+              <Dropdown
+                options={activeCollectionDropdownOptions.options}
+                onChange={activeCollectionDropdownOptions.onChange}
+                value={activeCollectionDropdownOptions.value}
+                placeholder="All"
+              />
+            </div>
+
+          </div>
         </div>
 
         <div
@@ -223,6 +387,7 @@ class Tracks extends Component {
 
 Tracks.propTypes = {
   actions: PropTypes.object.isRequired,
+  collections: PropTypes.object.isRequired,
   queue: PropTypes.object.isRequired,
   tracks: PropTypes.object.isRequired,
 };

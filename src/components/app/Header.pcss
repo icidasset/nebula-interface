@@ -1,6 +1,7 @@
 @import "../../styles/colors";
 @import "../../styles/fonts";
 @import "../../styles/queries";
+@import "../../styles/z-indexes";
 
 
 /*
@@ -18,7 +19,7 @@ http://codepen.io/Bork/pen/wJhEm/
   color: color(black a(.45));
   padding: grid(2) grid(1);
   position: relative;
-  z-index: 3;
+  z-index: $z-index-header;
 
   @media (--medium) {
     display: flex;

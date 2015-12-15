@@ -1,3 +1,4 @@
+import filter from 'lodash/collection/filter';
 import sortByAll from 'lodash/collection/sortByAll';
 
 import * as trackUtils from '../utils/tracks';
@@ -21,7 +22,9 @@ const initialTrack = {
 
 
 const initialState = {
-  collection: false,
+  activeCollection: null,
+  targetCollection: null,
+
   filter: (typeof importScripts !== 'function') ?
     (localStorage.getItem('tracksFilter') || '') :
     (''),
@@ -61,7 +64,7 @@ export default function tracks(state = initialState, action) {
     return {
       ...state,
       ...gatherItems(action.items, {
-        collection: state.collection,
+        collection: state.activeCollection,
         filter: state.filter,
       }),
       isFetching: false,
@@ -74,7 +77,7 @@ export default function tracks(state = initialState, action) {
     return {
       ...state,
       ...gatherItems(state.items, {
-        collection: state.collection,
+        collection: state.activeCollection,
         filter: action.value,
         filteredOnly: true,
       }),
@@ -88,7 +91,7 @@ export default function tracks(state = initialState, action) {
     return {
       ...state,
       ...gatherItems(action.items, {
-        collection: state.collection,
+        collection: state.activeCollection,
         filter: state.filter,
       }),
     };
@@ -101,7 +104,14 @@ export default function tracks(state = initialState, action) {
         collection: action.collection,
         filter: state.filter,
       }),
-      collection: action.collection,
+      activeCollection: action.collection,
+    };
+
+
+  case types.SET_TARGET_COLLECTION:
+    return {
+      ...state,
+      targetCollection: action.collection,
     };
 
 
@@ -112,7 +122,8 @@ export default function tracks(state = initialState, action) {
 
 
 function gatherItems(items, options = {}) {
-  const filtered = runThroughFilter(items, options.filter);
+  const collected = getItemsFromCollection(items, options.collection);
+  const filtered = runThroughFilter(collected, options.filter);
   const sorted = sortByAll(filtered, [
     'properties.artist',
     'properties.album',
@@ -127,20 +138,41 @@ function gatherItems(items, options = {}) {
   };
 
   if (!options.filteredOnly) {
-    Object.assign(result, { items: [...items] });
+    Object.assign(result, { items: [ ...items ] });
   }
 
   return result;
 }
 
 
+function getItemsFromCollection(items, collection) {
+  if (!collection) {
+    return items;
+  }
+
+  const collectionIds = (collection.trackIds || []).slice(0);
+
+  return filter(items, (item) => {
+    const id = trackUtils.generateTrackId(item);
+    const cidx = collectionIds.indexOf(id);
+
+    if (cidx !== -1) {
+      collectionIds.splice(cidx, 1);
+      return true;
+    }
+  });
+
+  // TODO: Rewrite this so "missing" tracks are rendered too.
+}
+
+
 function runThroughFilter(items, filter) {
   if (!filter || !filter.length) {
-    return [...items];
+    return [ ...items ];
   }
 
   const r = new RegExp(filter.replace(/[\\^$*+?.()|[\]{}]/g, '\\$&'), 'i');
-  const checkAttr = ['title', 'artist', 'album'];
+  const checkAttr = [ 'title', 'artist', 'album' ];
 
   return items.filter((item) => {
     let isMatch = false;
