@@ -44,9 +44,9 @@ export function fetchTracks() {
 
     dispatch({ type: types.FETCH_TRACKS });
 
-    return firebase.fetch('tracks', state.auth.user.uid).then(
+    return firebase.fetch('tracks', state.auth.user.uid, '[]', state.connection.offline).then(
       (result) => {
-        const items = JSON.parse(result) || [];
+        const items = JSON.parse(result);
         return dispatch({ type: types.FETCH_TRACKS_DONE, items: items });
       }
     );

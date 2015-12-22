@@ -40,9 +40,9 @@ export function fetchSources() {
 
     dispatch({ type: types.FETCH_SOURCES });
 
-    return firebase.fetch('sources', state.auth.user.uid).then(
+    return firebase.fetch('sources', state.auth.user.uid, {}, state.connection.offline).then(
       (result) => {
-        const items = firebase.convertPushedToArray(result || {});
+        const items = firebase.convertPushedToArray(result);
         dispatch({ type: types.FETCH_SOURCES_DONE, items });
       }
     );

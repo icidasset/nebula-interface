@@ -11,13 +11,25 @@ export function promiseCallback(resolve, reject) {
 }
 
 
-export function fetch(key, userId) {
+export function fetch(key, userId, fallback, offline) {
+  if (fallback === undefined) {
+    throw new Error('utils/firebase.fetch was called without the \'fallback\' argument');
+  }
+
+  if (offline === undefined) {
+    throw new Error('utils/firebase.fetch was called without the \'offline\' argument');
+  }
+
   return new Promise((resolve, reject) => {
-    base.child(`${key}/${userId}`).on(
-      'value',
-      (snapshot) => resolve(snapshot.val()),
-      (error) => reject(error)
-    );
+    if (offline) {
+      resolve(fallback);
+    } else {
+      base.child(`${key}/${userId}`).on(
+        'value',
+        (snapshot) => resolve(snapshot.val() || fallback),
+        (error) => reject(error)
+      );
+    }
   });
 }
 
@@ -40,6 +52,14 @@ export function replace(key, items, userId) {
   return new Promise((resolve, reject) => {
     base.child(`${key}/${userId}`)
         .set(items, promiseCallback(resolve, reject));
+  });
+}
+
+
+export function update(key, uid, attributes, userId) {
+  return new Promise((resolve, reject) => {
+    base.child(`${key}/${userId}/${uid}`)
+        .update(attributes, promiseCallback(resolve, reject));
   });
 }
 

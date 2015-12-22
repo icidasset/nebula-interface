@@ -5,9 +5,12 @@
 /**
  * Tracks
  */
+.tracksWrapper {
+  cursor: pointer;
+}
+
 .tracks {
   color: #6f6f6f;
-  cursor: pointer;
   font-size: 0.8rem;
   left: 0;
   letter-spacing: 0.025em;
@@ -72,7 +75,8 @@
     border: 0;
     box-sizing: border-box;
     color: $shade-text-dark;
-    font-size: 1.5rem;
+    font-size: 1.45rem;
+    font-weight: 100;
     height: grid(3);
     padding: grid(3) grid(1.5);
     padding-left: grid(5.5);
@@ -136,7 +140,7 @@
 }
 
 .target-collection {
-  margin-right: grid(1.5)
+  margin-right: grid(1.75)
   position: relative;
 }
 
@@ -145,7 +149,7 @@
 }
 
 .target-collection :global(.icon) {
-  color: color(black a(.55));
+  color: $shade-text-dark;
   position: relative;
   z-index: 1;
 }

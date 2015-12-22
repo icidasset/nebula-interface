@@ -21,9 +21,25 @@ class Tracks extends Component {
     this.state = {
       rowHeight: 25,
       tracksContainerHeight: 0,
+
+      targetKeys: {
+        pressed: {
+          c: false, // collection
+          q: false, // queue
+        },
+      },
     };
 
     this.boundHandleResize = this.handleResize.bind(this);
+  }
+
+
+  componentWillMount() {
+    this.boundHandleKeyPress = this.handleKeyPress.bind(this);
+    this.boundHandleKeyUp = this.handleKeyUp.bind(this);
+
+    document.body.addEventListener('keypress', this.boundHandleKeyPress);
+    document.body.addEventListener('keyup', this.boundHandleKeyUp);
   }
 
 
@@ -59,7 +75,43 @@ class Tracks extends Component {
 
 
   componentWillUnmount() {
+    document.body.removeEventListener('keypress', this.boundHandleKeyPress);
+    document.body.removeEventListener('keyup', this.boundHandleKeyUp);
     window.removeEventListener('resize', this.boundHandleResize);
+  }
+
+
+  /**
+   * Keyboard events
+   */
+
+  handleKeyPress() {
+    if (this._keyPressed) return;
+
+    this._keyPressed = true;
+
+    const key = event.keyCode || event.which;
+    const c = (key === 99);
+    const q = (key === 113);
+
+    if (c || q) {
+      this.state.targetKeys.pressed = {
+        ...this.state.targetKeys.pressed,
+        c,
+        q,
+      };
+    }
+  }
+
+
+  handleKeyUp() {
+    this._keyPressed = false;
+
+    this.state.targetKeys.pressed = {
+      ...this.state.targetKeys.pressed,
+      c: false,
+      q: false,
+    };
   }
 
 
@@ -116,14 +168,23 @@ class Tracks extends Component {
 
     event.preventDefault();
 
-    // get track and play it
+    // get track
     const track = this.props.tracks.filteredItems[idx];
 
-    if (this.props.queue.activeItem !== track) {
-      this.props.actions.injectIntoQueue(track);
-    }
+    // -> action
+    if (this.state.targetKeys.pressed.c) {
+      if (this.props.tracks.targetCollection) {
+        this.props.actions.addTrackToCollection(track, this.props.tracks.targetCollection);
+      }
+    } else if (this.state.targetKeys.pressed.q) {
+      // TODO
+    } else {
+      if (this.props.queue.activeItem !== track) {
+        this.props.actions.injectIntoQueue(track);
+      }
 
-    this.props.actions.setAudioIsPlaying(true);
+      this.props.actions.setAudioIsPlaying(true);
+    }
   }
 
 
@@ -333,7 +394,7 @@ class Tracks extends Component {
 
             <div className={styles['target-collection']}>
               <div className={styles['target-collection__icon-wrapper']}>
-                <Icon icon="hair-cross" />
+                <Icon icon="copy" />
               </div>
               <Dropdown
                 options={targetCollectionDropdownOptions.options}
@@ -357,6 +418,7 @@ class Tracks extends Component {
         <div
           onDoubleClick={this.handleTracksWrapperDoubleClick.bind(this)}
           onMouseDown={(event) => event.preventDefault()}
+          className={styles.tracksWrapper}
         >
           <ReactListView
             style={{ height: this.state.tracksContainerHeight }}

@@ -50,6 +50,8 @@ export function makeTrackObject(attributes) {
 
 
 export default function tracks(state = initialState, action) {
+  let targetCollection;
+
   switch (action.type) {
   case types.FETCH_TRACKS:
     return {
@@ -98,6 +100,15 @@ export default function tracks(state = initialState, action) {
 
 
   case types.SET_ACTIVE_COLLECTION:
+    targetCollection = state.targetCollection;
+
+    if (action.collection && targetCollection) {
+      if (action.collection.uid === targetCollection.uid) {
+        targetCollection = null;
+      }
+    }
+
+
     return {
       ...state,
       ...gatherItems(state.items, {
@@ -105,13 +116,22 @@ export default function tracks(state = initialState, action) {
         filter: state.filter,
       }),
       activeCollection: action.collection,
+      targetCollection: targetCollection,
     };
 
 
   case types.SET_TARGET_COLLECTION:
+    targetCollection = action.collection;
+
+    if (targetCollection && state.activeCollection) {
+      if (targetCollection.uid === state.activeCollection.uid) {
+        targetCollection = null;
+      }
+    }
+
     return {
       ...state,
-      targetCollection: action.collection,
+      targetCollection: targetCollection,
     };
 
 

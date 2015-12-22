@@ -27,7 +27,7 @@ class Boxes extends Component {
     case '/app/history':
       res.queue.push('is-active');
       break;
-    case '/equalizer':
+    case '/app/equalizer':
       res.equalizer.push('is-active');
       break;
     case '/app/sources':

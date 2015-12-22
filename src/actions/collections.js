@@ -1,4 +1,5 @@
 import * as firebase from '../utils/firebase';
+import * as trackUtils from '../utils/tracks';
 import * as types from '../constants/action_types/collections';
 
 
@@ -15,8 +16,22 @@ export function addCollection(attributes) {
 }
 
 
-export function addTrackToCollection(track) {
-  // TODO
+export function addTrackToCollection(track, collection) {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    collection.trackIds = collection.trackIds || [];
+    collection.trackIds.push(trackUtils.generateTrackId(track));
+
+    return firebase.update(
+      'collections',
+      collection.uid,
+      { trackIds: collection.trackIds},
+      state.auth.user.uid,
+    );
+
+    // TODO: check if it isn't already in the collection
+  };
 }
 
 
@@ -36,9 +51,9 @@ export function fetchCollections() {
 
     dispatch({ type: types.FETCH_COLLECTIONS });
 
-    return firebase.fetch('collections', state.auth.user.uid).then(
+    return firebase.fetch('collections', state.auth.user.uid, {}, state.connection.offline).then(
       (result) => {
-        const items = firebase.convertPushedToArray(result || {});
+        const items = firebase.convertPushedToArray(result);
         dispatch({ type: types.FETCH_COLLECTIONS_DONE, items });
       }
     );
