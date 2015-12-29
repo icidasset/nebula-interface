@@ -18,29 +18,40 @@ class App extends Component {
   }
 
 
-  render() {
+  renderChild() {
     if (!this.props.auth.passedInitialCheck) {
       return (<Loader />);
     } else if (this.props.routing.container) {
       return createElement( pages[this.props.routing.container] );
     }
 
-    return (<div />);
+    return '';
+  }
+
+
+  render() {
+    return (
+      <div style={{ height: '100%' }}>
+        {this.renderChild()}
+        {this.props.children}
+      </div>
+    );
   }
 
 }
 
 
 App.propTypes = {
+  actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  children: PropTypes.node,
   history: PropTypes.object.isRequired,
   routing: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
 };
 
 
 function mapStateToProps(state) {
-  return pick(state, ['auth', 'routing']);
+  return pick(state, [ 'auth', 'routing' ]);
 }
 
 

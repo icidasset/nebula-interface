@@ -1,6 +1,7 @@
 import * as firebase from '../utils/firebase';
 import * as trackUtils from '../utils/tracks';
 import * as types from '../constants/action_types/collections';
+import * as notificationActions from './notifications';
 
 
 /// Actions
@@ -19,6 +20,11 @@ export function addCollection(attributes) {
 export function addTrackToCollection(track, collection) {
   return (dispatch, getState) => {
     const state = getState();
+
+    dispatch(notificationActions.addNotification({
+      message: 'Test',
+      level: 'info',
+    }));
 
     collection.trackIds = collection.trackIds || [];
     collection.trackIds.push(trackUtils.generateTrackId(track));

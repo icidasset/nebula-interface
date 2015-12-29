@@ -416,6 +416,11 @@ class Tracks extends Component {
         </div>
 
         <div
+          onClick={() => {
+            if (document.activeElement) {
+              document.activeElement.blur();
+            }
+          }}
           onDoubleClick={this.handleTracksWrapperDoubleClick.bind(this)}
           onMouseDown={(event) => event.preventDefault()}
           className={styles.tracksWrapper}

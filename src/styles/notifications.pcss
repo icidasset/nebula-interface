@@ -1,0 +1,22 @@
+@import './colors';
+
+
+:global .notifications-wrapper {
+  bottom: grid(1.5);
+  position: fixed;
+  right: grid(1.5);
+}
+
+
+:global .notification {
+  background: $shade-accent;
+  color: white;
+  opacity: 0;
+  padding: grid(1);
+  transition: opacity 500ms;
+}
+
+
+:global .notification-visible {
+  opacity: 1;
+}
