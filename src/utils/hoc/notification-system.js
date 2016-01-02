@@ -59,6 +59,8 @@ export default function(store) {
 
         this.refs.notificationSystem.addNotification(i);
       });
+
+      this.local = sourceOfTruth.slice(0);
     },
 
 

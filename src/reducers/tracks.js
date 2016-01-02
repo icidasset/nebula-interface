@@ -102,9 +102,16 @@ export default function tracks(state = initialState, action) {
   case types.SET_ACTIVE_COLLECTION:
     targetCollection = state.targetCollection;
 
+    if (action.collection) {
+      localStorage.setItem('activeCollection', action.collection.uid);
+    } else {
+      localStorage.removeItem('activeCollection');
+    }
+
     if (action.collection && targetCollection) {
       if (action.collection.uid === targetCollection.uid) {
         targetCollection = null;
+        localStorage.removeItem('targetCollection');
       }
     }
 
@@ -123,9 +130,16 @@ export default function tracks(state = initialState, action) {
   case types.SET_TARGET_COLLECTION:
     targetCollection = action.collection;
 
+    if (targetCollection) {
+      localStorage.setItem('targetCollection', targetCollection.uid);
+    } else {
+      localStorage.removeItem('targetCollection');
+    }
+
     if (targetCollection && state.activeCollection) {
       if (targetCollection.uid === state.activeCollection.uid) {
         targetCollection = null;
+        localStorage.removeItem('targetCollection');
       }
     }
 
@@ -141,6 +155,8 @@ export default function tracks(state = initialState, action) {
 }
 
 
+/// Private
+///
 function gatherItems(items, options = {}) {
   const collected = getItemsFromCollection(items, options.collection);
   const filtered = runThroughFilter(collected, options.filter);

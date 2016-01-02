@@ -13,6 +13,20 @@ import contentStyles from '../Content.pcss';
 import styles from './Tracks.pcss';
 
 
+const MESSAGES = {
+  targetKeys: {
+    c: {
+      message: `Double click a track to add it to the selected collection`,
+      level: 'info',
+    },
+    q: {
+      message: `Double click a track to add it to the queue`,
+      level: 'info',
+    },
+  },
+};
+
+
 class Tracks extends Component {
 
   constructor(props) {
@@ -27,6 +41,11 @@ class Tracks extends Component {
           c: false, // collection
           q: false, // queue
         },
+
+        notificationUids: {
+          c: null,
+          q: null,
+        }
       },
     };
 
@@ -85,8 +104,12 @@ class Tracks extends Component {
    * Keyboard events
    */
 
-  handleKeyPress() {
-    if (this._keyPressed) return;
+  handleKeyPress(event) {
+    if (this._keyPressed ||
+      event.target.tagName === 'INPUT' ||
+      event.target.tagName === 'TEXTAREA') {
+      return;
+    }
 
     this._keyPressed = true;
 
@@ -100,6 +123,12 @@ class Tracks extends Component {
         c,
         q,
       };
+
+      this.state.targetKeys.notificationUids = {
+        ...this.state.targetKeys.notificationUids,
+        c: c ? this.props.actions.addNotification(MESSAGES.targetKeys.c).notification.uid : null,
+        q: q ? this.props.actions.addNotification(MESSAGES.targetKeys.q).notification.uid : null,
+      };
     }
   }
 
@@ -112,6 +141,14 @@ class Tracks extends Component {
       c: false,
       q: false,
     };
+
+    if (this.state.targetKeys.notificationUids.c) {
+      this.props.actions.removeNotification(this.state.targetKeys.notificationUids.c);
+    }
+
+    if (this.state.targetKeys.notificationUids.q) {
+      this.props.actions.removeNotification(this.state.targetKeys.notificationUids.q);
+    }
   }
 
 
@@ -177,10 +214,10 @@ class Tracks extends Component {
         this.props.actions.addTrackToCollection(track, this.props.tracks.targetCollection);
       }
     } else if (this.state.targetKeys.pressed.q) {
-      // TODO
+      this.props.actions.injectIntoQueue(track);
     } else {
       if (this.props.queue.activeItem !== track) {
-        this.props.actions.injectIntoQueue(track);
+        this.props.actions.injectIntoQueue(track, true);
       }
 
       this.props.actions.setAudioIsPlaying(true);

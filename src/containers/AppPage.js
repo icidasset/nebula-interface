@@ -20,15 +20,9 @@ class AppPage extends Component {
     this.props.actions.fetchSources().then(
       () => this.props.actions.fetchCollections()
     ).then(
-      () => {
-        // TODO: get activeCollection and targetCollection from localStorage
-        // 1. exec collectionsActions.getStoredCollectionSettings()
-        // 2. retrieve uids from localStorage
-        // 3. find collections matching the uids
-        // 4. exec tracksActions.SET_TARGET_COLLECTION
-        //    and tracksActions.SET_ACTIVE_COLLECTION if the collections (still) exist
-        return this.props.actions.fetchTracks()
-      }
+      () => this.props.actions.restoreATC()
+    ).then(
+      () => this.props.actions.fetchTracks()
     ).then(
       () => this.props.actions.processSources()
     );

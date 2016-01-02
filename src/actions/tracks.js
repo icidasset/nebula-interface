@@ -89,6 +89,25 @@ export function setTargetCollection(collection) {
 }
 
 
+export function restoreATC() {
+  return (dispatch, getState) => {
+    const activeCollection = localStorage.getItem('activeCollection');
+    const targetCollection = localStorage.getItem('targetCollection');
+    const collections = getState().collections.items;
+
+    if (activeCollection) {
+      const a = collections.find((i) => i.uid === activeCollection);
+      if (a) dispatch(setActiveCollection(a));
+    }
+
+    if (targetCollection) {
+      const t = collections.find((i) => i.uid === targetCollection);
+      if (t) dispatch(setTargetCollection(t));
+    }
+  };
+}
+
+
 /// Private
 ///
 function handleDiff(oldCollection, diff) {

@@ -3,20 +3,49 @@
 
 :global .notifications-wrapper {
   bottom: grid(1.5);
+  font-size: .85rem;
+  line-height: 1.4;
   position: fixed;
   right: grid(1.5);
 }
 
 
 :global .notification {
-  background: $shade-accent;
+  background: color(black a(.675));
+  border-radius: 3px;
+  clear: right;
   color: white;
+  cursor: pointer;
+  float: right;
+  font-weight: 500;
+  margin-top: grid(.5);
   opacity: 0;
-  padding: grid(1);
+  padding: 0.55rem .8rem .5rem;
   transition: opacity 500ms;
 }
 
 
 :global .notification-visible {
   opacity: 1;
+}
+
+
+:global .notification-message:before {
+  content: "⌘";
+  display: inline-block;
+  margin-right: grid(1);
+  opacity: .75;
+  position: relative;
+  top: -2px;
+  vertical-align: middle;
+}
+
+
+:global .notification-success .notification-message:before {
+  color: $green;
+}
+
+
+:global .notification-dismiss {
+  display: none;
 }

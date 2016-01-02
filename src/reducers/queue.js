@@ -1,3 +1,5 @@
+import findLastIndex from 'lodash/array/findLastIndex';
+
 import * as types from '../constants/action_types/queue';
 import * as trackUtils from '../utils/tracks';
 
@@ -22,20 +24,32 @@ export default function queue(state = initialState, action) {
 
   switch (action.type) {
   case types.INJECT_INTO_QUEUE:
-    const injectedTrackId = trackUtils.generateTrackId(action.track);
+    const trackId = trackUtils.generateTrackId(action.track);
+    const track = { ...action.track, injected: true };
 
-    if (state.activeItem) {
-      newHistory = [...state.history, state.activeItem];
+    if (action.replace && state.activeItem) {
+      newHistory = [ ...state.history, state.activeItem ];
     } else {
-      newHistory = [...state.history];
+      newHistory = [ ...state.history ];
+    }
+
+    if (action.replace) {
+      newItems = state.items.filter(
+        (i) => trackUtils.generateTrackId(i) !== trackId
+      );
+    } else {
+      const lastIndex = findLastIndex(state.items, { injected: true }) + 1;
+
+      newItems = [ ...state.items ];
+      newItems.splice(lastIndex, 0, track);
     }
 
     return {
       ...state,
 
-      activeItem: { ...action.track, injected: true },
+      activeItem: action.replace ? track : state.activeItem,
       history: newHistory,
-      items: state.items.filter((i) => trackUtils.generateTrackId(i) !== injectedTrackId),
+      items: newItems,
     };
 
 
@@ -65,9 +79,9 @@ export default function queue(state = initialState, action) {
 
   case types.SHIFT_QUEUE:
     if (state.activeItem) {
-      newHistory = [...state.history, state.activeItem];
+      newHistory = [ ...state.history, state.activeItem ];
     } else {
-      newHistory = [...state.history];
+      newHistory = [ ...state.history ];
     }
 
     newActiveItem = state.items.shift();
@@ -115,7 +129,6 @@ export default function queue(state = initialState, action) {
         activeItem: newActiveItem,
         items: newItems || [],
       };
-
     }
 
     return state;

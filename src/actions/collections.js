@@ -23,7 +23,7 @@ export function addTrackToCollection(track, collection) {
 
     dispatch(notificationActions.addNotification({
       message: 'Test',
-      level: 'info',
+      level: 'success',
     }));
 
     collection.trackIds = collection.trackIds || [];

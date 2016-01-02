@@ -7,32 +7,19 @@ import * as trackUtils from '../utils/tracks';
 import * as types from '../constants/action_types/queue';
 
 
-/// Actions
-///
-
 /**
- * Move to the next item.
- * Set the first item in the queue as the active item.
+ * {pub} Inject track into queue.
  */
-export function shiftQueue() {
+export function injectIntoQueue(track, replaceActiveItem = false) {
   return (dispatch) => {
-    dispatch({ type: types.SHIFT_QUEUE });
+    dispatch({ type: types.INJECT_INTO_QUEUE, track, replace: replaceActiveItem });
     dispatch(refill());
   };
 }
 
 
 /**
- * Go back.
- * Add the active item back in front.
- */
-export function unshiftQueue() {
-  return { type: types.UNSHIFT_QUEUE };
-}
-
-
-/**
- * Refresh.
+ * {pub} Refresh.
  * Check if there are old (now non-existing) tracks in the queue.
  */
 export function refreshQueue() {
@@ -44,7 +31,7 @@ export function refreshQueue() {
 
 
 /**
- * Reset.
+ * {pub} Reset.
  * Clear queue and refill.
  */
 export function resetQueue() {
@@ -56,18 +43,27 @@ export function resetQueue() {
 
 
 /**
- * Inject track into queue.
+ * {pub} Move to the next item.
+ * Set the first item in the queue as the active item.
  */
-export function injectIntoQueue(track) {
+export function shiftQueue() {
   return (dispatch) => {
-    dispatch({ type: types.INJECT_INTO_QUEUE, track });
+    dispatch({ type: types.SHIFT_QUEUE });
     dispatch(refill());
   };
 }
 
 
 /**
- * Toggle shuffle
+ * {pub} Toggle repeat
+ */
+export function toggleRepeat() {
+  return { type: types.TOGGLE_REPEAT };
+}
+
+
+/**
+ * {pub} Toggle shuffle
  */
 export function toggleShuffle() {
   return (dispatch) => {
@@ -78,15 +74,15 @@ export function toggleShuffle() {
 
 
 /**
- * Toggle repeat
+ * {pub} Go back.
+ * Add the active item back in front.
  */
-export function toggleRepeat() {
-  return { type: types.TOGGLE_REPEAT };
+export function unshiftQueue() {
+  return { type: types.UNSHIFT_QUEUE };
 }
 
 
-/// Private
-///
+
 
 /**
  * Refill queue.
@@ -108,7 +104,7 @@ function refill() {
     const newItems = [];
     const currentItems = []
       .concat(state.queue.history)
-      .concat(state.queue.activeItem ? [state.queue.activeItem] : [])
+      .concat(state.queue.activeItem ? [ state.queue.activeItem ] : [])
       .concat(state.queue.items)
       .map(trackUtils.generateTrackId);
 
@@ -124,13 +120,11 @@ function refill() {
     if (doShuffle) {
       // randomize
       indexes = shuffle(indexes);
-
     } else if (currentItems.length) {
       // continue
       i = trackIds.indexOf(last(currentItems));
       i = findIndex(indexes, (n) => (n > i));
       i = i < 0 ? 0 : i;
-
     }
 
     while (newItems.length < indexes.length && newItems.length < types.QUEUE_LENGTH) {
