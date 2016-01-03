@@ -14,8 +14,10 @@ class Sources extends Component {
   /// {actions} Index
   ///
   handleIndexDelete(event) {
-    const uid = event.target.closest('li').getAttribute('data-key');
-    this.props.actions.deleteSource(uid);
+    if (window.confirm('Are you sure you want to remove this source?')) {
+      const uid = event.target.closest('li').getAttribute('data-key');
+      this.props.actions.deleteSource(uid);
+    }
   }
 
 
@@ -184,6 +186,15 @@ class Sources extends Component {
   }
 
 
+  renderInfo() {
+    return (
+      <div>
+        <p>Sources are the places where your music is stored. Or in other words, your cloud-storage accounts.</p>
+      </div>
+    );
+  }
+
+
   /// {render}
   ///
   render() {
@@ -200,6 +211,9 @@ class Sources extends Component {
       <a key="process" onClick={this.props.actions.processSources} style={{ cursor: 'pointer' }}>
         <Icon icon="thunder-cloud" /> Process sources
       </a>,
+      <Link key="info" to="/app/sources/info">
+        <Icon icon="help-with-circle" /> Info
+      </Link>,
     ];
 
     return (

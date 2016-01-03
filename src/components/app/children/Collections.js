@@ -12,8 +12,10 @@ class Collections extends Component {
   /// {actions} Index
   ///
   handleIndexDelete(event) {
-    const uid = event.target.closest('li').getAttribute('data-key');
-    this.props.actions.deleteCollection(uid);
+    if (window.confirm('Are you sure you want to remove this collection?')) {
+      const uid = event.target.closest('li').getAttribute('data-key');
+      this.props.actions.deleteCollection(uid);
+    }
   }
 
 
@@ -119,6 +121,15 @@ class Collections extends Component {
   }
 
 
+  renderInfo() {
+    return (
+      <div>
+        <p>Collections are smaller collections of your music, which might be auto generated or defined by you.</p>
+      </div>
+    );
+  }
+
+
   /// {render}
   ///
   render() {
@@ -132,6 +143,9 @@ class Collections extends Component {
       </Link>,
       <Link key="add" to="/app/collections/add">
         <Icon icon="plus" /> Add new
+      </Link>,
+      <Link key="info" to="/app/collections/info">
+        <Icon icon="help-with-circle" /> Info
       </Link>,
     ];
 
