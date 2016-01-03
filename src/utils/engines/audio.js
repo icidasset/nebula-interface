@@ -237,10 +237,6 @@ class AudioEngine {
   createChannelSplitterNode() {
     const node = this.ac.createChannelSplitter(2);
 
-    // connect to analyser
-    // TODO: node.connect(this.nodes.analyserLeft, 0, 0);
-    // TODO: node.connect(this.nodes.analyserRight, 1, 0);
-
     // store node
     this.nodes.channelSplitter = node;
   }
@@ -281,9 +277,6 @@ class AudioEngine {
     low.connect(mid);
     mid.connect(hi);
     hi.connect(this.ac.destination);
-
-    // TODO: if shouldAnalyse
-    // TODO: hi.connect(this.nodes.channelSplitter)
 
     // store nodes
     this.nodes.biquad = { low, mid, hi };
