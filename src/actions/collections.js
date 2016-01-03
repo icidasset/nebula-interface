@@ -22,7 +22,7 @@ export function addTrackToCollection(track, collection) {
     const state = getState();
 
     dispatch(notificationActions.addNotification({
-      message: 'Test',
+      message: `Added "${track.properties.title}" to the "${collection.name}" collection`,
       level: 'success',
     }));
 

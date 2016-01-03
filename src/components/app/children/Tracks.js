@@ -15,11 +15,11 @@ import styles from './Tracks.pcss';
 
 const MESSAGES = {
   targetKeys: {
-    c: {
+    shift: {
       message: `Double click a track to add it to the selected collection`,
       level: 'info',
     },
-    q: {
+    alt: {
       message: `Double click a track to add it to the queue`,
       level: 'info',
     },
@@ -37,14 +37,9 @@ class Tracks extends Component {
       tracksContainerHeight: 0,
 
       targetKeys: {
-        pressed: {
-          c: false, // collection
-          q: false, // queue
-        },
-
         notificationUids: {
-          c: null,
-          q: null,
+          shift: null,
+          alt: null,
         }
       },
     };
@@ -54,10 +49,10 @@ class Tracks extends Component {
 
 
   componentWillMount() {
-    this.boundHandleKeyPress = this.handleKeyPress.bind(this);
+    this.boundHandleKeyDown = this.handleKeyDown.bind(this);
     this.boundHandleKeyUp = this.handleKeyUp.bind(this);
 
-    document.body.addEventListener('keypress', this.boundHandleKeyPress);
+    document.body.addEventListener('keydown', this.boundHandleKeyDown);
     document.body.addEventListener('keyup', this.boundHandleKeyUp);
   }
 
@@ -94,7 +89,7 @@ class Tracks extends Component {
 
 
   componentWillUnmount() {
-    document.body.removeEventListener('keypress', this.boundHandleKeyPress);
+    document.body.removeEventListener('keydown', this.boundHandleKeyDown);
     document.body.removeEventListener('keyup', this.boundHandleKeyUp);
     window.removeEventListener('resize', this.boundHandleResize);
   }
@@ -104,7 +99,7 @@ class Tracks extends Component {
    * Keyboard events
    */
 
-  handleKeyPress(event) {
+  handleKeyDown(event) {
     if (this._keyPressed ||
       event.target.tagName === 'INPUT' ||
       event.target.tagName === 'TEXTAREA') {
@@ -113,21 +108,15 @@ class Tracks extends Component {
 
     this._keyPressed = true;
 
-    const key = event.keyCode || event.which;
-    const c = (key === 99);
-    const q = (key === 113);
-
-    if (c || q) {
-      this.state.targetKeys.pressed = {
-        ...this.state.targetKeys.pressed,
-        c,
-        q,
-      };
-
+    if (event.shiftKey || event.altKey) {
       this.state.targetKeys.notificationUids = {
         ...this.state.targetKeys.notificationUids,
-        c: c ? this.props.actions.addNotification(MESSAGES.targetKeys.c).notification.uid : null,
-        q: q ? this.props.actions.addNotification(MESSAGES.targetKeys.q).notification.uid : null,
+        shift: event.shiftKey ?
+          this.props.actions.addNotification(MESSAGES.targetKeys.shift).notification.uid :
+          null,
+        alt: event.altKey ?
+          this.props.actions.addNotification(MESSAGES.targetKeys.alt).notification.uid :
+          null,
       };
     }
   }
@@ -136,18 +125,12 @@ class Tracks extends Component {
   handleKeyUp() {
     this._keyPressed = false;
 
-    this.state.targetKeys.pressed = {
-      ...this.state.targetKeys.pressed,
-      c: false,
-      q: false,
-    };
-
-    if (this.state.targetKeys.notificationUids.c) {
-      this.props.actions.removeNotification(this.state.targetKeys.notificationUids.c);
+    if (this.state.targetKeys.notificationUids.shift) {
+      this.props.actions.removeNotification(this.state.targetKeys.notificationUids.shift);
     }
 
-    if (this.state.targetKeys.notificationUids.q) {
-      this.props.actions.removeNotification(this.state.targetKeys.notificationUids.q);
+    if (this.state.targetKeys.notificationUids.alt) {
+      this.props.actions.removeNotification(this.state.targetKeys.notificationUids.alt);
     }
   }
 
@@ -209,12 +192,16 @@ class Tracks extends Component {
     const track = this.props.tracks.filteredItems[idx];
 
     // -> action
-    if (this.state.targetKeys.pressed.c) {
+    if (this.state.targetKeys.notificationUids.shift) {
       if (this.props.tracks.targetCollection) {
         this.props.actions.addTrackToCollection(track, this.props.tracks.targetCollection);
       }
-    } else if (this.state.targetKeys.pressed.q) {
+    } else if (this.state.targetKeys.notificationUids.alt) {
       this.props.actions.injectIntoQueue(track);
+      this.props.actions.addNotification({
+        message: `Added "${track.properties.title}" to the queue`,
+        level: 'success',
+      });
     } else {
       if (this.props.queue.activeItem !== track) {
         this.props.actions.injectIntoQueue(track, true);

@@ -42,6 +42,7 @@ const initialState = {
 
 export function makeTrackObject(attributes) {
   return {
+    createdAt: Date.now(),
     sourceUid: attributes.sourceUid,
     path: attributes.path,
     properties: { ...initialTrack.properties, ...attributes.properties },
@@ -161,11 +162,11 @@ function gatherItems(items, options = {}) {
   const collected = getItemsFromCollection(items, options.collection);
   const filtered = runThroughFilter(collected, options.filter);
   const sorted = sortByAll(filtered, [
-    'properties.artist',
-    'properties.album',
-    'path',
-    'properties.track',
-    'properties.title',
+    (t) => t.properties.artist.toLowerCase(),
+    (t) => t.properties.album.toLowerCase(),
+    (t) => t.path,
+    (t) => t.properties.track,
+    (t) => t.properties.title.toLowerCase(),
   ]);
 
   const result = {

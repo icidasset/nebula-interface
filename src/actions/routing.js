@@ -67,7 +67,7 @@ export function goTo(path, status = statusCodes.ADD_HISTORY) {
     const tableItem = ROUTING_TABLE[routingItem];
 
     // exit if already there
-    if (cleanPath === currentPath) return;
+    if (cleanPath === currentPath) return false;
 
     // if *found*
     if (tableItem) {
@@ -103,6 +103,9 @@ export function goTo(path, status = statusCodes.ADD_HISTORY) {
       dispatch(setContainer('NotFoundPage'));
 
     }
+
+    // feedback
+    return true;
   };
 }
 

@@ -3,6 +3,8 @@ import CSSModules from 'react-css-modules';
 
 import Icon from '../Icon';
 import styles from './Mixer.pcss';
+import tracksStyles from './children/Tracks.pcss';
+import * as trackUtils from '../../utils/tracks';
 
 
 class Mixer extends Component {
@@ -30,7 +32,24 @@ class Mixer extends Component {
 
 
   handleNowPlayingClick() {
-    alert('TODO - Scroll to currently-playing track');
+    this.props.actions.goTo('/app');
+
+    const activeItem = this.props.queue.activeItem;
+    const wrapperNode = document.querySelector(`.${tracksStyles.tracksWrapper}`);
+
+    if (!activeItem || !wrapperNode) return;
+
+    const containerNode = wrapperNode.querySelector('.ReactListView-container');
+    const parentNode = containerNode.parentNode;
+
+    const n = this.props.tracksFilteredItemIds.indexOf(
+      trackUtils.generateTrackId(activeItem)
+    );
+
+    const rowHeight = (containerNode.clientHeight / this.props.tracksFilteredItemIds.length);
+    const y = (n < 0 ? 0 : n) * rowHeight;
+
+    parentNode.scrollTop = y;
   }
 
 
@@ -133,7 +152,7 @@ class Mixer extends Component {
       <div styleName="mixer">
 
         { /* now playing */ }
-        <div styleName="now-playing">
+        <div styleName="now-playing" onClick={this.handleNowPlayingClick.bind(this)}>
           { this.renderNowPlaying() }
         </div>
 
@@ -192,6 +211,7 @@ Mixer.propTypes = {
   actions: PropTypes.object.isRequired,
   audio: PropTypes.object.isRequired,
   queue: PropTypes.object.isRequired,
+  tracksFilteredItemIds: PropTypes.array.isRequired,
 };
 
 

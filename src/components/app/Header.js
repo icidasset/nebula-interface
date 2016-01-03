@@ -16,6 +16,7 @@ class Header extends Component {
           actions={this.props.actions}
           audio={this.props.audio}
           queue={this.props.queue}
+          tracksFilteredItemIds={this.props.tracks.filteredItemIds}
         />
 
         <Boxes
