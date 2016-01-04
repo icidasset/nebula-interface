@@ -28,6 +28,7 @@
   height: grid(6);
   margin-right: grid(1);
   position: relative;
+  transition: opacity 500ms;
   width: grid(10);
 
   &:last-child {
@@ -36,6 +37,22 @@
 
   &.is-active {
     background-color: rgba(255, 255, 255, 0.55);
+  }
+
+  &.is-slightly-less-important {
+    flex: 0 0 11%;
+    opacity: .525;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    :global(.icon) {
+      height: grid(1.5);
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: grid(1.5);
+    }
   }
 
   .box__label,

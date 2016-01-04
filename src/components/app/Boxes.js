@@ -16,6 +16,7 @@ class Boxes extends Component {
       queue: [ def ],
       equalizer: [ def ],
       sources: [ def ],
+      user: [ def, 'is-slightly-less-important' ],
     };
 
     switch (this.props.routing.path) {
@@ -67,6 +68,10 @@ class Boxes extends Component {
         { value: '{route}:/app/sources', label: <strong>Show sources</strong> },
         { value: '{action}:processSources', label: 'Process sources' },
       ],
+
+      user: [
+        { value: '{route}:/sign-out', label: <strong>Sign out</strong> },
+      ]
 
     };
   }
@@ -135,6 +140,15 @@ class Boxes extends Component {
             options={dropdownItems.sources}
             onChange={dropdownChangeHandler}
             placeholder="Sources"
+          />
+        </div>
+
+        <div styleName={styleNames.user}>
+          <Icon icon="dots-three-horizontal"/>
+          <Dropdown
+            options={dropdownItems.user}
+            onChange={dropdownChangeHandler}
+            placeholder="User"
           />
         </div>
 
