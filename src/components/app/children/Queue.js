@@ -23,7 +23,7 @@ class Queue extends Component {
         label: 'Remove',
         icon: 'trash',
         clickHandler: () => {
-          alert('TODO - Implement delete-queue-item');
+          alert('TODO');
         },
       },
     ];

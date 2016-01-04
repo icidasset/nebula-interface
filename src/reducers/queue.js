@@ -61,11 +61,7 @@ export default function queue(state = initialState, action) {
 
 
   case types.REFRESH_QUEUE:
-    // TODO:
-    // - remove non-existing (old) items from
-    //   `state.queue.items`,
-    //   `state.queue.history`,
-    //   `state.queue.activeItem`
+    // TODO
 
     return state;
 

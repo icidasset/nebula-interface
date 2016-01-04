@@ -198,8 +198,6 @@ function getItemsFromCollection(items, collection) {
       return true;
     }
   });
-
-  // TODO: Rewrite this so "missing" tracks are rendered too.
 }
 
 

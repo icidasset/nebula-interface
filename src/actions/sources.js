@@ -27,7 +27,6 @@ export function deleteSource(uid) {
 
     dispatch({ type: types.DELETE_SOURCE, uid });
     dispatch(trackActions.removeTracksBySourceUid(uid));
-    // TODO: remove tracks from collections, mark them as missing
 
     return firebase.remove('sources', uid, state.auth.user.uid);
   };

@@ -22,7 +22,7 @@ class Sources extends Component {
 
 
   handleIndexEdit() {
-    alert('TODO - Implement source edit');
+    alert('TODO');
   }
 
 

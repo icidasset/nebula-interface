@@ -20,7 +20,7 @@ class Collections extends Component {
 
 
   handleIndexEdit() {
-    alert('TODO - Implement collection edit');
+    alert('TODO');
   }
 
 
