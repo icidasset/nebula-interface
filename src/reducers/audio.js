@@ -2,8 +2,12 @@ import * as types from '../constants/action_types/audio';
 
 
 const initialState = {
+  filterValues: [],
   isMuted: false,
   volume: 0.5,
+
+  // fixed values
+  filterValueMax: 10, // -10 and 10 that is
 
   // feedback
   duration: 0,
@@ -14,10 +18,15 @@ const initialState = {
 
   // fast feedback
   currentTime: 0,
+
+  // stored settings
+  ...retrieveSettings(),
 };
 
 
 export default function audio(state = initialState, action) {
+  let newState;
+
   switch (action.type) {
 
   case types.SEEK_AUDIO:
@@ -48,6 +57,16 @@ export default function audio(state = initialState, action) {
     };
 
 
+  case types.SET_AUDIO_FILTER_VALUES:
+    newState = {
+      ...state,
+      filterValues: action.values,
+    };
+
+    storeSettings(newState);
+    return newState;
+
+
   case types.SET_AUDIO_IS_LOADING:
     return {
       ...state,
@@ -63,17 +82,23 @@ export default function audio(state = initialState, action) {
 
 
   case types.SET_AUDIO_VOLUME:
-    return {
+    newState = {
       ...state,
       volume: action.value,
     };
 
+    storeSettings(newState);
+    return newState;
+
 
   case types.TOGGLE_MUTE:
-    return {
+    newState = {
       ...state,
       isMuted: !state.isMuted,
     };
+
+    storeSettings(newState);
+    return newState;
 
 
   case types.TOGGLE_PLAY:
@@ -86,4 +111,18 @@ export default function audio(state = initialState, action) {
   default:
     return state;
   }
+}
+
+
+/// Private
+///
+function storeSettings(state) {
+  const { filterValues, isMuted, volume } = state;
+  const settings = { filterValues, isMuted, volume };
+  window.localStorage.setItem('audioSettings', JSON.stringify(settings));
+}
+
+
+function retrieveSettings() {
+  return JSON.parse(window.localStorage.getItem('audioSettings') || '{}');
 }

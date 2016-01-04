@@ -22,6 +22,7 @@
     "react-css-modules": "^3.6.1",
     "react-dom": "^0.14.0",
     "react-dropdown": "^0.7.2",
+    "react-input-range": "^0.6.1",
     "react-list-view": "^0.3.0",
     "react-notification-system": "^0.2.6",
     "react-redux": "^4.0.0",

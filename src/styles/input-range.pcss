@@ -1,0 +1,110 @@
+@import './colors';
+
+
+:global .InputRange-slider {
+  appearance: none;
+  background: $shade-accent;
+  border: 1px solid $shade-accent;
+  border-radius: 100%;
+  cursor: pointer;
+  display: block;
+  height: 1rem;
+  margin-left: -0.5rem;
+  margin-top: -0.65rem;
+  outline: none;
+  position: absolute;
+  top: 50%;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  width: 1rem;
+
+  &:active {
+    transform: scale(1.3);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 5px rgba(63, 81, 181, 0.2);
+  }
+}
+
+
+:global .InputRange.is-disabled .InputRange-slider {
+  background: #ccc;
+  border: 1px solid #ccc;
+  box-shadow: none;
+  transform: none;
+}
+
+:global .InputRange-sliderContainer {
+  transition: left 0.3s ease-out;
+}
+
+:global .InputRange-label {
+  color: #cacaca;
+  font-family: "Helvetica Neue", san-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+:global .InputRange-label--min,
+:global .InputRange-label--max {
+  bottom: -1.4rem;
+  position: absolute;
+}
+
+:global .InputRange-label--min {
+  left: 0;
+}
+
+:global .InputRange-label--max {
+  right: 0;
+}
+
+:global .InputRange-label--value {
+  color: $shade-accent;
+  font-weight: bold;
+  padding-left: .275em;
+  position: absolute;
+  top: -2.15rem;
+  transform: translateX(-50%);
+}
+
+:global .InputRange-labelContainer {
+  transform: translateX(-50%);
+}
+
+:global .InputRange-label--max .InputRange-labelContainer {
+  left: 50%;
+}
+
+:global .InputRange-track {
+  background: #eee;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  display: block;
+  height: 0.3rem;
+  position: relative;
+  transition: left 0.3s ease-out, width 0.3s ease-out;
+}
+
+:global .InputRange.is-disabled .InputRange-track {
+  background: #eee;
+}
+
+:global .InputRange-track--container {
+  left: 0;
+  margin-top: -0.15rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+
+:global .InputRange-track--active {
+  background: $shade-accent;
+}
+
+:global .InputRange {
+  height: 1rem;
+  margin-top: grid(5);
+  position: relative;
+  width: 100%;
+}

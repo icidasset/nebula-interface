@@ -1,6 +1,6 @@
 import find from 'lodash/collection/find';
 import findWhere from 'lodash/collection/findWhere';
-import last from 'lodash/array/last';
+import objGet from 'lodash/object/get';
 
 import * as audioActions from '../../actions/audio';
 import * as queueActions from '../../actions/queue';
@@ -28,9 +28,6 @@ export function initialize(store) {
 class AudioEngine {
 
   constructor(store) {
-    const state = store.getState();
-
-    // audio
     this.connections = [];
     this.audioElements = [];
     this.nodes = {};
@@ -51,15 +48,15 @@ class AudioEngine {
 
 
   getNodeValue(nodeKey) {
-    const node = this.nodes[nodeKey];
+    const node = objGet(this.nodes, nodeKey);
 
     // set value
     switch (nodeKey) {
-    case 'low':
-    case 'mid':
-    case 'hi':
+    case 'biquad.low':
+    case 'biquad.mid':
+    case 'biquad.hi':
+    case 'volume':
       return node.gain.value;
-      break;
 
     default:
       return node.value;
@@ -68,7 +65,7 @@ class AudioEngine {
 
 
   setNodeValue(nodeKey, value) {
-    const node = this.nodes[nodeKey];
+    const node = objGet(this.nodes, nodeKey);
 
     // check if node exists
     if (!node) return;
@@ -78,9 +75,9 @@ class AudioEngine {
 
     // set value
     switch (nodeKey) {
-    case 'low':
-    case 'mid':
-    case 'hi':
+    case 'biquad.low':
+    case 'biquad.mid':
+    case 'biquad.hi':
     case 'volume':
       node.gain.value = value;
       break;
@@ -127,6 +124,17 @@ class AudioEngine {
       }
     );
 
+    // audio - filters
+    reduxUtils.observeStore(
+      this.store,
+      (s) => s.audio.filterValues,
+      (v) => {
+        this.setNodeValue('biquad.low', this.handleFilterValue(v[0]));
+        this.setNodeValue('biquad.mid', this.handleFilterValue(v[1]));
+        this.setNodeValue('biquad.hi', this.handleFilterValue(v[2]));
+      }
+    );
+
     // audio - volume
     reduxUtils.observeStore(
       this.store,
@@ -140,6 +148,17 @@ class AudioEngine {
       (s) => s.audio.isMuted,
       (v) => this.setNodeValue('volume', v ? 0 : this.store.getState().audio.volume)
     );
+  }
+
+
+  handleFilterValue(value) {
+    const percentage = Math.abs(value) / this.store.getState().audio.filterValueMax;
+
+    if (value < 0) {
+      return -(50 * percentage);
+    }
+
+    return percentage * 9;
   }
 
 
