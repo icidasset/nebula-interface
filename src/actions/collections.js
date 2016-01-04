@@ -53,6 +53,40 @@ export function addTrackToCollection(track, collection) {
 }
 
 
+export function removeTrackFromCollection(track, collection) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const trackId = trackUtils.generateTrackId(track);
+
+    dispatch(notificationActions.addNotification({
+      message: `Removed "${track.properties.title}" from your "${collection.name}" collection`,
+      level: 'success',
+    }));
+
+    const idx = collection.trackIds.indexOf(trackId);
+
+    if (idx > -1) {
+      collection.trackIds.splice(idx, 1);
+
+      dispatch({ type: types.UPDATE_COLLECTION_TRACKS });
+
+      return firebase.update(
+        'collections',
+        collection.uid,
+        { trackIds: collection.trackIds },
+        state.auth.user.uid,
+      );
+    }
+  };
+}
+
+
+export function checkIfTrackIsInCollection(track, collection) {
+  const trackId = trackUtils.generateTrackId(track);
+  return (collection.trackIds || []).indexOf(trackId) !== -1;
+}
+
+
 export function deleteCollection(uid) {
   return (dispatch, getState) => {
     const state = getState();

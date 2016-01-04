@@ -16,7 +16,11 @@ import styles from './Tracks.pcss';
 const MESSAGES = {
   targetKeys: {
     shift: {
-      message: `Double click a track to add it to the selected collection`,
+      message: `Double click a track to add it to (or remove it from) the selected collection`,
+      level: 'info',
+    },
+    shiftInCollection: {
+      message: `Double click a track to remove it from this collection`,
       level: 'info',
     },
     alt: {
@@ -40,7 +44,7 @@ class Tracks extends Component {
         notificationUids: {
           shift: null,
           alt: null,
-        }
+        },
       },
     };
 
@@ -113,7 +117,11 @@ class Tracks extends Component {
       this.state.targetKeys.notificationUids = {
         ...this.state.targetKeys.notificationUids,
         shift: event.shiftKey ?
-          this.props.actions.addNotification(MESSAGES.targetKeys.shift).notification.uid :
+          this.props.actions.addNotification(
+            this.props.tracks.activeCollection ?
+              MESSAGES.targetKeys.shiftInCollection :
+              MESSAGES.targetKeys.shift
+          ).notification.uid :
           null,
         alt: event.altKey ?
           this.props.actions.addNotification(MESSAGES.targetKeys.alt).notification.uid :
@@ -196,8 +204,24 @@ class Tracks extends Component {
 
     // -> action
     if (this.state.targetKeys.notificationUids.shift) {
-      if (this.props.tracks.targetCollection) {
-        this.props.actions.addTrackToCollection(track, this.props.tracks.targetCollection);
+      if (this.props.tracks.activeCollection) {
+        this.props.actions.removeTrackFromCollection(track, this.props.tracks.activeCollection);
+      } else if (this.props.tracks.targetCollection) {
+        const trackIsInCollection = this.props.actions.checkIfTrackIsInCollection(
+          track,
+          this.props.tracks.targetCollection
+        );
+
+        if (trackIsInCollection) {
+          this.props.actions.removeTrackFromCollection(track, this.props.tracks.targetCollection);
+        } else {
+          this.props.actions.addTrackToCollection(track, this.props.tracks.targetCollection);
+        }
+      } else {
+        this.props.actions.addNotification({
+          message: `You haven't selected a collection to add something to`,
+          level: 'warning',
+        });
       }
     } else if (this.state.targetKeys.notificationUids.alt) {
       this.props.actions.injectIntoQueue(track);
