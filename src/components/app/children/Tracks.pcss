@@ -24,16 +24,40 @@
 }
 
 .track {
+  align-items: center;
   border-bottom: 1px solid color($shade-light a(.25));
   cursor: pointer;
   display: flex;
   position: relative;
   user-select: none;
   white-space: nowrap;
+
+  &::before {
+    background-color: #eee;
+    border-radius: 100%;
+    content: "";
+    display: inline-block;
+    height: 6px;
+    margin-left: grid(2);
+    transform: translateY(1px);
+    width: 7px;
+  }
 }
 
 .track.is-active {
   color: $shade-accent;
+}
+
+.track.is-active::before {
+  background-color: color($shade-accent a(.625));
+}
+
+.track.is-active.is-in-collection {
+  color: $red;
+}
+
+.track.is-in-collection::before {
+  background-color: $red;
 }
 
 .track > div {
@@ -126,7 +150,7 @@
 }
 
 .active-collection :global(.Dropdown-control) {
-  background: $shade-accent;
+  background: $red;
   border-radius: 3px;
   color: white;
   font-size: .75rem;
@@ -170,4 +194,9 @@
 .settings .target-collection :global(.Dropdown-menu) {
   right: -0.65rem;
   top: 175%;
+}
+
+.active-collection :global(.Dropdown-option .is-active),
+.target-collection :global(.Dropdown-option .is-active) {
+  color: $red;
 }

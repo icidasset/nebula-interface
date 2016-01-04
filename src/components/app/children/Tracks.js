@@ -69,6 +69,7 @@ class Tracks extends Component {
     const propsChanged = (
       (nextProps.tracks.filteredItemIds !== this.props.tracks.filteredItemIds) ||
       (nextProps.queue.activeItem !== this.props.queue.activeItem) ||
+      (nextProps.collections.allTrackIds !== this.props.collections.allTrackIds) ||
 
       (nextProps.tracks.activeCollection !== this.props.tracks.activeCollection) ||
       (nextProps.tracks.targetCollection !== this.props.tracks.targetCollection)
@@ -127,10 +128,12 @@ class Tracks extends Component {
 
     if (this.state.targetKeys.notificationUids.shift) {
       this.props.actions.removeNotification(this.state.targetKeys.notificationUids.shift);
+      this.state.targetKeys.notificationUids.shift = null;
     }
 
     if (this.state.targetKeys.notificationUids.alt) {
       this.props.actions.removeNotification(this.state.targetKeys.notificationUids.alt);
+      this.state.targetKeys.notificationUids.alt = null;
     }
   }
 
@@ -368,6 +371,10 @@ class Tracks extends Component {
 
       if (trackId === activeTrackId) {
         className = `${className} ${styles['is-active']}`;
+      }
+
+      if (this.props.collections.allTrackIds.indexOf(trackId) !== -1) {
+        className = `${className} ${styles['is-in-collection']}`;
       }
 
       return (<div

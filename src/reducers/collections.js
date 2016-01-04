@@ -1,3 +1,4 @@
+import flatten from 'lodash/array/flatten';
 import sortBy from 'lodash/collection/sortBy';
 
 import * as types from '../constants/action_types/collections';
@@ -14,11 +15,14 @@ const initialCollection = {
 const initialState = {
   isFetching: false,
 
+  allTrackIds: [],
   items: [],
 };
 
 
 export default function tracks(state = initialState, action) {
+  let newItems;
+
   switch (action.type) {
   case types.ADD_COLLECTION:
     return {
@@ -31,11 +35,12 @@ export default function tracks(state = initialState, action) {
 
 
   case types.DELETE_COLLECTION:
+    newItems = state.items.filter((item) => item.uid !== action.uid);
+
     return {
       ...state,
-      ...gatherItems(
-        state.items.filter((item) => item.uid !== action.uid)
-      ),
+      ...gatherItems(newItems),
+      allTrackIds: collectAllTrackIds(newItems),
     };
 
 
@@ -47,10 +52,20 @@ export default function tracks(state = initialState, action) {
 
 
   case types.FETCH_COLLECTIONS_DONE:
+    newItems = action.items || [];
+
     return {
       ...state,
-      ...gatherItems(action.items || []),
+      ...gatherItems(newItems),
+      allTrackIds: collectAllTrackIds(newItems),
       isFetching: false,
+    };
+
+
+  case types.UPDATE_COLLECTION_TRACKS:
+    return {
+      ...state,
+      allTrackIds: collectAllTrackIds(state.items),
     };
 
 
@@ -68,4 +83,9 @@ function gatherItems(items) {
   return {
     items: sorted,
   };
+}
+
+
+function collectAllTrackIds(items) {
+  return flatten(items.map((i) => i.trackIds || []));
 }

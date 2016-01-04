@@ -40,6 +40,8 @@ export function addTrackToCollection(track, collection) {
     }
 
     if (changed) {
+      dispatch({ type: types.UPDATE_COLLECTION_TRACKS });
+
       return firebase.update(
         'collections',
         collection.uid,
