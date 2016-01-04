@@ -20,23 +20,33 @@ export function addCollection(attributes) {
 export function addTrackToCollection(track, collection) {
   return (dispatch, getState) => {
     const state = getState();
+    const trackId = trackUtils.generateTrackId(track);
+
+    let changed = false;
 
     dispatch(notificationActions.addNotification({
-      message: `Added "${track.properties.title}" to the "${collection.name}" collection`,
+      message: `Added "${track.properties.title}" to your "${collection.name}" collection`,
       level: 'success',
     }));
 
-    collection.trackIds = collection.trackIds || [];
-    collection.trackIds.push(trackUtils.generateTrackId(track));
+    if (!collection.trackIds) {
+      collection.trackIds = [];
+      changed = true;
+    }
 
-    return firebase.update(
-      'collections',
-      collection.uid,
-      { trackIds: collection.trackIds},
-      state.auth.user.uid,
-    );
+    if (collection.trackIds.indexOf(trackId) === -1) {
+      collection.trackIds.push(trackId);
+      changed = true;
+    }
 
-    // TODO: check if it isn't already in the collection
+    if (changed) {
+      return firebase.update(
+        'collections',
+        collection.uid,
+        { trackIds: collection.trackIds },
+        state.auth.user.uid,
+      );
+    }
   };
 }
 
