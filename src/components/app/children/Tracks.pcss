@@ -78,6 +78,7 @@
 .filter {
   background: color($shade-light a(0.25));
   box-shadow: 0 -2px 4px 0px rgba(0, 0, 0, 0.05) inset;
+  height: grid(6);
   position: relative;
   z-index: $z-index-tracks-filter;
 
@@ -101,9 +102,8 @@
     color: $shade-text-dark;
     font-size: 1.45rem;
     font-weight: 100;
-    height: grid(3);
-    padding: grid(3) grid(1.5);
-    padding-left: grid(5.5);
+    height: 100%;
+    padding: 0 grid(1.5) 0 grid(5.5);
     width: 100%;
 
     -webkit-font-smoothing: antialiased;

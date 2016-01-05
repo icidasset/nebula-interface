@@ -79,7 +79,7 @@ class AudioEngine {
     case 'biquad.mid':
     case 'biquad.hi':
     case 'volume':
-      node.gain.value = value;
+      node.gain.value = value || 0;
       break;
 
     default:
