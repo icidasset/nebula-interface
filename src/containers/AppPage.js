@@ -24,7 +24,16 @@ class AppPage extends Component {
     ).then(
       () => this.props.actions.fetchTracks()
     ).then(
-      () => this.props.actions.processSources()
+      () => {
+        if (this.props.tracks.items.length === 0) {
+          if (!localStorage.getItem('has_shown_get_started')) {
+            localStorage.setItem('has_shown_get_started', '1');
+            return this.props.actions.goTo('/app/help');
+          }
+        }
+
+        return this.props.actions.processSources();
+      }
     );
   }
 

@@ -1,39 +1,60 @@
 import { createElement } from 'react';
 
 import ContentWithMenu from '../../ContentWithMenu';
+import Icon from '../../Icon';
 import Link from '../../Link';
+
+import styles from './Help.pcss';
 
 
 export default () => {
   return (
     <ContentWithMenu
       menuItems={[]}
-      title="Help"
+      title="Getting started"
     >
-      <p>
-        Most of the UI should be self-explanatory, if not,
-        you can always create an issue on
-        the <a href="https://github.com/icidasset/ongaku-ryoho/issues">Github repo</a>.
-      </p>
-
-      <h2>How to get started</h2>
-
-      <ol>
+      <ol className={styles.steps}>
         <li>
           Add a <Link to="/app/sources">source</Link>
           <small> (ie. define where your music is stored)</small>.
         </li>
         <li>Wait for it to be processed.</li>
-        <li>Play <Link to="/app">music</Link>.</li>
+        <li>Play some <Link to="/app">music</Link>.</li>
       </ol>
+
+      <p className={styles.note}>
+        Most of the UI should be self-explanatory, if not,
+        you can always create an issue on
+        the <a href="https://github.com/icidasset/ongaku-ryoho/issues">Github repo</a>.
+      </p>
 
       <h2>Collections and the queue</h2>
 
-      <p>
-        When viewing the <Link to="/app">track-list</Link> you can add tracks
-        to <Link to="/app/collections">collections</Link> and to
-        the <Link to="/app/queue">queue</Link>.
-      </p>
+      <div className={styles.keys}>
+        <div>
+          <h3>Add to, or remove from, a collection</h3>
+          <ul>
+            <li>&#x21E7;</li>
+            <li>+</li>
+            <li><Icon icon="mouse-pointer" /></li>
+          </ul>
+          <p>
+            Shift key + double-click
+          </p>
+        </div>
+
+        <div>
+          <h3>Add to the queue</h3>
+          <ul>
+            <li>&#x2325;</li>
+            <li>+</li>
+            <li><Icon icon="mouse-pointer" /></li>
+          </ul>
+          <p>
+            Alt/option key + double-click
+          </p>
+        </div>
+      </div>
 
       <p>
         To add a track to, or remove from, a collection, first select a collection
