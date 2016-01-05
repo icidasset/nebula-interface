@@ -1,15 +1,15 @@
 import nearest from 'find-nearest-file';
 import partial from 'webpack-partial';
 import path from 'path';
+import webpack from 'webpack';
 
 import cssConfig from './partial/css';
 import imagesConfig from './partial/images';
 import javascriptConfig from './partial/javascript';
 
 
-const root = path.dirname(
-  nearest('package.json')
-);
+const root = path.dirname(nearest('package.json'));
+const minify = process.env.MINIFY === '1';
 
 
 const config = {
@@ -34,6 +34,12 @@ const config = {
     publicPath: '/',
     path: path.join(root, 'build'),
   },
+
+  plugins: (
+    minify ?
+      [ new webpack.optimize.UglifyJsPlugin({ minimize: true }) ] :
+      []
+  ),
 };
 
 export default partial(

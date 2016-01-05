@@ -5,7 +5,7 @@
   "description": "Music therapy.",
   "main": "main.js",
   "scripts": {
-    "build": "babel-node index.js",
+    "build": "MINIFY=1 babel-node index.js",
     "dev": "WATCH=1 SERVE=1 babel-node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
