@@ -134,3 +134,14 @@
   top: 125%;
   transform: translateX(-50%);
 }
+
+.box.is-slightly-less-important :global(.Dropdown-menu) {
+  left: auto;
+  right: -1px;
+  transform: none;
+
+  &::before {
+    left: auto;
+    right: rem(8px);
+  }
+}
