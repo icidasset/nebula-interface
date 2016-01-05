@@ -40,7 +40,7 @@ const ROUTING_TABLE = {
 
   '/sign-in': { container: 'SignInUpPage' },
   '/sign-up': { container: 'SignInUpPage' },
-  '/sign-out': { redirectTo: '/sign-in', onEnter: signOutPageEnter },
+  '/sign-out': { redirectTo: '/', onEnter: signOutPageEnter },
   '/reset-password': { container: 'ResetPasswordPage' },
 
   // redirects
