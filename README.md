@@ -25,7 +25,9 @@ Example of how to deploy, using surge (not included in dependencies).
 surge ./build ongaku-ryoho-301253298.surge.sh
 ```
 
-So, in short, to get a production build running, you do two things:
+So, in short, to get a production build running, you follow these steps:
 
-1. `npm run build`
-2. `surge ./build something-something.surge.sh`
+1. Setup a Firebase app
+2. Make a `.env` file with `FIREBASE_URL`
+3. `npm run build`
+4. `surge ./build something-something.surge.sh`
