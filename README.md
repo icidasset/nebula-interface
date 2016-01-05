@@ -3,6 +3,11 @@
 Music therapy.
 
 
+###### Hold on a sec, what is this?
+
+A music player which connects to your cloud storage.
+
+
 ## How to use
 
 ```bash
