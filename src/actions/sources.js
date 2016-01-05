@@ -15,7 +15,10 @@ export function addSource(attributes) {
     const state = getState();
 
     return firebase.add('sources', attributes, state.auth.user.uid).then(
-      (source) => dispatch({ type: types.ADD_SOURCE, source })
+      (source) => {
+        dispatch({ type: types.ADD_SOURCE, source });
+        dispatch(processSources());
+      }
     );
   };
 }

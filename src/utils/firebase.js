@@ -24,7 +24,7 @@ export function fetch(key, userId, fallback, offline) {
     if (offline) {
       resolve(fallback);
     } else {
-      base.child(`${key}/${userId}`).on(
+      base().child(`${key}/${userId}`).on(
         'value',
         (snapshot) => resolve(snapshot.val() || fallback),
         (error) => reject(error)
@@ -42,7 +42,7 @@ export function add(key, arg, userId) {
 
 export function remove(key, uid, userId) {
   return new Promise((resolve, reject) => {
-    base.child(`${key}/${userId}/${uid}`)
+    base().child(`${key}/${userId}/${uid}`)
         .remove(promiseCallback(resolve, reject));
   });
 }
@@ -50,7 +50,7 @@ export function remove(key, uid, userId) {
 
 export function replace(key, items, userId) {
   return new Promise((resolve, reject) => {
-    base.child(`${key}/${userId}`)
+    base().child(`${key}/${userId}`)
         .set(items, promiseCallback(resolve, reject));
   });
 }
@@ -58,7 +58,7 @@ export function replace(key, items, userId) {
 
 export function update(key, uid, attributes, userId) {
   return new Promise((resolve, reject) => {
-    base.child(`${key}/${userId}/${uid}`)
+    base().child(`${key}/${userId}/${uid}`)
         .update(attributes, promiseCallback(resolve, reject));
   });
 }
@@ -75,7 +75,7 @@ export function convertPushedToArray(pushed = {}) {
 ///
 function addSingle(key, item, userId) {
   return new Promise((resolve, reject) => {
-    const ref = base.child(`${key}/${userId}`);
+    const ref = base().child(`${key}/${userId}`);
     const newRef = ref.push();
 
     newRef.set(item, promiseCallback(

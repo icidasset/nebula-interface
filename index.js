@@ -19,6 +19,10 @@ import webpackConfig from './config/webpack';
 const envFile = fs.readFileSync('./.env');
 const envVariables = dotenv.parse(envFile);
 
+envVariables.FIREBASE_URL = (
+  process.env.FIREBASE_URL || envVariables.DEFAULT_FIREBASE_URL
+);
+
 const watchPaths = {
   '${source}/**/*': true,
   'src/**/*': '**/*',

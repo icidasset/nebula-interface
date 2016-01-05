@@ -10,7 +10,7 @@ export function createUser(credentials) {
 
       // create user with email & password
       // -> return promise with data
-      base.createUser(credentials, (error, userData) => {
+      base().createUser(credentials, (error, userData) => {
         if (error) reject(error);
         else resolve(userData);
       });
@@ -25,7 +25,7 @@ export function performInitialAuthCheck() {
 
       // check if the user is authenticated
       // -> return promise
-      base.onAuth((authData) => {
+      base().onAuth((authData) => {
         let promise;
 
         if (authData) promise = dispatch(authenticate(authData));
@@ -49,7 +49,7 @@ export function authenticate(args) {
       //
       // 1. authenticate with credentials
       if (args.email) {
-        base.authWithPassword(args, (error, authData) => {
+        base().authWithPassword(args, (error, authData) => {
           if (error) {
             reject(error);
           } else {
@@ -73,7 +73,7 @@ export function deauthenticate() {
   return (dispatch) => {
 
     // deauthenticate user
-    base.unauth();
+    base().unauth();
     dispatch({ type: types.DEAUTHENTICATE });
 
   };
@@ -85,7 +85,7 @@ export function resetPassword(email) {
 
       // send password reset email
       // -> return promise
-      base.resetPassword({ email }, (error) => {
+      base().resetPassword({ email }, (error) => {
         if (error) reject(error);
         else resolve();
       });
