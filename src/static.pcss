@@ -18,6 +18,10 @@ h1 {
   text-align: center;
 }
 
+h2 {
+  font-weight: 300;
+}
+
 p {
   color: #999;
   text-align: center;
@@ -38,7 +42,7 @@ ul {
 }
 
 :global .screenshot {
-  margin: grid(3) 0;
+  margin: grid(3.5) 0;
 
   img {
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.075);
@@ -46,5 +50,24 @@ ul {
     margin: 0 auto;
     max-width: 1440px;
     width: 100%;
+  }
+}
+
+
+/**
+ * About page
+ */
+:global .page-about {
+  background-color: #3F424A;
+  color: color(white a(.9));
+
+  :global .button {
+    border: 2px solid $shade-accent;
+    box-shadow: none;
+    color: color(white a(.9));
+  }
+
+  p {
+    color: color(white a(.45));
   }
 }
