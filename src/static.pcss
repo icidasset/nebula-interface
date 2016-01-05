@@ -2,10 +2,14 @@
 @import "styles/colors";
 @import "styles/button";
 
+body {
+  margin: grid(2);
+}
+
 
 :global .wrapper {
-  margin: 3rem auto;
-  width: 960px;
+  margin: grid(4) auto;
+  max-width: 960px;
 }
 
 h1 {
@@ -17,4 +21,30 @@ h1 {
 p {
   color: #999;
   text-align: center;
+}
+
+a {
+  color: $shade-accent;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+
+  li::before {
+    content: "♪";
+    margin-right: 1em;
+  }
+}
+
+:global .screenshot {
+  margin: grid(3) 0;
+
+  img {
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.075);
+    height: auto;
+    margin: 0 auto;
+    max-width: 1440px;
+    width: 100%;
+  }
 }
