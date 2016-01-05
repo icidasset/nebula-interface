@@ -70,7 +70,8 @@ class Boxes extends Component {
       ],
 
       user: [
-        { value: '{route}:/sign-out', label: <strong>Sign out</strong> },
+        { value: '{route}:/app/help', label: 'Help' },
+        { value: '{route}:/sign-out', label: 'Sign out' },
       ]
 
     };
