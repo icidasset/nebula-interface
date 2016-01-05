@@ -35,7 +35,7 @@ class SignInUpPage extends ComponentWithInfo {
 
   createAndAuthenticateUser(credentials) {
     return this.props.actions.createUser(credentials).then(
-      () => this.props.actions.authenticate(credentials),
+      () => this.authenticateUser(credentials),
       (error) => this.setInfo('error', error)
     );
   }
