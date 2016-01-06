@@ -19,8 +19,9 @@ class Collections extends Component {
   }
 
 
-  handleIndexEdit() {
-    alert('TODO');
+  handleIndexEdit(event) {
+    const uid = event.target.closest('li').getAttribute('data-key');
+    this.goToEdit(uid);
   }
 
 
@@ -37,6 +38,24 @@ class Collections extends Component {
 
   goToAdd() {
     this.props.actions.goTo('/app/collections/add');
+  }
+
+
+  /// {actions} Edit
+  ///
+  handleEdit() {
+    const collectionUid = this.props.routing.path.split('/')[4];
+
+    this.props.actions.updateCollection(collectionUid, {
+      name: this.refs.name.value,
+    });
+
+    this.props.actions.goTo('/app/collections');
+  }
+
+
+  goToEdit(uid) {
+    this.props.actions.goTo(`/app/collections/edit/${uid}`);
   }
 
 
@@ -80,9 +99,13 @@ class Collections extends Component {
   }
 
 
-  /// {view} Add
+  /// {view} Add, edit & info
   ///
-  renderForm(rel, values, buttonLabel) {
+  renderForm(buttonLabel, onSubmit, collection) {
+    const values = {
+      name: collection ? collection.name : null,
+    };
+
     const inputs = (
       <div>
         <label htmlFor="name">Name</label>
@@ -104,27 +127,31 @@ class Collections extends Component {
         info={[]}
         inputs={inputs}
         note={<span></span>}
-        onSubmit={this.handleAdd.bind(this)}
+        onSubmit={onSubmit.bind(this)}
       />
     );
   }
 
 
   renderAdd() {
-    return this.renderForm(null, { name: '' }, 'Add');
+    return this.renderForm('Add', this.handleAdd);
   }
 
 
-  renderEdit(uid) {
-    const collection = this.props.collections.find((c) => c.uid === uid);
-    return this.renderForm(uid, { name: collection.name }, 'Save');
+  renderEdit() {
+    const uid = this.props.routing.path.split('/')[4];
+    const collection = this.props.collections.items.find((c) => c.uid === uid);
+    return this.renderForm('Save', this.handleEdit, collection);
   }
 
 
   renderInfo() {
     return (
       <div>
-        <p>Collections are smaller collections of your music, which might be auto generated or defined by you.</p>
+        <p>
+          Collections are smaller collections of your music,
+          which might be auto generated or defined by you.
+        </p>
       </div>
     );
   }

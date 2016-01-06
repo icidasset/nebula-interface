@@ -116,3 +116,14 @@ export function fetchCollections() {
 export function setSpecialCollection(type, items) {
   return { type: types.SET_SPECIAL_COLLECTION, specialType: type, items };
 }
+
+
+export function updateCollection(uid, attributes) {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    dispatch({ type: types.UPDATE_COLLECTION, uid, attributes });
+
+    return firebase.update('collections', uid, attributes, state.auth.user.uid);
+  };
+}

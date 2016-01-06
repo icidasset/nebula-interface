@@ -77,6 +77,19 @@ export default function tracks(state = initialState, action) {
     return newState;
 
 
+  case types.UPDATE_COLLECTION:
+    const collectionToUpdate = state.items.find((i) => i.uid === action.uid);
+
+    if (collectionToUpdate) {
+      Object.assign(collectionToUpdate, action.attributes);
+    }
+
+    return {
+      ...state,
+      ...gatherItems(state.items),
+    };
+
+
   case types.UPDATE_COLLECTION_TRACKS:
     return {
       ...state,
