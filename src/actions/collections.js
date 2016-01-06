@@ -111,3 +111,8 @@ export function fetchCollections() {
     );
   };
 }
+
+
+export function setSpecialCollection(type, items) {
+  return { type: types.SET_SPECIAL_COLLECTION, specialType: type, items };
+}

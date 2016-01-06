@@ -21,8 +21,9 @@ class Sources extends Component {
   }
 
 
-  handleIndexEdit() {
-    alert('TODO');
+  handleIndexEdit(event) {
+    const uid = event.target.closest('li').getAttribute('data-key');
+    this.goToEdit(uid);
   }
 
 
@@ -50,6 +51,34 @@ class Sources extends Component {
 
   goToAdd() {
     this.props.actions.goTo('/app/sources/add');
+  }
+
+
+  /// {actions} Edit
+  ///
+  handleEdit() {
+    const sourceUid = this.props.routing.path.split('/')[4];
+
+    this.props.actions.updateSource(sourceUid, {
+      name: this.refs.name.value,
+
+      properties: {
+        accessKey: this.refs.accessKey.value,
+        secretKey: this.refs.secretKey.value,
+        bucket: this.refs.bucket.value,
+      },
+
+      settings: {
+        directoryCollections: this.refs.directoryCollections.checked,
+      },
+    });
+
+    this.props.actions.goTo('/app/sources');
+  }
+
+
+  goToEdit(uid) {
+    this.props.actions.goTo(`/app/sources/edit/${uid}`);
   }
 
 
@@ -109,9 +138,19 @@ class Sources extends Component {
   }
 
 
-  /// {view} Add
+  /// {view} Add, edit & info
   ///
-  renderForm(buttonLabel) {
+  renderForm(buttonLabel, onSubmit, source) {
+    const values = {
+      name: source ? source.name : null,
+
+      accessKey: source ? source.properties.accessKey : null,
+      secretKey: source ? source.properties.secretKey : null,
+      bucket: source ? source.properties.bucket : null,
+
+      directoryCollections: source ? source.settings.directoryCollections : false,
+    };
+
     const inputs = (
       <div>
         <label htmlFor="name">Name</label>
@@ -120,6 +159,7 @@ class Sources extends Component {
           id="name"
           ref="name"
           placeholder="e.g. Music collection"
+          defaultValue={values.name}
           autoFocus
           required
         />
@@ -130,6 +170,7 @@ class Sources extends Component {
           id="accessKey"
           ref="accessKey"
           placeholder="Access key"
+          defaultValue={values.accessKey}
           required
         />
 
@@ -139,6 +180,7 @@ class Sources extends Component {
           id="secretKey"
           ref="secretKey"
           placeholder="•••••••••"
+          defaultValue={values.secretKey}
           required
         />
 
@@ -148,6 +190,7 @@ class Sources extends Component {
           id="bucket"
           ref="bucket"
           placeholder="Bucket"
+          defaultValue={values.bucket}
           required
         />
 
@@ -158,6 +201,7 @@ class Sources extends Component {
             type="checkbox"
             id="directoryCollections"
             ref="directoryCollections"
+            defaultChecked={values.directoryCollections}
           />
           <label htmlFor="directoryCollections">Enable directory collections</label>
         </div>
@@ -170,26 +214,31 @@ class Sources extends Component {
         info={[]}
         inputs={inputs}
         note={<span></span>}
-        onSubmit={this.handleAdd.bind(this)}
+        onSubmit={onSubmit.bind(this)}
       />
     );
   }
 
 
   renderAdd() {
-    return this.renderForm('Add');
+    return this.renderForm('Add', this.handleAdd);
   }
 
 
   renderEdit() {
-    return this.renderForm('Save');
+    const sourceUid = this.props.routing.path.split('/')[4];
+    const source = this.props.sources.items.find((s) => s.uid === sourceUid);
+    return this.renderForm('Save', this.handleEdit, source);
   }
 
 
   renderInfo() {
     return (
       <div>
-        <p>Sources are the places where your music is stored. Or in other words, your cloud-storage accounts.</p>
+        <p>
+          Sources are the places where your music is stored.
+          Or in other words, your cloud-storage accounts.
+        </p>
       </div>
     );
   }

@@ -96,7 +96,14 @@ export function restoreATC() {
     const collections = getState().collections.items;
 
     if (activeCollection) {
-      const a = collections.find((i) => i.uid === activeCollection);
+      let a;
+
+      if (activeCollection.indexOf('special:') === 0) {
+        a = activeCollection;
+      } else {
+        a = collections.find((i) => i.uid === activeCollection);
+      }
+
       if (a) dispatch(setActiveCollection(a));
     }
 

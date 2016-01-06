@@ -17,11 +17,13 @@ const initialState = {
 
   allTrackIds: [],
   items: [],
+  special: {}, // object because { type: []collection }
 };
 
 
 export default function tracks(state = initialState, action) {
   let newItems;
+  let newState;
 
   switch (action.type) {
   case types.ADD_COLLECTION:
@@ -60,6 +62,19 @@ export default function tracks(state = initialState, action) {
       allTrackIds: collectAllTrackIds(newItems),
       isFetching: false,
     };
+
+
+  case types.SET_SPECIAL_COLLECTION:
+    newState = {
+      ...state,
+      special: {
+        ...state.special,
+      },
+    };
+
+    newState.special[action.specialType] = action.items;
+
+    return newState;
 
 
   case types.UPDATE_COLLECTION_TRACKS:

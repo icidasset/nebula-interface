@@ -35,6 +35,13 @@
       font-weight: 500;
     }
   }
+
+  :global .group {
+    max-height: grid(30);
+    overflow: hidden;
+    overflow-y: scroll;
+    transform: translateZ(0);
+  }
 }
 
 :global .Dropdown-option {
@@ -43,5 +50,18 @@
 
   :global .is-active {
     color: $shade-accent;
+  }
+
+  & > span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :global .prefix {
+    display: inline-block;
+    margin-right: .625em;
+    opacity: .45;
   }
 }

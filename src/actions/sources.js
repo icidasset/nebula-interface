@@ -61,6 +61,17 @@ export function processSources() {
 }
 
 
+export function updateSource(uid, attributes) {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    dispatch({ type: types.UPDATE_SOURCE, uid, attributes });
+
+    return firebase.update('sources', uid, attributes, state.auth.user.uid);
+  };
+}
+
+
 /// Private
 ///
 function execProcess() {

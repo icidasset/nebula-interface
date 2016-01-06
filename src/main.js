@@ -7,6 +7,7 @@ import * as audioEngine from './utils/engines/audio';
 import * as connectionEngine from './utils/engines/connection';
 import * as historyEngine from './utils/engines/history';
 import * as queueEngine from './utils/engines/queue';
+import * as SpecialCollectionsEngine from './utils/engines/special-collections';
 
 import nsHoC from './utils/hoc/notification-system';
 
@@ -28,6 +29,7 @@ const children = <NotificationSystem />;
 audioEngine.initialize(store);
 connectionEngine.initialize(store);
 queueEngine.initialize(store);
+SpecialCollectionsEngine.initialize(store);
 
 
 render(

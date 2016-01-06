@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import ReactListView from 'react-list-view';
 import Dropdown from 'react-dropdown';
 
+import flatten from 'lodash/array/flatten';
+import isObject from 'lodash/lang/isObject';
+import sortBy from 'lodash/collection/sortBy';
+
+import * as collectionUtils from '../../../utils/collections';
 import * as trackUtils from '../../../utils/tracks';
 
 import Icon from '../../Icon';
@@ -118,7 +123,7 @@ class Tracks extends Component {
         ...this.state.targetKeys.notificationUids,
         shift: event.shiftKey ?
           this.props.actions.addNotification(
-            this.props.tracks.activeCollection ?
+            isObject(this.props.tracks.activeCollection) ?
               MESSAGES.targetKeys.shiftInCollection :
               MESSAGES.targetKeys.shift
           ).notification.uid :
@@ -204,7 +209,7 @@ class Tracks extends Component {
 
     // -> action
     if (this.state.targetKeys.notificationUids.shift) {
-      if (this.props.tracks.activeCollection) {
+      if (isObject(this.props.tracks.activeCollection)) {
         this.props.actions.removeTrackFromCollection(track, this.props.tracks.activeCollection);
       } else if (this.props.tracks.targetCollection) {
         const trackIsInCollection = this.props.actions.checkIfTrackIsInCollection(
@@ -306,13 +311,36 @@ class Tracks extends Component {
     let value;
 
     const active = this.props.tracks.activeCollection;
+    const activeIsObject = isObject(active);
 
     // options
     options = [ { value: null, label: <strong>All</strong> } ];
+
     options = options.concat(
-      this.props.collections.items.map((col) => {
-        return { value: col.uid, label: col.name };
-      })
+      sortBy(
+        this.props.collections.items.map((col) => {
+          return { value: col.uid, label: col.name };
+        }),
+        'label'
+      )
+    );
+
+    options = options.concat(
+      sortBy(
+        flatten(
+          collectionUtils.generateSpecialPairs(
+            this.props.collections.special
+          ).map((s) => {
+            return s.map((i) => {
+              return {
+                value: i[1],
+                label: <span><span className="prefix">[ {i[0][0]} ]</span> {i[0][1]}</span>,
+              };
+            });
+          })
+        ),
+        'label'
+      )
     );
 
     options.forEach((option) => {
@@ -321,8 +349,13 @@ class Tracks extends Component {
           <span className="is-active">{option.label}</span> :
           option.label
         );
-      } else {
+      } else if (activeIsObject) {
         option.label = (active && active.uid === option.value ?
+          <span className="is-active">{option.label}</span> :
+          option.label
+        );
+      } else {
+        option.label = (active === option.value ?
           <span className="is-active">{option.label}</span> :
           option.label
         );
@@ -333,10 +366,14 @@ class Tracks extends Component {
     onChange = (option) => {
       let collection;
 
-      if (option) {
-        collection = this.props.collections.items.find((col) => {
-          return col.uid === option.value;
-        });
+      if (option && option.value) {
+        if (option.value.indexOf('special:') === 0) {
+          collection = option.value;
+        } else {
+          collection = this.props.collections.items.find((col) => {
+            return col.uid === option.value;
+          });
+        }
       }
 
       this.props.actions.setActiveCollection(collection);
@@ -346,10 +383,17 @@ class Tracks extends Component {
     value = this.props.tracks.activeCollection;
 
     if (value) {
-      value = {
-        value: value.uid,
-        label: value.name,
-      };
+      if (isObject(value)) {
+        value = {
+          value: value.uid,
+          label: value.name,
+        };
+      } else {
+        value = {
+          value: value,
+          label: value.split(':').slice(2).join(':'),
+        };
+      }
     }
 
     // @return

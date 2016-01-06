@@ -81,6 +81,19 @@ export default function sources(state = initialState, action) {
     };
 
 
+  case types.UPDATE_SOURCE:
+    const sourceToUpdate = state.items.find((i) => i.uid === action.uid);
+
+    if (sourceToUpdate) {
+      Object.assign(sourceToUpdate, action.attributes);
+    }
+
+    return {
+      ...state,
+      ...gatherItems(state.items),
+    };
+
+
   default:
     return state;
   }

@@ -1,6 +1,7 @@
-import filter from 'lodash/collection/filter';
+import isObject from 'lodash/lang/isObject';
 import sortByAll from 'lodash/collection/sortByAll';
 
+import * as collectionUtils from '../utils/collections';
 import * as trackUtils from '../utils/tracks';
 import * as types from '../constants/action_types/tracks';
 
@@ -104,12 +105,17 @@ export default function tracks(state = initialState, action) {
     targetCollection = state.targetCollection;
 
     if (action.collection) {
-      localStorage.setItem('activeCollection', action.collection.uid);
+      localStorage.setItem(
+        'activeCollection',
+        isObject(action.collection) ?
+          action.collection.uid :
+          action.collection
+      );
     } else {
       localStorage.removeItem('activeCollection');
     }
 
-    if (action.collection && targetCollection) {
+    if (isObject(action.collection) && targetCollection) {
       if (action.collection.uid === targetCollection.uid) {
         targetCollection = null;
         localStorage.removeItem('targetCollection');
@@ -137,7 +143,7 @@ export default function tracks(state = initialState, action) {
       localStorage.removeItem('targetCollection');
     }
 
-    if (targetCollection && state.activeCollection) {
+    if (targetCollection && isObject(state.activeCollection)) {
       if (targetCollection.uid === state.activeCollection.uid) {
         targetCollection = null;
         localStorage.removeItem('targetCollection');
@@ -187,17 +193,7 @@ function getItemsFromCollection(items, collection) {
     return items;
   }
 
-  const collectionIds = (collection.trackIds || []).slice(0);
-
-  return filter(items, (item) => {
-    const id = trackUtils.generateTrackId(item);
-    const cidx = collectionIds.indexOf(id);
-
-    if (cidx !== -1) {
-      collectionIds.splice(cidx, 1);
-      return true;
-    }
-  });
+  return collectionUtils.matchTracksWithCollection(items, collection);
 }
 
 
