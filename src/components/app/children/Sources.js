@@ -203,7 +203,10 @@ class Sources extends Component {
             ref="directoryCollections"
             defaultChecked={values.directoryCollections}
           />
-          <label htmlFor="directoryCollections">Enable directory collections</label>
+          <label htmlFor="directoryCollections">
+            <span>Enable directory collections </span>
+            <small>(Root directories become collections)</small>
+          </label>
         </div>
       </div>
     );
