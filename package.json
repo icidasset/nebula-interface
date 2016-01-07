@@ -1,7 +1,6 @@
 {
   "name": "ongaku-ryoho",
   "version": "0.1.0",
-  "private": true,
   "description": "Music therapy.",
   "main": "main.js",
   "scripts": {

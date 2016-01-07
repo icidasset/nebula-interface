@@ -17,10 +17,11 @@ import msWebpack from 'ms-webpack';
 import webpackConfig from './config/webpack';
 
 const envFile = fs.readFileSync('./.env');
-const envVariables = dotenv.parse(envFile);
+const dotEnvVariables = dotenv.parse(envFile);
+const envVariables = {};
 
 envVariables.FIREBASE_URL = (
-  process.env.FIREBASE_URL || envVariables.DEFAULT_FIREBASE_URL
+  process.env.FIREBASE_URL || dotEnvVariables.DEFAULT_FIREBASE_URL
 );
 
 const watchPaths = {
