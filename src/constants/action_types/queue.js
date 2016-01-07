@@ -3,6 +3,7 @@ export const QUEUE_LENGTH = 50;
 export const INJECT_INTO_QUEUE = 'INJECT_INTO_QUEUE';
 export const REFILL_QUEUE = 'REFILL_QUEUE';
 export const REFRESH_QUEUE = 'REFRESH_QUEUE';
+export const REMOVE_ITEM_FROM_QUEUE = 'REMOVE_ITEM_FROM_QUEUE';
 export const RESET_QUEUE = 'RESET_QUEUE';
 export const SHIFT_QUEUE = 'SHIFT_QUEUE';
 export const TOGGLE_REPEAT = 'TOGGLE_REPEAT';

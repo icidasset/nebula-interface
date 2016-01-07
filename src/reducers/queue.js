@@ -62,8 +62,17 @@ export default function queue(state = initialState, action) {
 
   case types.REFRESH_QUEUE:
     // TODO
-
     return state;
+
+
+  case types.REMOVE_ITEM_FROM_QUEUE:
+    newItems = [ ...state.items ];
+    newItems.splice(action.idx, 1);
+
+    return {
+      ...state,
+      items: newItems,
+    };
 
 
   case types.RESET_QUEUE:

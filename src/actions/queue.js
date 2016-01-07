@@ -31,6 +31,17 @@ export function refreshQueue() {
 
 
 /**
+ * {pub} Remove item from queue.
+ */
+export function removeItemFromQueue(idx) {
+  return (dispatch) => {
+    dispatch({ type: types.REMOVE_ITEM_FROM_QUEUE, idx });
+    dispatch(refill());
+  };
+}
+
+
+/**
  * {pub} Reset.
  * Clear queue and refill.
  */
@@ -127,7 +138,10 @@ function refill() {
       i = i < 0 ? 0 : i;
     }
 
-    while (newItems.length < indexes.length && newItems.length < types.QUEUE_LENGTH) {
+    while (
+      newItems.length < indexes.length &&
+      newItems.length < (types.QUEUE_LENGTH - state.queue.items.length)
+    ) {
       const newItem = Object.assign({}, state.tracks.filteredItems[indexes[i]]);
       newItems.push(newItem);
 

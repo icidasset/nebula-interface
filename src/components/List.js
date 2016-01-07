@@ -26,7 +26,17 @@ class List extends Component {
     });
 
     if (items.length) {
-      return (<ol styleName="list">{items}</ol>);
+      const listClasses = [ styles.list ];
+
+      if (this.props.isNumbered) {
+        listClasses.push( styles['list--numbered'] );
+      }
+
+      if (this.props.isSmall) {
+        listClasses.push( styles['list--small'] );
+      }
+
+      return (<ol className={listClasses.join(' ')}>{items}</ol>);
     }
 
     return (
@@ -51,6 +61,8 @@ List.propTypes = {
   emptyIcon: PropTypes.string.isRequired,
   emptyMessage: PropTypes.string.isRequired,
   emptyNote: PropTypes.string,
+  isNumbered: PropTypes.bool,
+  isSmall: PropTypes.bool,
   items: PropTypes.array,
   onClick: PropTypes.func,
 };

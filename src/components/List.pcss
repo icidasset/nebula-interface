@@ -32,6 +32,34 @@
 
 
 /**
+ * {alt} Small
+ */
+.list--small {
+  font-size: .9rem;
+}
+
+.list--small .item {
+  padding: grid(1) 0;
+}
+
+
+/**
+ * {alt} Numbered
+ */
+.list--numbered {
+  counter-reset: list-numbered;
+
+  .item::before {
+    counter-increment: list-numbered;
+    content: counters(list-numbered, ".") ".";
+    display: inline-block;
+    margin-right: grid(1.5);
+    opacity: .5;
+  }
+}
+
+
+/**
  * Empty state
  */
 .empty-state {

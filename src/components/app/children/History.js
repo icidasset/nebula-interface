@@ -11,13 +11,11 @@ class Queue extends Component {
       return {
         key: idx,
         title: (<span>
-          <strong style={{ fontWeight: '500' }}>{track.properties.title}</strong>
+          <span>{track.properties.title}</span>
           <span> &nbsp;&mdash;&nbsp; {track.properties.artist}</span>
         </span>),
       };
     });
-
-    const actions = [];
 
     return (
       <ContentWithMenu
@@ -28,7 +26,9 @@ class Queue extends Component {
           items={items}
           emptyIcon="list"
           emptyMessage="Nothing has been played yet."
-          actions={actions}
+          actions={[]}
+          isNumbered
+          isSmall
         />
       </ContentWithMenu>
     );

@@ -7,11 +7,22 @@ import List from '../../List';
 class Queue extends Component {
 
   render() {
+    const prefixStyles = {
+      display: 'inline-block',
+      marginRight: '.75rem',
+      opacity: '.65',
+    };
+
     const items = this.props.queue.items.map((track, idx) => {
+      const prefix = track.injected ?
+        <span style={prefixStyles}>[ added ]</span> :
+        null;
+
       return {
         key: idx,
         title: (<span>
-          <strong style={{ fontWeight: '500' }}>{track.properties.title}</strong>
+          {prefix}
+          <span>{track.properties.title}</span>
           <span> &nbsp;&mdash;&nbsp; {track.properties.artist}</span>
         </span>),
       };
@@ -21,9 +32,12 @@ class Queue extends Component {
       {
         key: 'remove',
         label: 'Remove',
-        icon: 'trash',
-        clickHandler: () => {
-          alert('TODO');
+        icon: 'circle-with-cross',
+        clickHandler: (event) => {
+          const li = event.target.closest('li');
+          const idx = li.getAttribute('data-key');
+
+          this.props.actions.removeItemFromQueue(idx);
         },
       },
     ];
@@ -38,6 +52,8 @@ class Queue extends Component {
           emptyIcon="list"
           emptyMessage="Nothing in the queue yet."
           actions={actions}
+          isNumbered
+          isSmall
         />
       </ContentWithMenu>
     );
@@ -47,6 +63,7 @@ class Queue extends Component {
 
 
 Queue.propTypes = {
+  actions: PropTypes.object.isRequired,
   queue: PropTypes.object.isRequired,
 };
 
