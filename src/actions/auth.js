@@ -93,3 +93,41 @@ export function resetPassword(email) {
     });
   };
 }
+
+export function updateEmail(newEmail, password) {
+  return (dispatch, getState) => {
+    const oldEmail = getState().auth.user.password.email;
+
+    return new Promise((resolve, reject) => {
+
+      // change email
+      // -> return promise
+      base().changeEmail({ oldEmail, newEmail, password }, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          dispatch(authenticate({ email: newEmail, password }));
+          resolve();
+        }
+      });
+
+    });
+  };
+}
+
+export function updatePassword(oldPassword, newPassword) {
+  return (dispatch, getState) => {
+    const email = getState().auth.user.password.email;
+
+    return new Promise((resolve, reject) => {
+
+      // change password
+      // -> return promise
+      base().changePassword({ email, oldPassword, newPassword }, (error) => {
+        if (error) reject(error);
+        else resolve();
+      });
+
+    });
+  };
+}

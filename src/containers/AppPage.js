@@ -101,7 +101,7 @@ AppPage.propTypes = {
 
 
 function mapStateToProps(state) {
-  return pick(state, ['audio', 'collections', 'queue', 'routing', 'sources', 'tracks']);
+  return pick(state, ['audio', 'auth', 'collections', 'queue', 'routing', 'sources', 'tracks']);
 }
 
 

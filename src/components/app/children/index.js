@@ -1,3 +1,4 @@
+import Account from './Account';
 import Collections from './Collections';
 import Equalizer from './Equalizer';
 import Help from './Help';
@@ -8,6 +9,7 @@ import Tracks from './Tracks';
 
 
 export default {
+  Account,
   Collections,
   Equalizer,
   Help,
