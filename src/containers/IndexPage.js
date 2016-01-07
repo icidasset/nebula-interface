@@ -9,7 +9,7 @@ class IndexPage extends Component {
   render() {
     return (
       <Middle>
-        <Message icon="⚡">
+        <Message icon="flash">
           Redirecting
         </Message>
       </Middle>
