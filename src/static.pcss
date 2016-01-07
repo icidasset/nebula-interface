@@ -2,14 +2,13 @@
 @import "styles/colors";
 @import "styles/button";
 
-body {
-  margin: grid(2);
-}
-
-
 :global .wrapper {
   margin: grid(4) auto;
   max-width: 960px;
+}
+
+:global .content-box {
+  padding: grid(2);
 }
 
 h1 {
@@ -19,6 +18,7 @@ h1 {
 }
 
 h2 {
+  font-size: 1.6em;
   font-weight: 300;
 }
 
@@ -36,11 +36,20 @@ ul {
   padding: 0;
 
   li::before {
-    content: "♪";
-    margin-right: 1em;
+    content: "•";
+    margin-right: 1.1em;
+    opacity: .55;
+  }
+
+  li {
+    margin-top: 3px;
   }
 }
 
+
+/**
+ * Pieces
+ */
 :global .screenshot {
   margin: grid(3.5) 0;
 
@@ -53,11 +62,7 @@ ul {
   }
 }
 
-
-/**
- * About page
- */
-:global .page-about {
+:global .dark-background {
   background-color: #3F424A;
   color: color(white a(.9));
 
@@ -65,6 +70,7 @@ ul {
     border: 2px solid $shade-accent;
     box-shadow: none;
     color: color(white a(.9));
+    font-weight: bold;
   }
 
   p {
