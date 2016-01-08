@@ -2,7 +2,9 @@
 
 Music therapy.
 
-###### Hold on a sec, what is this?
+
+
+## What does it do exactly?
 
 A music player which connects to your cloud storage.
 
