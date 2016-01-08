@@ -6,9 +6,9 @@ Music therapy.
 
 A music player which connects to your cloud storage.
 
-For example, say you have a Amazon S3 bucket with music on it.
-This application looks for all .mp3, .mp4 and .m4a files in
-the bucket and then gets the music metadata from all those files.
+For example, say you have a Amazon S3 bucket with music on it.  
+This application looks for all mp3, mp4 and m4a files in the bucket  
+and then gets the music metadata from all those files.
 
 So, in short:
 
