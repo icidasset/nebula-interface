@@ -93,13 +93,35 @@ class SignInUpPage extends ComponentWithInfo {
     const inputs = (
       <div>
         <label htmlFor="email">Email</label>
-        <input type="email" id="email" ref="email" placeholder="user@email.com" autoFocus required />
+        <input
+          type="email"
+          id="email"
+          ref="email"
+          name="email"
+          placeholder="user@email.com"
+          autoFocus
+          required
+        />
 
         <label htmlFor="password">Password</label>
-        <input type="password" id="password" ref="password" placeholder="••••••••" minLength={5} required />
+        <input
+          type="password"
+          id="password"
+          ref="password"
+          name="password"
+          placeholder="••••••••"
+          minLength={5}
+          required
+        />
 
         <label htmlFor="email">Custom Firebase url <small>(not required)</small></label>
-        <input type="url" id="firebase" ref="firebase" placeholder="https://something-something.firebaseio.com/" />
+        <input
+          type="url"
+          id="firebase"
+          ref="firebase"
+          name="firebase"
+          placeholder="https://something-something.firebaseio.com/"
+        />
       </div>
     );
 

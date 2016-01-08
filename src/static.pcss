@@ -20,6 +20,7 @@ h1 {
 h2 {
   font-size: 1.6em;
   font-weight: 300;
+  margin-top: grid(5);
 }
 
 p {
@@ -37,6 +38,25 @@ ul {
 
   li::before {
     content: "•";
+    display: inline-block;
+    margin-right: 1.1em;
+    opacity: .55;
+  }
+
+  li {
+    margin-top: 3px;
+  }
+}
+
+ol {
+  counter-reset: list-numbered;
+  list-style: none;
+  padding: 0;
+
+  li::before {
+    counter-increment: list-numbered;
+    content: counters(list-numbered, ".") ".";
+    display: inline-block;
     margin-right: 1.1em;
     opacity: .55;
   }

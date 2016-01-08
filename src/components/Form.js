@@ -44,7 +44,7 @@ class Form extends Component {
       <form styleName="form" ref="form" onSubmit={this.onSubmit.bind(this)}>
         <div styleName="inputs">{this.props.inputs}</div>
         <Info items={this.props.info} />
-        <p><button className="button">{this.props.buttonLabel}</button></p>
+        <p><button className="button" type="submit">{this.props.buttonLabel}</button></p>
         <p styleName="note">{this.props.note}</p>
         {this.props.children}
       </form>

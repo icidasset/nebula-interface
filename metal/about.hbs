@@ -29,6 +29,25 @@ layout: 'static.hbs'
 <div class="content-box">
   <div class="wrapper">
 
+    <h2>What does it do exactly?</h2>
+
+    <p>
+      For example, say you have a Amazon S3 bucket with music on it.<br />
+      This application looks for all mp3, mp4 and m4a files in the bucket<br />
+      and then gets the music metadata from all those files.
+    </p>
+
+    <p>
+      <strong>So, in short:</strong>
+    </p>
+
+    <ol>
+      <li>Scans S3 bucket for mp3/mp4/m4a files</li>
+      <li>Gets music metadata for said files</li>
+      <li>Stores metadata and file tree locally and on Firebase</li>
+      <li>Shows list of all added music (from multiple buckets/sources)</li>
+    </ol>
+
     <h2>Features</h2>
 
     <ul>
