@@ -35,6 +35,12 @@ const config = {
     path: path.join(root, 'build'),
   },
 
+  resolve: {
+    alias: {
+      querystring: 'querystring-browser',
+    },
+  },
+
   plugins: (
     minify ?
       [ new webpack.optimize.UglifyJsPlugin({ minimize: true }) ] :

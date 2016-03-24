@@ -3,7 +3,7 @@ import aws4 from 'aws4';
 import fetch from 'isomorphic-fetch';
 import he from 'he';
 import last from 'lodash/array/last';
-import queryString from 'query-string';
+import querystring from 'querystring-browser';
 import xmlParser from 'xml-parser';
 
 
@@ -25,7 +25,7 @@ export function getTree(source, pathRegex) {
   };
 
   return getBucketRegion(source).then(
-    (region) => list(Object.assign({}, args, { region }))
+    (region) => list({ ...args, region })
   ).then(
     (results) => results.collection
   );
@@ -67,7 +67,7 @@ function getBucketRegion(source) {
 function makeSignature(source, region, queryAttributes = {}) {
   return aws4.sign({
     hostname: `${source.properties.bucket}.s3.amazonaws.com`,
-    path: `?${queryString.stringify(queryAttributes)}`,
+    path: `?${querystring.stringify(queryAttributes)}`,
     region: region,
     service: 's3',
     signQuery: true,
