@@ -309,17 +309,28 @@ class AudioEngine {
     const source = findWhere(this.store.getState().sources.items, { uid: track.sourceUid });
     const url = sourceUtils.getSignedUrl(source, track.path);
 
+    // stop buffering other audio elements
+    this.audioElements.forEach(node => {
+      node.src = URL.createObjectURL(new Blob([], { type: 'audio/mp3' }));
+    });
+
     // track
+    audioElement.setAttribute('crossorigin', 'anonymous');
+    audioElement.setAttribute('preload', 'none');
     audioElement.setAttribute('src', url);
     audioElement.setAttribute('rel', trackId);
-    audioElement.setAttribute('crossorigin', 'anonymous');
 
     // load
     audioElement.load();
 
     // play
     const promise = new Promise((resolve) => {
-      audioElement.canPlayHandler = () => {
+      let didResolve = false;
+
+      const callback = () => {
+        if (didResolve) return;
+        didResolve = true;
+
         resolve({
           trackId,
           bindAudioEvents: () => {
@@ -328,10 +339,11 @@ class AudioEngine {
             audioElement.addEventListener('ended', ::this.onEnd);
             audioElement.addEventListener('play', ::this.onPlay);
             audioElement.addEventListener('pause', ::this.onPause);
-          }
+          },
         });
       };
 
+      audioElement.canPlayHandler = callback;
       audioElement.addEventListener('canplay', audioElement.canPlayHandler);
     });
 

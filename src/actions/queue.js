@@ -11,9 +11,11 @@ import * as types from '../constants/action_types/queue';
  * {pub} Inject track into queue.
  */
 export function injectIntoQueue(track, replaceActiveItem = false) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const shuffle = getState().shuffle;
+
     dispatch({ type: types.INJECT_INTO_QUEUE, track, replace: replaceActiveItem });
-    dispatch(refill());
+    dispatch(shuffle ? refill() : resetQueue());
   };
 }
 
