@@ -25,16 +25,15 @@ export function performInitialAuthCheck() {
 
       // check if the user is authenticated
       // -> return promise
-      base().onAuth((authData) => {
-        let promise;
+      const authData = base().getAuth();
+      let promise;
 
-        if (authData) promise = dispatch(authenticate(authData));
-        else promise = Promise.resolve();
+      if (authData) promise = dispatch(authenticate(authData));
+      else promise = Promise.resolve();
 
-        promise
-          .then(() => dispatch({ type: types.PASS_INITIAL_AUTH_CHECK }), reject)
-          .then(resolve, reject);
-      });
+      promise
+        .then(() => dispatch({ type: types.PASS_INITIAL_AUTH_CHECK }), reject)
+        .then(resolve, reject);
 
     });
   };
