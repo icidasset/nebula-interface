@@ -111,7 +111,6 @@ class Tracks extends Component {
 
   handleKeyDown(event) {
     if (this._keyPressed ||
-      event.target.tagName === 'INPUT' ||
       event.target.tagName === 'TEXTAREA') {
       return;
     }
