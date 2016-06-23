@@ -9,7 +9,7 @@ export function createUser(credentials) {
 
     // create user with email & password
     // -> return promise with data
-    return firebase.createUserWithEmailAndPassword(
+    return firebase.auth().createUserWithEmailAndPassword(
       credentials.email,
       credentials.password
     );
