@@ -82,8 +82,10 @@ export function removeTrackFromCollection(track, collection) {
 
 
 export function checkIfTrackIsInCollection(track, collection) {
-  const trackId = trackUtils.generateTrackId(track);
-  return (collection.trackIds || []).indexOf(trackId) !== -1;
+  return () => {
+    const trackId = trackUtils.generateTrackId(track);
+    return (collection.trackIds || []).indexOf(trackId) !== -1;
+  };
 }
 
 

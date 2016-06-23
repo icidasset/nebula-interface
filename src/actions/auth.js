@@ -1,21 +1,19 @@
+import firebase from 'firebase';
 import * as types from '../constants/action_types/auth';
-import base from '../constants/firebase';
 
 
 /// Actions
 ///
 export function createUser(credentials) {
   return () => {
-    return new Promise((resolve, reject) => {
 
-      // create user with email & password
-      // -> return promise with data
-      base().createUser(credentials, (error, userData) => {
-        if (error) reject(error);
-        else resolve(userData);
-      });
+    // create user with email & password
+    // -> return promise with data
+    return firebase.createUserWithEmailAndPassword(
+      credentials.email,
+      credentials.password
+    );
 
-    });
   };
 }
 
@@ -25,15 +23,16 @@ export function performInitialAuthCheck() {
 
       // check if the user is authenticated
       // -> return promise
-      const authData = base().getAuth();
-      let promise;
+      firebase.auth().onAuthStateChanged(user => {
+        let promise;
 
-      if (authData) promise = dispatch(authenticate(authData));
-      else promise = Promise.resolve();
+        if (user) promise = dispatch(authenticate(user));
+        else promise = Promise.resolve();
 
-      promise
-        .then(() => dispatch({ type: types.PASS_INITIAL_AUTH_CHECK }), reject)
-        .then(resolve, reject);
+        promise
+          .then(() => dispatch({ type: types.PASS_INITIAL_AUTH_CHECK }), reject)
+          .then(resolve, reject);
+      });
 
     });
   };
@@ -46,21 +45,27 @@ export function authenticate(args) {
       // authenticate user
       // -> return promise
       //
-      // 1. authenticate with credentials
-      if (args.email) {
-        base().authWithPassword(args, (error, authData) => {
-          if (error) {
-            reject(error);
-          } else {
-            dispatch({ type: types.AUTHENTICATE, user: authData });
-            resolve(authData);
-          }
-        });
-
-      // 2. authenticate with firebase data
-      } else {
+      // 1. authenticate with firebase data
+      if (args.uid) {
         dispatch({ type: types.AUTHENTICATE, user: args });
         resolve(args);
+
+      // 2. authenticate with credentials
+      } else if (args.email) {
+        firebase.auth().signInWithEmailAndPassword(
+          args.email,
+          args.password
+        ).then(
+          user => {
+            dispatch({ type: types.AUTHENTICATE, user });
+            resolve(user);
+          },
+          reject
+        );
+
+      // otherwise, fail
+      } else {
+        reject();
 
       }
 
@@ -72,7 +77,7 @@ export function deauthenticate() {
   return (dispatch) => {
 
     // deauthenticate user
-    base().unauth();
+    firebase.auth().signOut();
     dispatch({ type: types.DEAUTHENTICATE });
 
   };
@@ -80,35 +85,27 @@ export function deauthenticate() {
 
 export function resetPassword(email) {
   return () => {
-    return new Promise((resolve, reject) => {
 
-      // send password reset email
-      // -> return promise
-      base().resetPassword({ email }, (error) => {
-        if (error) reject(error);
-        else resolve();
-      });
+    // send password reset email
+    // -> return promise
+    return firebase.auth().sendPasswordResetEmail(email);
 
-    });
   };
 }
 
 export function updateEmail(newEmail, password) {
   return (dispatch, getState) => {
-    const oldEmail = getState().auth.user.password.email;
-
     return new Promise((resolve, reject) => {
 
       // change email
       // -> return promise
-      base().changeEmail({ oldEmail, newEmail, password }, (error) => {
-        if (error) {
-          reject(error);
-        } else {
-          dispatch(authenticate({ email: newEmail, password }));
-          resolve();
-        }
-      });
+      const user = getState().auth.user;
+      const oldEmail = user.email;
+      const credential = firebase.auth.EmailAuthProvider.credential(oldEmail, password);
+
+      user.reauthenticate(credential)
+        .then(() => user.updateEmail(newEmail), reject)
+        .then(resolve, reject);
 
     });
   };
@@ -116,16 +113,17 @@ export function updateEmail(newEmail, password) {
 
 export function updatePassword(oldPassword, newPassword) {
   return (dispatch, getState) => {
-    const email = getState().auth.user.password.email;
-
     return new Promise((resolve, reject) => {
 
       // change password
       // -> return promise
-      base().changePassword({ email, oldPassword, newPassword }, (error) => {
-        if (error) reject(error);
-        else resolve();
-      });
+      const user = getState().auth.user;
+      const oldEmail = user.email;
+      const credential = firebase.auth.EmailAuthProvider.credential(oldEmail, oldPassword);
+
+      user.reauthenticate(credential)
+        .then(() => user.updatePassword(newPassword), reject)
+        .then(resolve, reject);
 
     });
   };

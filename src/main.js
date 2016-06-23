@@ -1,13 +1,13 @@
 import { createElement } from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-// import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
+import firebase from 'firebase';
 
 import * as audioEngine from './utils/engines/audio';
 import * as connectionEngine from './utils/engines/connection';
 import * as historyEngine from './utils/engines/history';
 import * as queueEngine from './utils/engines/queue';
-import * as SpecialCollectionsEngine from './utils/engines/special-collections';
+import * as specialCollectionsEngine from './utils/engines/special-collections';
 
 import nsHoC from './utils/hoc/notification-system';
 
@@ -15,21 +15,21 @@ import store from './main-store';
 import App from './containers/App';
 
 
-// const debugPanel = (
-//   <DebugPanel top right bottom>
-//     <DevTools store={store} monitor={LogMonitor} />
-//   </DebugPanel>
-// );
+firebase.initializeApp({
+  apiKey: ENV.FIREBASE_API_KEY,
+  databaseURL: ENV.FIREBASE_URL,
+});
 
 
 const history = historyEngine.initialize(store);
 const NotificationSystem = nsHoC(store);
 const children = <NotificationSystem />;
 
+
 audioEngine.initialize(store);
 connectionEngine.initialize(store);
 queueEngine.initialize(store);
-SpecialCollectionsEngine.initialize(store);
+specialCollectionsEngine.initialize(store);
 
 
 render(

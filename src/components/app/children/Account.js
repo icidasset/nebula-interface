@@ -1,4 +1,4 @@
-import { createElement, Component, PropTypes } from 'react';
+import { createElement, PropTypes } from 'react';
 
 import ComponentWithInfo from '../../ComponentWithInfo';
 import ContentWithMenu from '../../ContentWithMenu';
@@ -9,7 +9,7 @@ class Account extends ComponentWithInfo {
 
   handleFormSubmit() {
     const newEmail = this.refs.email.value;
-    const oldEmail = this.props.auth.user.password.email;
+    const oldEmail = this.props.auth.user.email;
 
     const currentPassword = this.refs.currentPassword.value;
     const newPassword = this.refs.newPassword.value;
@@ -51,7 +51,7 @@ class Account extends ComponentWithInfo {
           id="email"
           ref="email"
           placeholder="user@email.com"
-          defaultValue={this.props.auth.user.password.email}
+          defaultValue={this.props.auth.user.email}
           autoFocus
           required
         />

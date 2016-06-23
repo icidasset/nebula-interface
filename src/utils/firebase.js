@@ -1,14 +1,5 @@
+import firebase from 'firebase';
 import isArray from 'lodash/lang/isArray';
-
-import base from '../constants/firebase';
-
-
-export function promiseCallback(resolve, reject) {
-  return function firebaseCallback(error) {
-    if (error) reject(error);
-    else resolve();
-  };
-}
 
 
 export function fetch(key, userId, fallback, offline) {
@@ -24,10 +15,10 @@ export function fetch(key, userId, fallback, offline) {
     if (offline) {
       resolve(fallback);
     } else {
-      base().child(`${key}/${userId}`).on(
+      firebase.database().ref(`${key}/${userId}`).on(
         'value',
-        (snapshot) => resolve(snapshot.val() || fallback),
-        (error) => reject(error)
+        snapshot => resolve(snapshot.val() || fallback),
+        error => reject(error)
       );
     }
   });
@@ -41,26 +32,17 @@ export function add(key, arg, userId) {
 
 
 export function remove(key, uid, userId) {
-  return new Promise((resolve, reject) => {
-    base().child(`${key}/${userId}/${uid}`)
-        .remove(promiseCallback(resolve, reject));
-  });
+  return firebase.database().ref().child(`${key}/${userId}/${uid}`).remove();
 }
 
 
 export function replace(key, items, userId) {
-  return new Promise((resolve, reject) => {
-    base().child(`${key}/${userId}`)
-        .set(items, promiseCallback(resolve, reject));
-  });
+  return firebase.database().ref().child(`${key}/${userId}`).set(items);
 }
 
 
 export function update(key, uid, attributes, userId) {
-  return new Promise((resolve, reject) => {
-    base().child(`${key}/${userId}/${uid}`)
-        .update(attributes, promiseCallback(resolve, reject));
-  });
+  return firebase.database().ref().child(`${key}/${userId}/${uid}`).update(attributes);
 }
 
 
@@ -74,15 +56,12 @@ export function convertPushedToArray(pushed = {}) {
 /// Private
 ///
 function addSingle(key, item, userId) {
-  return new Promise((resolve, reject) => {
-    const ref = base().child(`${key}/${userId}`);
-    const newRef = ref.push();
+  const ref = firebase.database().ref(`${key}/${userId}`);
+  const newRef = ref.push();
 
-    newRef.set(item, promiseCallback(
-      () => resolve(Object.assign({ uid: newRef.key() }, item)),
-      reject
-    ));
-  });
+  return newRef.set(item).then(
+    () => Object.assign({ uid: newRef.key }, item)
+  );
 }
 
 

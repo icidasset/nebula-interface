@@ -50,17 +50,10 @@ class SignInUpPage extends ComponentWithInfo {
 
 
   handleSubmit() {
-    const firebase = this.refs.firebase.value;
     const credentials = {
       email: this.refs.email.value,
       password: this.refs.password.value,
     };
-
-    if (firebase && firebase.length) {
-      localStorage.setItem('firebaseUrl', firebase);
-    } else {
-      localStorage.removeItem('firebaseUrl');
-    }
 
     // sign up/in
     if (this.state.isSignUp) return this.createAndAuthenticateUser(credentials);
@@ -112,15 +105,6 @@ class SignInUpPage extends ComponentWithInfo {
           placeholder="••••••••"
           minLength={5}
           required
-        />
-
-        <label htmlFor="email">Custom Firebase url <small>(not required)</small></label>
-        <input
-          type="url"
-          id="firebase"
-          ref="firebase"
-          name="firebase"
-          placeholder="https://something-something.firebaseio.com/"
         />
       </div>
     );
