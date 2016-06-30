@@ -165,7 +165,7 @@ class AudioEngine {
   /// Internal events
   ///
   onEnd() {
-    const repeat = this.store.getState().audio.repeat;
+    const repeat = this.store.getState().queue.repeat;
 
     if (repeat) {
       this.play(this.getActiveConnection());
