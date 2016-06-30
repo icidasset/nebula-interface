@@ -223,7 +223,7 @@ class Tracks extends Component {
         }
       } else {
         this.props.actions.addNotification({
-          message: `You haven't selected a collection to add something to`,
+          message: "You haven't selected a collection to add something to",
           level: 'warning',
         });
       }
@@ -365,7 +365,7 @@ class Tracks extends Component {
     onChange = (option) => {
       let collection;
 
-      if (option && option.value) {
+      if (option && typeof option.value === 'string') {
         if (option.value.indexOf('special:') === 0) {
           collection = option.value;
         } else {
