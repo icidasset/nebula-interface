@@ -3,7 +3,8 @@ import groupBy from 'lodash/collection/groupBy';
 import mapValues from 'lodash/object/mapValues';
 import pairs from 'lodash/object/pairs';
 
-import { ID3 as meta } from 'imports?this=>{},window=>self!exports?this!../../vendor/id3-minimized.js';
+import jsmediatags from 'jsmediatags';
+import XhrFileReader from 'jsmediatags/build2/XhrFileReader';
 
 import * as sourceUtils from '../utils/sources';
 import { makeTrackObject } from '../reducers/tracks';
@@ -19,6 +20,44 @@ self.addEventListener('message', (event) => {
     });
   });
 });
+
+
+/// jsmediatags
+///
+function meta(urlGET, urlHEAD) {
+  const fakeURL = 'STOP_ME_FROM_DOING_EVIL';
+
+  const reader = new jsmediatags.Reader(fakeURL);
+  const fileReader = new XhrFileReader(fakeURL);
+  const makeXHRRequest = fileReader._makeXHRRequest;
+
+  fileReader._createXHRObject = function() {
+    return new XMLHttpRequest();
+  };
+
+  fileReader._makeXHRRequest = function(method, ...args) {
+    this._url = method.toUpperCase() === 'HEAD' ? urlHEAD : urlGET;
+    return makeXHRRequest.call(this, method, ...args);
+  };
+
+  return new Promise((resolve, reject) => {
+    fileReader.init({
+      onSuccess: () => {
+
+        reader._getTagReader(fileReader, {
+          onSuccess: (TagReader) => {
+            new TagReader(fileReader)
+              .setTagsToRead(reader._tagsToRead)
+              .read({ onSuccess: resolve, onError: reject });
+          },
+          onError: reject
+        });
+
+      },
+      onError: reject,
+    });
+  });
+}
 
 
 /// Utils
@@ -206,14 +245,12 @@ function getAttributesForNewTrackLoop(
 
 
 function getAttributesForNewTrack(source, newItem) {
-  return new Promise((resolve) => {
+  const urlGET = sourceUtils.getSignedUrl(source, newItem, 'GET', 10);
+  const urlHEAD = sourceUtils.getSignedUrl(source, newItem, 'HEAD', 10);
 
-    const urlHead = sourceUtils.getSignedUrl(source, newItem, 'HEAD', 10);
-    const urlGet = sourceUtils.getSignedUrl(source, newItem, 'GET', 10);
+  return meta(urlGET, urlHEAD).then(
 
-    meta.loadTags(urlGet, urlHead, () => {
-      const tags = meta.getAllTags(urlGet);
-
+    ({ tags }) => {
       const {
         album,
         artist,
@@ -223,7 +260,7 @@ function getAttributesForNewTrack(source, newItem) {
         year,
       } = tags;
 
-      resolve(makeTrackObject({
+      return makeTrackObject({
         path: newItem,
         sourceUid: source.uid,
 
@@ -236,20 +273,12 @@ function getAttributesForNewTrack(source, newItem) {
 
           track: track,
         },
-      }));
-    }, {
-      onError: () => {
-        resolve(null);
-      },
-      tags: [
-        'album',
-        'artist',
-        'genre',
-        'title',
-        'track',
-        'year',
-      ],
-    });
+      });
+    },
 
-  });
+    () => {
+      return null;
+    }
+
+  );
 }

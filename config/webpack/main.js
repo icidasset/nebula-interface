@@ -41,6 +41,10 @@ const config = {
     },
   },
 
+  node: {
+    fs: "empty",
+  },
+
   plugins: (
     minify ?
       [ new webpack.optimize.UglifyJsPlugin({ minimize: true }) ] :
