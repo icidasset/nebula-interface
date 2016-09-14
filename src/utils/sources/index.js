@@ -27,7 +27,12 @@ export function getTree(source) {
   const sourceTypeUtils = utils[source.type];
 
   if (sourceTypeUtils && sourceTypeUtils.getTree) {
-    return sourceTypeUtils.getTree(source, pathRegex);
+    return sourceTypeUtils
+      .getTree(source, pathRegex)
+      .catch(err => {
+        console.error(err.stack || err.toString());
+        return [];
+      });
   }
 
   console.error(`The source type '${source.type}' was not implemented correctly.`);

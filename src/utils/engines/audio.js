@@ -309,16 +309,18 @@ class AudioEngine {
     const source = findWhere(this.store.getState().sources.items, { uid: track.sourceUid });
     const url = sourceUtils.getSignedUrl(source, track.path);
 
-    // stop buffering other audio elements
-    this.audioElements.forEach(node => {
-      node.src = URL.createObjectURL(new Blob([], { type: 'audio/mp3' }));
-    });
+    // TODO: stop buffering other audio elements
+    // this.audioElements.forEach(node => {
+    //   node.src = URL.createObjectURL(new Blob([], { type: 'audio/mp3' }));
+    // });
 
     // track
     audioElement.setAttribute('crossorigin', 'anonymous');
+    audioElement.setAttribute('crossOrigin', 'anonymous');
     audioElement.setAttribute('preload', 'none');
     audioElement.setAttribute('src', url);
     audioElement.setAttribute('rel', trackId);
+    audioElement.volume = 1;
 
     // load
     audioElement.load();
@@ -334,6 +336,7 @@ class AudioEngine {
         resolve({
           trackId,
           bindAudioEvents: () => {
+            audioElement.currentTime = 0.00001; // fix no-volume issue
             audioElement.addEventListener('error', ::this.onError);
             audioElement.addEventListener('timeupdate', ::this.onCurrentTimeChange);
             audioElement.addEventListener('ended', ::this.onEnd);
@@ -362,7 +365,6 @@ class AudioEngine {
 
   createConnection(track, trackId) {
     const { audioElement, promise } = this.createNewAudioElement(track, trackId);
-    audioElement.volume = 1;
 
     // set loading to 'true'
     this.store.dispatch(audioActions.setAudioIsLoading(true));
@@ -480,7 +482,7 @@ class AudioEngine {
 
 
   seek(connection, percentageDecimal) {
-    const duration =  connection.mediaElement.duration;
+    const duration = connection.mediaElement.duration;
 
     if (!isNaN(duration) && !isNaN(percentageDecimal)) {
       connection.mediaElement.currentTime = duration * percentageDecimal;

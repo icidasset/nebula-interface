@@ -51,9 +51,9 @@ function getBucketRegion(source) {
   const url = `//${signature.hostname}${signature.path}`;
 
   return fetch(url, signature).then(
-    (response) => response.text()
+    response => response.text()
   ).then(
-    (xmlText) => {
+    xmlText => {
       const obj = xmlParser(xmlText);
       const regionObj = obj.root.children.filter((c) => c.name === 'Region')[0];
       const region = regionObj ? regionObj.content : defaultRegion;
