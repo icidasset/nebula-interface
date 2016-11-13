@@ -130,9 +130,14 @@
 }
 
 .box :global(.Dropdown-menu) {
+  bottom: 125%;
   left: 50%;
-  top: 125%;
   transform: translateX(-50%);
+
+  &:before {
+    top: 100%;
+    transform: translate(-50%, -1px) rotate(180deg);
+  }
 }
 
 .box.is-slightly-less-important :global(.Dropdown-menu) {

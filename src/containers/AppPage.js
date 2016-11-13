@@ -70,6 +70,10 @@ class AppPage extends Component {
 
     return (
       <div className="root__fh-child">
+        <AppContent>
+          {this.renderMainContent()}
+        </AppContent>
+
         <AppHeader
           actions={this.props.actions}
           audio={this.props.audio}
@@ -78,10 +82,6 @@ class AppPage extends Component {
           routing={this.props.routing}
           tracks={this.props.tracks}
         />
-
-        <AppContent>
-          {this.renderMainContent()}
-        </AppContent>
       </div>
     );
   }

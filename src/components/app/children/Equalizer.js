@@ -56,6 +56,10 @@ class Equalizer extends Component {
     const spanStyles = {
       cursor: 'pointer',
       display: 'inline-block',
+      fontSize: '0.75rem',
+      fontWeight: '600',
+      letterSpacing: '0.0375em',
+      textTransform: 'uppercase',
     };
 
     const parClick = function() {

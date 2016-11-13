@@ -10,6 +10,7 @@ import styles from './Help.pcss';
 export default () => {
   return (
     <ContentWithMenu
+      hasBoldTitle={true}
       menuItems={[]}
       title="Getting started"
     >

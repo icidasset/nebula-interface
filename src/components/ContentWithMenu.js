@@ -11,7 +11,9 @@ class ContentWithMenu extends Component {
       <section styleName="layout">
 
         <nav>
-          <h1>{this.props.title}</h1>
+          <h1 className={this.props.hasBoldTitle ? "is-bold" : ""}>
+            {this.props.title}
+          </h1>
           {this.props.menuItems}
         </nav>
 
@@ -28,6 +30,7 @@ class ContentWithMenu extends Component {
 
 ContentWithMenu.propTypes = {
   children: PropTypes.node.isRequired,
+  hasBoldTitle: PropTypes.bool,
   menuItems: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
 };
