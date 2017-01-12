@@ -15,7 +15,7 @@
     "he": "^1.1.0",
     "history": "^1.17.0",
     "isomorphic-fetch": "^2.2.0",
-    "jsmediatags": "^3.3.0",
+    "jsmediatags": "^3.3.2",
     "lodash": "^3.10.1",
     "querystring-browser": "^1.0.4",
     "react": "^15.1.0",
